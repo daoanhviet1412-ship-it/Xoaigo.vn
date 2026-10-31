@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
 <defs>
- <linearGradient id="mango" x1="40" y1="55" x2="250" y2="260" gradientUnits="userSpaceOnUse"><stop stop-color="#FFD12E"/><stop offset=".48" stop-color="#F6A51D"/><stop offset="1" stop-color="#F07824"/></linearGradient>
- <linearGradient id="leaf" x1="130" y1="18" x2="246" y2="82" gradientUnits="userSpaceOnUse"><stop stop-color="#8BAA47"/><stop offset=".52" stop-color="#287B2B"/><stop offset="1" stop-color="#15551F"/></linearGradient>
+ <linearGradient id="mango" x1="55" y1="54" x2="245" y2="260" gradientUnits="userSpaceOnUse"><stop stop-color="#FFD447"/><stop offset=".48" stop-color="#FFB21C"/><stop offset="1" stop-color="#F58220"/></linearGradient>
+ <linearGradient id="leaf" x1="130" y1="18" x2="246" y2="82" gradientUnits="userSpaceOnUse"><stop stop-color="#70C94C"/><stop offset=".52" stop-color="#00A94F"/><stop offset="1" stop-color="#087C3E"/></linearGradient>
 </defs>
-<path d="M143 76C113 70 76 91 51 126C31 154 13 188 15 218C17 252 49 274 91 270C154 264 224 227 251 174C273 132 253 89 214 77C192 70 170 72 143 76Z" fill="url(#mango)" fill-rule="evenodd" clip-rule="evenodd"/>
-<path d="M139 89C110 93 82 117 61 149C44 174 30 204 35 222C39 240 57 245 83 239C137 227 197 189 218 150C233 122 219 98 194 91C176 85 157 86 139 89Z" fill="#FFF6E5"/>
-<path d="M145 72C161 39 199 15 261 12C248 47 222 72 184 83C168 87 153 83 145 72Z" fill="url(#leaf)"/>
-<path d="M151 72C184 57 220 36 258 15" stroke="#B6CF69" stroke-width="2" stroke-linecap="round" opacity=".55"/>
+<path d="M145 76C119 76 91 92 69 117C45 145 24 183 24 215C24 251 51 276 91 273C148 269 214 238 245 190C272 148 257 103 222 84C200 72 172 70 145 76Z" fill="url(#mango)"/>
+<path d="M142 91C115 97 88 122 68 153C49 182 37 211 43 229C48 245 65 250 89 244C139 233 192 204 216 168C237 136 223 107 194 96C177 90 158 88 142 91Z" fill="#FFFFFF"/>
+<path d="M143 73C157 39 197 15 261 12C248 47 222 72 184 83C168 87 153 83 143 73Z" fill="url(#leaf)"/>
+<path d="M151 71C183 56 220 35 258 15" stroke="#B6E18A" stroke-width="2.5" stroke-linecap="round" opacity=".65"/>
 </svg>
