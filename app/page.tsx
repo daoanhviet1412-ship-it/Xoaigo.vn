@@ -16,10 +16,12 @@ const steps = [
 ];
 
 const faqs = [
-  ["Xoài Go là gì?", "Xoài Go kết nối người tiêu dùng với cửa hàng địa phương qua ưu đãi thành viên và các chương trình mua chung."],
-  ["Phí thành viên bao nhiêu?", "Mức phí dự kiến là 30.000 đồng mỗi tháng. Giá và quyền lợi chính thức sẽ được công bố trước khi mở đăng ký."],
-  ["Thanh toán như thế nào?", "Khách hàng thanh toán trực tiếp với cửa hàng cung cấp sản phẩm hoặc dịch vụ. Xoài Go không giữ tiền thanh toán của khách."],
-  ["Mua chung hoạt động ra sao?", "Mỗi chương trình hiển thị rõ sản phẩm, giá, số lượng, thời hạn và điều kiện tham gia trước khi bạn xác nhận."],
+  ["Xoài Go là gì?", "Xoài Go là nền tảng kết nối người tiêu dùng với cửa hàng địa phương thông qua ưu đãi thành viên và hoạt động mua chung."],
+  ["Tham gia Xoài Go có mất phí không?", "Mô hình thành viên đang được hoàn thiện với mức phí dự kiến 30.000 đồng mỗi tháng. Mức phí, quyền lợi và thời điểm áp dụng chính thức sẽ được công bố trước khi mở đăng ký."],
+  ["Xoài Go có trực tiếp bán hàng hay giữ tiền không?", "Định hướng vận hành là kết nối nhu cầu và cửa hàng. Khách hàng thanh toán trực tiếp cho cửa hàng; Xoài Go không đứng ra giữ tiền thanh toán của khách."],
+  ["Mua chung hoạt động như thế nào?", "Một chương trình sẽ nêu rõ sản phẩm, giá, số lượng tối thiểu (nếu có), thời hạn gom đơn, cách nhận hàng và điều kiện áp dụng. Chỉ tham gia khi bạn đã xem và đồng ý các thông tin đó."],
+  ["Cửa hàng tham gia được lợi gì?", "Cửa hàng có thêm kênh tiếp cận khách hàng, giới thiệu ưu đãi và thử nghiệm gom nhu cầu để tối ưu việc nhập hàng hoặc triển khai chương trình bán hàng."],
+  ["Xoài Go đã hoạt động chính thức chưa?", "Website hiện giới thiệu mô hình và định hướng của Xoài Go. Nền tảng đang trong giai đoạn hoàn thiện; các cửa hàng, ưu đãi và chương trình thực tế sẽ được công bố khi sẵn sàng."],
 ];
 
 export default function Home() {
@@ -33,9 +35,10 @@ export default function Home() {
         </a>
         <nav aria-label="Điều hướng chính">
           <a className="active" href="#">Trang chủ</a>
-          <a href="#community">Quyền lợi</a>
-          <a href="#how">Cách hoạt động</a>
-          <a href="#merchant">Đối tác</a>
+          <a href="#community">Ưu đãi</a>
+          <a href="#how">Mua chung</a>
+          <a href="#merchant">Khám phá quán</a>
+          <a href="#merchant">Dành cho đối tác</a>
           <a href="#faq">Hỏi đáp</a>
         </nav>
         <div className="nav-actions">
@@ -69,7 +72,7 @@ export default function Home() {
         <div><strong>50+</strong><span>Quán đối tác</span></div>
         <div><strong>Nhiều hơn</strong><span>Mỗi ngày</span></div>
       </div>
-      <section className="benefit-grid wrap" id="community">
+      <section className="benefit-grid wrap" id="community" aria-label="Quyền lợi thành viên">
         <article className="benefit-card benefit-feature">
           <div className="benefit-image"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1000&q=85" alt="Món ăn được trình bày sang trọng trên đĩa"/></div>
           <div className="benefit-content"><span className="card-index">01 / MEMBER PERKS</span><h3>Ăn ngon hơn.<br/>Ưu đãi thật hơn.</h3><p>Những ưu đãi cụ thể từ cửa hàng tham gia — để mỗi lần ghé quán đều có thêm một lý do vui.</p></div>
@@ -87,7 +90,7 @@ export default function Home() {
       <section className="how-section" id="how">
         <div className="wrap how-layout">
           <div className="how-intro"><span className="eyebrow light">CÁCH XOÀI GO HOẠT ĐỘNG</span><h2>Rõ ràng từ lúc chọn.<br/><em>Yên tâm khi giao dịch.</em></h2><p>Xoài tập trung kết nối và tổ chức thông tin. Bạn biết mình đang mua gì, từ ai và theo điều kiện nào.</p><div className="how-visual how-food-visual"><img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1100&q=85" alt="Món ăn tươi ngon cùng ưu đãi thành viên"/><div className="food-coupon"><span>ƯU ĐÃI THÀNH VIÊN</span><strong>GIẢM 10%</strong><b>MÃ: XOAI10</b></div></div></div>
-          <div><div className="step-list">{steps.map((step, i) => <div className="step" key={step[0]}><span className="step-no">0{i + 1}</span><div><h3>{step[0]}</h3><p>{step[1]}</p></div><span className="step-arrow">↗</span></div>)}</div><p className="how-trust-note">Xoài Go kết nối và cung cấp thông tin; khách hàng thanh toán trực tiếp với cửa hàng. Giá và điều kiện được hiển thị trước khi xác nhận.</p></div>
+          <div><div className="step-list">{steps.map((step, i) => <div className="step" key={step[0]}><span className="step-no">0{i + 1}</span><div><h3>{step[0]}</h3><p>{step[1]}</p></div><span className="step-arrow">↗</span></div>)}</div><p className="how-trust-note">Xoài Go kết nối người mua với cửa hàng, không trực tiếp bán hàng hay giữ tiền. Giá, điều kiện và cách nhận hàng được công bố trước; khách thanh toán trực tiếp với cửa hàng.</p></div>
         </div>
       </section>
 
