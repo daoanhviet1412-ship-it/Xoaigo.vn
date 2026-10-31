@@ -947,3 +947,38 @@ footer { background: #F8FBF9; }
 @media (prefers-reduced-motion: reduce) {
   .hero-woman,.hero-dish,.hero-basket,.feature-ribbon { animation:none !important; transition:none !important; }
 }
+
+
+/* Use the user-supplied single hero artwork instead of the layered collage */
+.hero-single {
+  position:relative;
+  width:calc(100% + 65px);
+  height:650px;
+  margin-left:-12px;
+  margin-right:-53px;
+  overflow:hidden;
+  background:transparent;
+  isolation:isolate;
+}
+.hero-single::before,
+.hero-single::after { content:none !important; display:none !important; }
+.hero-single-image {
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center center;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+}
+@media (max-width:1200px) {
+  .hero-single { height:550px; width:calc(100% + 35px); margin-right:-25px; }
+}
+@media (max-width:820px) {
+  .hero-single { width:100%; height:auto; aspect-ratio: 1 / 1; margin:0; overflow:visible; }
+  .hero-single-image { width:100%; height:100%; object-fit:contain; }
+}
+@media (max-width:560px) {
+  .hero-single { height:auto; aspect-ratio: 1 / 1; margin-top:4px; }
+}
