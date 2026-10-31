@@ -173,3 +173,197 @@ a:focus-visible, summary:focus-visible {
     transition-duration: .01ms !important;
   }
 }
+
+
+/* XOAI GO brand refresh — fresh green, clean light surfaces */
+:root {
+  --yellow: #FFC928;
+  --orange: #F58220;
+  --brown: #49382B;
+  --cream: #F7FBF7;
+  --green: #00B14F;
+  --ink: #202B24;
+  --muted: #66736A;
+  --line: #E3ECE5;
+  --paper: #FFFFFF;
+  --green-dark: #087C3E;
+  --green-soft: #EAF7EF;
+}
+body {
+  color: var(--ink);
+  background: #FFFFFF;
+  font-family: 'Be Vietnam Pro', Arial, sans-serif;
+}
+.wrap { width: min(1220px, calc(100% - 80px)); }
+.nav {
+  background: rgba(255,255,255,.94);
+  border-bottom-color: #E8EFE9;
+}
+.brand {
+  gap: 10px;
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+.brand img { width: 48px; height: 48px; }
+.brand-lockup { display: flex; flex-direction: column; gap: 1px; }
+.brand-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  color: #241C15;
+  font-size: 27px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -1.25px;
+}
+.brand-go {
+  background: linear-gradient(105deg, #FFB91F 0%, #F58220 42%, #00B14F 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+.brand-speed {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-left: 2px;
+  width: 17px;
+}
+.brand-speed b {
+  display: block;
+  height: 4px;
+  border-radius: 9px;
+  background: #008D43;
+}
+.brand-speed b:nth-child(1) { width: 17px; }
+.brand-speed b:nth-child(2) { width: 13px; }
+.brand-speed b:nth-child(3) { width: 9px; }
+.brand-lockup small {
+  color: #594536;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+.brand-go, .brand-name, .brand-lockup small { font-family: 'Be Vietnam Pro', Arial, sans-serif; }
+.nav nav { color: #526158; }
+.nav nav a:hover, .footer-main nav a:hover { color: var(--green-dark); }
+.nav-cta {
+  background: #F0FAF3;
+  border: 1px solid #CDEBD7;
+  color: #087C3E;
+}
+.nav-cta span { color: var(--green); }
+.hero {
+  position: relative;
+  isolation: isolate;
+}
+.hero:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 520px;
+  height: 520px;
+  right: -110px;
+  top: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,177,79,.09), rgba(0,177,79,0) 68%);
+  pointer-events: none;
+}
+.eyebrow { color: #087C3E; }
+.eyebrow i { background: var(--green); }
+.hero h1 { color: #202B24; }
+.hero h1 em, h2 em { color: var(--green-dark); }
+.hero-lead, .intro-copy p, .how-intro > p,
+.model-copy > p, .merchant-copy > p { color: #637168; }
+.btn-primary {
+  background: linear-gradient(110deg, #00B14F, #079B49);
+  color: #FFFFFF;
+  box-shadow: 0 9px 24px rgba(0,177,79,.18);
+}
+.btn-primary:hover { box-shadow: 0 14px 30px rgba(0,177,79,.25); }
+.text-link { color: #087C3E; }
+.text-link span, .under-link span { color: var(--green); }
+.proof-icon { background: #E8F7ED; color: var(--green-dark); }
+.hero-proof { color: #68766D; }
+.marquee {
+  background: #00B14F;
+  color: #FFFFFF;
+}
+.marquee b { color: #FFE08A; }
+.intro { background: #FFFFFF; }
+.benefit-feature { background: #FFFFFF; border-color: #E8EFE9; }
+.benefit-warm { background: #FFF8E9; }
+.benefit-green { background: #EAF7EF; }
+.benefit-green h3 { color: #17452C; }
+.benefit-green p { color: #587363; }
+.card-index { color: #718277; }
+.benefit-content p, .benefit-card p { color: #65736A; }
+.big-symbol { color: var(--green); }
+.benefit-warm h3 em { color: var(--orange); }
+.green-orbit { border-color: #9AD7B0; color: #54B77B; }
+.how-section {
+  background: #EAF7EF;
+  color: #202B24;
+}
+.how-intro h2 { color: #202B24; }
+.how-intro h2 em { color: #087C3E; }
+.eyebrow.light { color: #087C3E; }
+.how-intro > p { color: #5F7165; }
+.step-list, .step { border-color: #CFE5D5; }
+.step-no, .step-arrow { color: #00A84B; }
+.step h3 { color: #24382B; }
+.step p { color: #607267; }
+.how-visual { box-shadow: 0 12px 30px rgba(24,73,43,.10); }
+.model-section { background: #FFFFFF; }
+.model-card {
+  background: #F8FCF9;
+  border-color: #DFECE2;
+  box-shadow: 0 20px 50px rgba(22,80,44,.07);
+}
+.model-card-top { color: #64806D; }
+.flow-node { background: #FFFFFF; border-color: #DDEBE1; }
+.flow-connect { color: var(--green); }
+.flow-platform { background: #E5F7EB; color: #17452C; }
+.flow-platform small, .flow-node small { color: #688071; }
+.model-copy li { color: #53645A; }
+.model-copy li span { background: #E2F5E8; color: #078B42; }
+.model-foot { color: #668171; }
+.merchant-section { background: #F5FAF6; }
+.merchant-points { border-color: #DDE9E0; }
+.merchant-points div { border-color: #DDE9E0; }
+.merchant-points b { color: var(--green-dark); }
+.merchant-points span { color: #586A5F; }
+.faq-list, .faq-item { border-color: #E2ECE5; }
+.faq-item summary b { color: var(--green); }
+.faq-item summary:hover { color: var(--green-dark); }
+.faq-item p { color: #66756B; }
+.join-section {
+  background: linear-gradient(115deg, #00A84B, #078C43);
+  color: #FFFFFF;
+}
+.join-section .eyebrow.light { color: #D9F8E3; }
+.join-inner h2 { color: #FFFFFF; }
+.join-inner h2 em { color: #FFE08A; }
+.join-inner p { color: #E2F7E9; }
+.btn-light { background: #FFFFFF; color: #087C3E; }
+footer { background: #F8FBF8; }
+.footer-main { border-color: #E3ECE5; }
+.footer-tagline { color: #668171; }
+.footer-main nav { color: #617167; }
+.footer-bottom { color: #829087; }
+.footer-bottom b { color: var(--green); }
+.photo-stamp { background: #00B14F; }
+.photo-stamp span { color: #FFFFFF; }
+.note-symbol { background: #E5F7EB; color: #078B42; }
+.note-symbol.green { background: #FFF4D8; color: #D98216; }
+.floating-note { border-color: #E4EEE6; box-shadow: 0 14px 34px rgba(31,70,43,.10); }
+.btn:focus-visible, .nav-cta:focus-visible { outline-color: var(--green); }
+@media (max-width: 650px) {
+  .wrap { width: calc(100% - 38px); }
+  .brand img { width: 40px; height: 40px; }
+  .brand-name { font-size: 23px; }
+  .brand-lockup small { font-size: 9px; }
+  .brand-speed { transform: scale(.85); transform-origin: left center; }
+  .hero:before { width: 300px; height: 300px; right: -90px; }
+}
