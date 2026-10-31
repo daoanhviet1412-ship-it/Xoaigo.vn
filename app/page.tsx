@@ -84,7 +84,7 @@ export default function Home() {
       </section>
       <section className="benefit-grid wrap" aria-label="Quyền lợi thành viên">
         <article className="benefit-card benefit-feature">
-          <div className="benefit-image"><img src="https://i.ibb.co/LhH8cp7c/Mi-Qua-ng-ga-mo-c-ma-c-a-m-vi.png" alt="Một tô mì Quảng gà với rau sống, đậu phộng và bánh tráng"/></div>
+          <div className="benefit-image"><img src="https://i.ibb.co/Z9Zym05/Mi-Qua-ng-ga-giu-a-sa-c-xanh-mo-c-ma-c.png" alt="Một tô mì Quảng gà với rau sống, đậu phộng và bánh tráng"/></div>
           <div className="benefit-content"><span className="card-index">01 / MEMBER PERKS</span><h3>Ăn ngon hơn.<br/>Ưu đãi thật hơn.</h3><p>Những ưu đãi cụ thể từ cửa hàng tham gia — để mỗi lần ghé quán đều có thêm một lý do vui.</p></div>
         </article>
         <article className="benefit-card benefit-warm">
