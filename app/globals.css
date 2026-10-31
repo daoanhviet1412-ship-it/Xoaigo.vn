@@ -2068,3 +2068,15 @@ footer { background:#fff; }
   font-weight:inherit;
   letter-spacing:inherit;
 }
+
+
+/* Use one consistent sans-serif headline style across all three benefit cards. */
+.benefit-content h3,
+.benefit-card h3,
+.benefit-content h3 em,
+.benefit-card h3 em {
+  font-family:'DM Sans',sans-serif;
+  font-style:normal;
+  font-weight:800;
+  letter-spacing:-.8px;
+}
