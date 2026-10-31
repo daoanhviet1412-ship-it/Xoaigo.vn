@@ -1033,3 +1033,21 @@ footer { background: #F8FBF9; }
     background: linear-gradient(90deg, rgba(255,253,248,.96), rgba(255,253,248,.78));
   }
 }
+
+
+/* Fine-tune: slightly smaller hero artwork and keep the feature ribbon below it. */
+.hero {
+  background-size: 90% auto;
+}
+.feature-ribbon.wrap {
+  margin-top: 24px;
+}
+@media (max-width: 820px) {
+  .hero {
+    background-size: auto 82%;
+    background-position: center bottom;
+  }
+  .feature-ribbon.wrap {
+    margin-top: 18px;
+  }
+}
