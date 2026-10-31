@@ -1336,3 +1336,11 @@ footer { background: #F8FBF9; }
     margin-top: -12px;
   }
 }
+
+
+/* Slightly reduce the full-bleed hero artwork by 5%, keeping its alignment. */
+@media (min-width: 821px) {
+  .hero.wrap {
+    background-size: 95% auto;
+  }
+}
