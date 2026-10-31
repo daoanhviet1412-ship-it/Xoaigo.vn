@@ -3,7 +3,16 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Xoài Go — Cùng nhau mua tốt hơn",
-  description: "Xoài Go kết nối bạn với cửa hàng địa phương, ưu đãi thành viên và chương trình mua chung tiết kiệm tại Đà Nẵng.",
+  description: "Khám phá ưu đãi thành viên, mua chung cộng đồng và cửa hàng địa phương cùng Xoài Go. Bắt đầu từ Đà Nẵng.",
+  applicationName: "Xoài Go",
+  metadataBase: new URL("https://xoaigo.vercel.app"),
+  openGraph: {
+    title: "Xoài Go — Cùng nhau mua tốt hơn",
+    description: "Kết nối người mua với cửa hàng địa phương. Ưu đãi thiết thực, mua chung cộng đồng.",
+    siteName: "Xoài Go",
+    locale: "vi_VN",
+    type: "website",
+  },
   icons: { icon: "/xoai-mark.svg" },
 };
 
