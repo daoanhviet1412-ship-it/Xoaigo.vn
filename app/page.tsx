@@ -42,7 +42,7 @@ export default function Home() {
 
       <section className="partner wrap" id="partners"><div><span className="eyebrow">DÀNH CHO CỬA HÀNG ĐỊA PHƯƠNG</span><h2>Cùng Xoài kết nối<br/><em>nhiều khách hàng hơn.</em></h2><p>Đưa cửa hàng của bạn đến gần cộng đồng, giới thiệu ưu đãi và cùng tạo nên những chương trình mua chung hấp dẫn.</p><a className="button" href="#join">Trở thành đối tác <span>↗</span></a></div><div className="partner-art"><div className="shop"><img src="/xoai-mark.svg" alt=""/><strong>ĐIỂM ĐẾN<br/>YÊU THÍCH</strong><small>GROW TOGETHER</small></div></div></section>
 
-      <section className="join wrap" id="join"><img className="join-mark" src="/xoai-mark.svg" alt=""/><div><span className="eyebrow">CỘNG ĐỒNG XOÀI GO</span><h2>Đi cùng nhau,<br/><em>lợi hơn mỗi ngày.</em></h2></div><div><p>Xoài đang từng bước hoàn thiện nền tảng và mở rộng mạng lưới cửa hàng đối tác tại Đà Nẵng.</p><a className="button" href="mailto:hello@xoaigo.vn">Kết nối với Xoài <span>↗</span></a></div></section>
+      <section className="join wrap" id="join"><img className="join-mark" src="/xoai-mark.svg" alt=""/><div><span className="eyebrow">CỘNG ĐỒNG XOÀI GO</span><h2>Đi cùng nhau,<br/><em>lợi hơn mỗi ngày.</em></h2></div><div><p>Xoài đang từng bước hoàn thiện nền tảng và mở rộng mạng lưới cửa hàng đối tác tại Đà Nẵng.</p><a className="button" href="#partners">Kết nối với Xoài <span>↗</span></a></div></section>
       <footer><div className="wrap foot"><a className="brand" href="#"><img className="brand-mark" src="/xoai-mark.svg" alt=""/><span className="brand-word">Xoài<span>Go</span></span></a><span>© 2026 Xoài Go · Kết nối tiêu dùng địa phương</span><a href="#join">Kết nối với Xoài ↗</a></div></footer>
     </main>
   );
