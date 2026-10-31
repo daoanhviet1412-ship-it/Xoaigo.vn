@@ -2015,3 +2015,21 @@ footer { background:#fff; }
   .benefit-grid { padding-top:34px; }
   .how-trust-note { margin-top:14px;padding:13px 14px; }
 }
+
+
+/* Match the typography and text palette of the closing “Cùng nhau mua tốt hơn” CTA. */
+.how-intro h2 {
+  color:#fff;
+  font-size:clamp(25px,3vw,34px);
+  line-height:1.2;
+  letter-spacing:-1px;
+}
+.how-intro h2 em { color:#C6EBD0; }
+.how-intro>p {
+  color:rgba(255,255,255,.78);
+  font-size:12px;
+  line-height:1.7;
+}
+.step h3 { color:#fff; }
+.step p { color:rgba(255,255,255,.78); }
+.step-no,.step-arrow { color:#C6EBD0; }
