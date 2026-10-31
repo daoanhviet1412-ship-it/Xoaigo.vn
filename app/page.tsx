@@ -56,13 +56,7 @@ export default function Home() {
             <div><strong>Nhiều hơn</strong><span>Mỗi ngày</span></div>
           </div>
         </div>
-        <div className="hero-visual hero-single" aria-label="Hình ảnh hero Xoài Go">
-          <img
-            className="hero-single-image"
-            src="https://i.ibb.co/GqNW4VP/Tu-o-i-ngon-cu-ng-Xoa-i-Go.png"
-            alt="Cùng nhau Xoài Go: trải nghiệm ẩm thực, cộng đồng và mua sắm tiện lợi"
-          />
-        </div>
+
       </section>
       <section className="feature-ribbon wrap">
         <article><span className="feature-icon">♜</span><div><b>Ưu đãi quán quen</b><small>Giảm giá và đặc quyền<br/>chỉ dành cho thành viên</small></div></article>
