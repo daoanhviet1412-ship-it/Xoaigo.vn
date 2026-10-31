@@ -1265,3 +1265,74 @@ footer { background: #F8FBF9; }
     background-position: center bottom;
   }
 }
+
+
+/* Reference composition: navigation and feature ribbon float over the hero artwork. */
+@media (min-width: 821px) {
+  .nav.wrap {
+    position: absolute;
+    z-index: 40;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: none;
+    height: 88px;
+    min-height: 88px;
+    margin: 0;
+    padding: 0 max(38px, calc((100% - 1420px) / 2));
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+  .nav nav, .nav-actions { background: transparent !important; }
+  .hero.wrap {
+    width: 100%;
+    max-width: none;
+    min-height: 816px;
+    margin: 0;
+    padding: 160px max(38px, calc((100% - 1420px) / 2)) 170px;
+    display: grid;
+    grid-template-columns: minmax(430px, .82fr) minmax(0, 1.18fr);
+    align-items: start;
+    gap: 28px;
+    background-size: 100% auto;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-color: #fffdf8;
+  }
+  .hero::before {
+    inset: 0;
+    width: auto;
+    height: auto;
+    background: linear-gradient(90deg,
+      rgba(255,253,248,.88) 0%,
+      rgba(255,253,248,.70) 28%,
+      rgba(255,253,248,.12) 53%,
+      rgba(255,253,248,0) 72%);
+    pointer-events: none;
+  }
+  .hero-copy {
+    position: relative;
+    z-index: 3;
+    max-width: 570px;
+  }
+  .feature-ribbon.wrap {
+    position: relative;
+    z-index: 35;
+    width: calc(100% - 70px);
+    max-width: 1460px;
+    margin: -150px auto 72px;
+    padding: 24px 18px;
+    background: rgba(255,255,255,.97);
+    border: 1px solid rgba(237,241,237,.9);
+    box-shadow: 0 12px 36px rgba(26,58,35,.10);
+  }
+}
+@media (max-width: 820px) {
+  .feature-ribbon.wrap {
+    position: relative;
+    z-index: 5;
+    margin-top: -12px;
+  }
+}
