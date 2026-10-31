@@ -84,7 +84,7 @@ export default function Home() {
       </section>
       <section className="benefit-grid wrap" aria-label="Quyền lợi thành viên">
         <article className="benefit-card benefit-feature">
-          <div className="benefit-image"><img src="https://delightfulplate.com/wp-content/uploads/2023/01/Mi-Quang-Ga-Vietnamese-Quang-style-noodle.jpg" alt="Một tô mì Quảng gà với rau sống, đậu phộng và bánh tráng"/></div>
+          <div className="benefit-image"><img src="https://i.ibb.co/LhH8cp7c/Mi-Qua-ng-ga-mo-c-ma-c-a-m-vi.png" alt="Một tô mì Quảng gà với rau sống, đậu phộng và bánh tráng"/></div>
           <div className="benefit-content"><span className="card-index">01 / MEMBER PERKS</span><h3>Ăn ngon hơn.<br/>Ưu đãi thật hơn.</h3><p>Những ưu đãi cụ thể từ cửa hàng tham gia — để mỗi lần ghé quán đều có thêm một lý do vui.</p></div>
         </article>
         <article className="benefit-card benefit-warm">
@@ -104,7 +104,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="merchant-section" id="merchant"><div className="wrap merchant-layout"><div className="merchant-photo"><img src="https://napoli.vn/Document/Images/CUA-HANG-TIEU-BIEU/napoli-coffee-chung-cu-q7-so-600-nguyen-luong-bang-p-phu-my-01/napoli-coffee-chung-cu-q7-so-600-nguyen-luong-bang-p-phu-my-quan-7-tp-hcm-vn-04.jpg" alt="Nữ nhân viên Việt Nam đứng tại quầy cà phê, chào khách; phía sau là kệ cà phê và bảng menu"/></div><div className="merchant-copy"><span className="eyebrow">DÀNH CHO CỬA HÀNG ĐỊA PHƯƠNG</span><h2>Khách hàng mới.<br/><em>Cơ hội phát triển mới.</em></h2><p>Xoài Go mong muốn đồng hành cùng những cửa hàng có sản phẩm và dịch vụ tốt, muốn tiếp cận cộng đồng khách hàng gần mình hơn.</p><div className="merchant-points"><div><b>01</b><span>Giới thiệu cửa hàng và ưu đãi đến cộng đồng</span></div><div><b>02</b><span>Thử nghiệm chương trình mua chung theo nhu cầu</span></div><div><b>03</b><span>Thêm một kênh xây dựng khách hàng quay lại</span></div></div><a className="btn btn-primary" href="#join">Tìm hiểu cơ hội hợp tác <span>↗</span></a></div></div></section>
+      <section className="merchant-section" id="merchant"><div className="wrap merchant-layout"><div className="merchant-photo"><img src="https://i.ibb.co/pvKYRDNQ/Bu-a-to-i-a-m-cu-ng-du-o-i-e-n-ma-y.png" alt="Nữ nhân viên Việt Nam đứng tại quầy cà phê, chào khách; phía sau là kệ cà phê và bảng menu"/></div><div className="merchant-copy"><span className="eyebrow">DÀNH CHO CỬA HÀNG ĐỊA PHƯƠNG</span><h2>Khách hàng mới.<br/><em>Cơ hội phát triển mới.</em></h2><p>Xoài Go mong muốn đồng hành cùng những cửa hàng có sản phẩm và dịch vụ tốt, muốn tiếp cận cộng đồng khách hàng gần mình hơn.</p><div className="merchant-points"><div><b>01</b><span>Giới thiệu cửa hàng và ưu đãi đến cộng đồng</span></div><div><b>02</b><span>Thử nghiệm chương trình mua chung theo nhu cầu</span></div><div><b>03</b><span>Thêm một kênh xây dựng khách hàng quay lại</span></div></div><a className="btn btn-primary" href="#join">Tìm hiểu cơ hội hợp tác <span>↗</span></a></div></div></section>
 
       <section className="faq-section wrap" id="faq"><div className="faq-heading"><span className="eyebrow">BẠN CÓ THỂ ĐANG THẮC MẮC</span><h2>Hỏi nhanh,<br/><em>hiểu rõ về Xoài.</em></h2><p>Những nguyên tắc cốt lõi trong mô hình Xoài Go.</p></div><div className="faq-list">{faqs.map(([q, a], i) => <details key={q} className="faq-item"><summary><span>{q}</span><b>+</b></summary><p>{a}</p></details>)}</div></section>
 
