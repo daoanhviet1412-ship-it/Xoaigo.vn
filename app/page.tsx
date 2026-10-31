@@ -23,14 +23,53 @@ const faqs = [
 export default function Home() {
   return (
     <main>
-      <section className="hero-art" aria-label="Xoài Go — Cùng nhau mua tốt hơn">
-        <img
-          src="https://i.ibb.co/F46tH016/Cu-ng-Nhau-Mua-To-t-Ho-n.png"
-          alt="Xoài Go — Cùng nhau mua tốt hơn"
-          fetchPriority="high"
-        />
+      <header className="nav wrap">
+        <a className="brand" href="#" aria-label="Xoài Go trang chủ">
+          <img className="brand-primary" src="/xoai-logo.svg" alt="Xoài Go — Cùng nhau mua tốt hơn." />
+        </a>
+        <nav aria-label="Điều hướng chính">
+          <a className="active" href="#">Trang chủ</a>
+          <a href="#community">Ưu đãi</a>
+          <a href="#how">Mua chung</a>
+          <a href="#merchant">Khám phá quán</a>
+          <a href="#merchant">Dành cho đối tác</a>
+          <a href="#about">Về Xoài Go</a>
+        </nav>
+        <div className="nav-actions">
+          <span className="location-pill"><span>⌖</span> Đà Nẵng <b>⌄</b></span>
+          <a className="nav-cta" href="#join">Tải ứng dụng</a>
+        </div>
+      </header>
+
+      <section className="hero wrap">
+        <div className="hero-copy">
+          <div className="eyebrow"><i/> CỘNG ĐỒNG TIÊU DÙNG ĐÀ NẴNG</div>
+          <h1>Cùng nhau<br/><em>mua tốt hơn.</em></h1>
+          <p className="hero-lead"><strong>Ưu đãi</strong> tại các quán ngon quanh bạn,<br className="desktop-break"/> mua chung giá tốt, và nhiều đặc quyền<br className="desktop-break"/> chỉ dành riêng cho thành viên <strong>Xoài Go.</strong></p>
+          <div className="hero-actions">
+            <a className="btn btn-primary" href="#join">Tải ứng dụng <span>→</span></a>
+            <a className="btn btn-soft" href="#community">Khám phá ưu đãi</a>
+          </div>
+          <div className="hero-stats">
+            <div><strong>1.000+</strong><span>Thành viên sớm</span></div>
+            <div><strong>50+</strong><span>Quán đối tác</span></div>
+            <div><strong>Nhiều hơn</strong><span>Mỗi ngày</span></div>
+          </div>
+        </div>
+        <div className="hero-visual hero-single" aria-label="Hình ảnh hero Xoài Go">
+          <img
+            className="hero-single-image"
+            src="https://i.ibb.co/GqNW4VP/Tu-o-i-ngon-cu-ng-Xoa-i-Go.png"
+            alt="Cùng nhau Xoài Go: trải nghiệm ẩm thực, cộng đồng và mua sắm tiện lợi"
+          />
+        </div>
       </section>
-      <section className="hero-art-spacer" aria-hidden="true"></section>
+      <section className="feature-ribbon wrap">
+        <article><span className="feature-icon">♜</span><div><b>Ưu đãi quán quen</b><small>Giảm giá và đặc quyền<br/>chỉ dành cho thành viên</small></div></article>
+        <article><span className="feature-icon">🛒</span><div><b>Mua chung giá tốt</b><small>Gom nhu cầu, nhập sỉ,<br/>chi phí hợp lý hơn</small></div></article>
+        <article><span className="feature-icon">▤</span><div><b>Khám phá quanh bạn</b><small>Nhiều quán ngon<br/>ngay trong khu vực</small></div></article>
+        <article><span className="feature-icon">♟</span><div><b>Cộng đồng tiêu dùng</b><small>Cùng nhau mua tốt hơn<br/>mỗi ngày</small></div></article>
+      </section>
       <section className="marquee"><div>ĐI CHỢ VUI HƠN <b>✳</b> ƯU ĐÃI THIẾT THỰC <b>✳</b> MUA CHUNG CỘNG ĐỒNG <b>✳</b> ỦNG HỘ CỬA HÀNG ĐỊA PHƯƠNG <b>✳</b> CÙNG NHAU MUA TỐT HƠN <b>✳</b></div></section>
 
       <section className="intro wrap" id="community">
