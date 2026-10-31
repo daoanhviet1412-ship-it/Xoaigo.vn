@@ -25,7 +25,7 @@ export default function Home() {
     <main>
       <header className="nav wrap">
         <a className="brand" href="#" aria-label="Xoài Go trang chủ">
-          <img src="/xoai-mark.svg" alt="" /><span className="brand-lockup"><span className="brand-name"><span>Xoài</span><span className="brand-go">Go</span><i className="brand-speed"><b/><b/><b/></i></span><small>Cùng nhau mua tốt hơn.</small></span>
+          <img className="brand-primary" src="/xoai-logo.svg" alt="Xoài Go — Cùng nhau mua tốt hơn." />
         </a>
         <nav aria-label="Điều hướng chính">
           <a href="#how">Cách hoạt động</a><a href="#community">Cộng đồng</a><a href="#merchant">Đối tác cửa hàng</a><a href="#faq">Hỏi đáp</a>
@@ -84,7 +84,7 @@ export default function Home() {
 
       <section className="join-section" id="join"><div className="wrap join-inner"><img src="/xoai-mark.svg" alt=""/><div><span className="eyebrow light">XOÀI GO · ĐÀ NẴNG</span><h2>Cùng nhau mua tốt hơn.<br/><em>Bắt đầu từ những điều gần gũi.</em></h2><p>Xoài đang hoàn thiện nền tảng và kết nối những cửa hàng đầu tiên. Hẹn gặp bạn trong cộng đồng.</p></div><a className="btn btn-light" href="#merchant">Tôi muốn đồng hành <span>↗</span></a></div></section>
 
-      <footer><div className="wrap footer-main"><a className="brand footer-brand" href="#"><img src="/xoai-mark.svg" alt=""/><span className="brand-lockup"><span className="brand-name"><span>Xoài</span><span className="brand-go">Go</span><i className="brand-speed"><b/><b/><b/></i></span><small>Cùng nhau mua tốt hơn.</small></span></a><div className="footer-tagline">Cùng nhau mua tốt hơn.</div><nav><a href="#how">Cách hoạt động</a><a href="#merchant">Đối tác</a><a href="#faq">Hỏi đáp</a></nav></div><div className="wrap footer-bottom"><span>© 2026 Xoài Go. Đang trong giai đoạn hoàn thiện nền tảng.</span><span>Made for local communities <b>✳</b></span></div></footer>
+      <footer><div className="wrap footer-main"><a className="brand footer-brand" href="#"><img className="brand-primary" src="/xoai-logo.svg" alt="Xoài Go — Cùng nhau mua tốt hơn." /></a><div className="footer-tagline">Cùng nhau mua tốt hơn.</div><nav><a href="#how">Cách hoạt động</a><a href="#merchant">Đối tác</a><a href="#faq">Hỏi đáp</a></nav></div><div className="wrap footer-bottom"><span>© 2026 Xoài Go. Đang trong giai đoạn hoàn thiện nền tảng.</span><span>Made for local communities <b>✳</b></span></div></footer>
     </main>
   );
 }
