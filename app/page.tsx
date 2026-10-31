@@ -56,16 +56,12 @@ export default function Home() {
             <div><strong>Nhiều hơn</strong><span>Mỗi ngày</span></div>
           </div>
         </div>
-        <div className="hero-visual hero-collage" aria-label="Món ăn ngon, khách hàng Xoài Go và giỏ thực phẩm xanh">
-          <div className="hero-woman">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1100&q=90" alt="Nữ khách hàng trẻ trong cộng đồng Xoài Go"/>
-            <div className="brand-print"><img src="/xoai-mark.svg" alt=""/><b>Xoài Go</b><small>Cùng nhau mua tốt hơn.</small></div>
-          </div>
-          <div className="hero-dish"><img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=1000&q=90" alt="Món cá hồi áp chảo được trình bày trên đĩa"/></div>
-          <div className="hero-basket"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=90" alt="Giỏ rau củ quả xanh tươi"/></div>
-          <div className="hero-note">Cùng nhau<br/><em>mua tốt hơn</em> <span>✳</span></div>
-          <div className="hero-note hero-note-left">Ăn ngon<br/><em>ưu đãi thật</em> <span>↝</span></div>
-          <div className="hero-note hero-note-right">Mua chung<br/><em>giá tốt hơn</em> <span>↝</span></div>
+        <div className="hero-visual hero-single" aria-label="Hình ảnh hero Xoài Go">
+          <img
+            className="hero-single-image"
+            src="https://i.ibb.co/GqNW4VP/Tu-o-i-ngon-cu-ng-Xoa-i-Go.png"
+            alt="Cùng nhau Xoài Go: trải nghiệm ẩm thực, cộng đồng và mua sắm tiện lợi"
+          />
         </div>
       </section>
       <section className="feature-ribbon wrap">
