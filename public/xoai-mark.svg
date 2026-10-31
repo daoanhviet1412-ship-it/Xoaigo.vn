@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+<defs>
+ <linearGradient id="mango" x1="40" y1="55" x2="250" y2="260" gradientUnits="userSpaceOnUse"><stop stop-color="#FFD12E"/><stop offset=".48" stop-color="#F6A51D"/><stop offset="1" stop-color="#F07824"/></linearGradient>
+ <linearGradient id="leaf" x1="130" y1="18" x2="246" y2="82" gradientUnits="userSpaceOnUse"><stop stop-color="#8BAA47"/><stop offset=".52" stop-color="#287B2B"/><stop offset="1" stop-color="#15551F"/></linearGradient>
+</defs>
+<path d="M143 76C113 70 76 91 51 126C31 154 13 188 15 218C17 252 49 274 91 270C154 264 224 227 251 174C273 132 253 89 214 77C192 70 170 72 143 76Z" fill="url(#mango)" fill-rule="evenodd" clip-rule="evenodd"/>
+<path d="M139 89C110 93 82 117 61 149C44 174 30 204 35 222C39 240 57 245 83 239C137 227 197 189 218 150C233 122 219 98 194 91C176 85 157 86 139 89Z" fill="#FFF6E5"/>
+<path d="M145 72C161 39 199 15 261 12C248 47 222 72 184 83C168 87 153 83 145 72Z" fill="url(#leaf)"/>
+<path d="M151 72C184 57 220 36 258 15" stroke="#B6CF69" stroke-width="2" stroke-linecap="round" opacity=".55"/>
+</svg>
