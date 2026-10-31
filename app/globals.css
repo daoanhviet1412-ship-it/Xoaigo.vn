@@ -1051,3 +1051,28 @@ footer { background: #F8FBF9; }
     margin-top: 18px;
   }
 }
+
+
+/* Hero alignment tuned against the supplied 1536x1024 reference. */
+@media (min-width: 821px) {
+  .hero.wrap {
+    min-height: 724px;
+    padding-top: 18px;
+    padding-bottom: 0;
+    background-size: auto 100%;
+    background-position: right center;
+  }
+  .feature-ribbon.wrap {
+    margin-top: 0;
+  }
+}
+@media (max-width: 820px) {
+  .hero.wrap {
+    background-size: auto 58%;
+    background-position: center bottom;
+    padding-bottom: 8px;
+  }
+  .feature-ribbon.wrap {
+    margin-top: 8px;
+  }
+}
