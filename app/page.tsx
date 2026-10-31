@@ -72,6 +72,12 @@ export default function Home() {
         <div><strong>50+</strong><span>Quán đối tác</span></div>
         <div><strong>Nhiều hơn</strong><span>Mỗi ngày</span></div>
       </div>
+      <section className="feature-ribbon wrap">
+        <article><span className="feature-icon">♜</span><div><b>Ưu đãi quán quen</b><small>Giảm giá và đặc quyền<br/>chỉ dành cho thành viên</small></div></article>
+        <article><span className="feature-icon">🛒</span><div><b>Mua chung giá tốt</b><small>Gom nhu cầu, nhập sỉ,<br/>chi phí hợp lý hơn</small></div></article>
+        <article><span className="feature-icon">▤</span><div><b>Khám phá quanh bạn</b><small>Nhiều quán ngon<br/>ngay trong khu vực</small></div></article>
+        <article><span className="feature-icon">♟</span><div><b>Cộng đồng tiêu dùng</b><small>Cùng nhau mua tốt hơn<br/>mỗi ngày</small></div></article>
+      </section>
       <section className="benefit-grid wrap" id="community" aria-label="Quyền lợi thành viên">
         <article className="benefit-card benefit-feature">
           <div className="benefit-image"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1000&q=85" alt="Món ăn được trình bày sang trọng trên đĩa"/></div>
