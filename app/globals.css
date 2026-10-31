@@ -2033,3 +2033,28 @@ footer { background:#fff; }
 .step h3 { color:#fff; }
 .step p { color:rgba(255,255,255,.78); }
 .step-no,.step-arrow { color:#C6EBD0; }
+
+
+/* Refine the food visual without changing its frame dimensions. */
+.how-food-visual > img {
+  filter:contrast(1.12) saturate(1.16) brightness(1.03);
+}
+.food-coupon {
+  padding:9px 12px;
+  gap:2px;
+  border-radius:10px;
+  transform:rotate(-2deg) scale(.84);
+  transform-origin:bottom right;
+}
+.food-coupon span { font-size:7px; letter-spacing:.8px; }
+.food-coupon strong { font-size:clamp(19px,2.4vw,27px); }
+.food-coupon b { margin-top:2px; padding:3px 6px; font-size:9px; letter-spacing:.8px; }
+@media (max-width:700px) {
+  .food-coupon {
+    right:10px;
+    bottom:10px;
+    padding:8px 10px;
+    transform:rotate(-2deg) scale(.82);
+  }
+  .food-coupon strong { font-size:20px; }
+}
