@@ -1116,3 +1116,16 @@ footer { background: #F8FBF9; }
     background-size: auto 44.8%;
   }
 }
+
+
+/* Match the updated reference artwork scale. */
+@media (min-width: 821px) {
+  .hero.wrap {
+    background-size: auto 94%;
+  }
+}
+@media (max-width: 820px) {
+  .hero.wrap {
+    background-size: auto 56%;
+  }
+}
