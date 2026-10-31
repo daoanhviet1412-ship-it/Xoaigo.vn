@@ -78,7 +78,11 @@ export default function Home() {
         <article><span className="feature-icon">▤</span><div><b>Khám phá quanh bạn</b><small>Nhiều quán ngon<br/>ngay trong khu vực</small></div></article>
         <article><span className="feature-icon">♟</span><div><b>Cộng đồng tiêu dùng</b><small>Cùng nhau mua tốt hơn<br/>mỗi ngày</small></div></article>
       </section>
-      <section className="benefit-grid wrap" id="community" aria-label="Quyền lợi thành viên">
+      <section className="intro wrap" id="community">
+        <div className="intro-heading"><span className="eyebrow">KHÔNG CHỈ LÀ MỘT ỨNG DỤNG ƯU ĐÃI</span><h2>Một cộng đồng nhỏ,<br/><em>thêm nhiều giá trị lớn.</em></h2></div>
+        <div className="intro-copy"><p>Mỗi ngày chúng ta đều mua thực phẩm, ăn uống và sử dụng dịch vụ quanh nơi mình sống. Xoài Go muốn làm cho những giao dịch quen thuộc ấy trở nên có lợi hơn — bằng cách kết nối đúng người mua với đúng cửa hàng.</p><a className="under-link" href="#how">Tìm hiểu hành trình của bạn <span>↗</span></a></div>
+      </section>
+      <section className="benefit-grid wrap" aria-label="Quyền lợi thành viên">
         <article className="benefit-card benefit-feature">
           <div className="benefit-image"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1000&q=85" alt="Món ăn được trình bày sang trọng trên đĩa"/></div>
           <div className="benefit-content"><span className="card-index">01 / MEMBER PERKS</span><h3>Ăn ngon hơn.<br/>Ưu đãi thật hơn.</h3><p>Những ưu đãi cụ thể từ cửa hàng tham gia — để mỗi lần ghé quán đều có thêm một lý do vui.</p></div>
