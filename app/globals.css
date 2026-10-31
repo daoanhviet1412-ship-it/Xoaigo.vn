@@ -1129,3 +1129,64 @@ footer { background: #F8FBF9; }
     background-size: auto 56%;
   }
 }
+
+
+/* FULL-BLEED HERO BACKGROUND — keep live navigation and copy above the artwork. */
+@media (min-width: 701px) {
+  .hero.wrap {
+    width: 100%;
+    max-width: none;
+    min-height: 724px;
+    padding: 48px max(44px, calc((100% - 1420px) / 2)) 38px;
+    grid-template-columns: .82fr 1.18fr;
+    gap: 34px;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+  .hero::before {
+    inset: 0;
+    width: auto;
+    height: auto;
+    right: 0;
+    top: 0;
+    border-radius: 0;
+    background: linear-gradient(90deg,
+      rgba(255,253,248,.18) 0%,
+      rgba(255,253,248,.08) 34%,
+      rgba(255,253,248,0) 62%);
+    pointer-events: none;
+  }
+  .hero-copy {
+    position: relative;
+    z-index: 4;
+  }
+  .feature-ribbon.wrap {
+    position: relative;
+    z-index: 5;
+    margin-top: 0;
+  }
+}
+@media (max-width: 700px) {
+  .hero.wrap {
+    width: 100%;
+    min-height: 0;
+    background-size: auto 100%;
+    background-position: center top;
+    background-repeat: no-repeat;
+    padding-left: 19px;
+    padding-right: 19px;
+  }
+  .hero::before {
+    inset: 0;
+    width: auto;
+    height: auto;
+    right: 0;
+    top: 0;
+    background: linear-gradient(180deg,
+      rgba(255,253,248,.36) 0%,
+      rgba(255,253,248,.12) 55%,
+      rgba(255,253,248,.30) 100%);
+  }
+  .hero-copy { position: relative; z-index: 4; }
+}
