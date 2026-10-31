@@ -35,21 +35,25 @@ export default function Home() {
 
       <section className="hero wrap">
         <div className="hero-copy">
-          <div className="eyebrow"><i/> CỘNG ĐỒNG TIÊU DÙNG ĐỊA PHƯƠNG · ĐÀ NẴNG</div>
-          <h1>Mua sắm thông minh.<br/><em>Vui hơn khi có hội.</em></h1>
-          <p className="hero-lead">Kết nối người mua với cửa hàng địa phương, tận hưởng ưu đãi thành viên và cùng nhau tạo nên những lựa chọn tốt hơn.</p>
-          <div className="hero-actions"><a className="btn btn-primary" href="#how">Khám phá cách Xoài hoạt động <span>↗</span></a><a className="text-link" href="#merchant">Tôi có cửa hàng <span>→</span></a></div>
-          <div className="hero-proof"><span className="proof-icon">✳</span><span>Bắt đầu từ Đà Nẵng</span><b>·</b><span>Ưu tiên giá trị thật</span></div>
+          <div className="eyebrow"><i/> CỘNG ĐỒNG TIÊU DÙNG ĐÀ NẴNG</div>
+          <h1>Cùng nhau<br/><em>mua tốt hơn.</em></h1>
+          <p className="hero-lead">Ưu đãi tại những quán ngon quanh bạn, mua chung giá tốt và khám phá những lựa chọn đáng tin cậy trong cộng đồng Xoài Go.</p>
+          <div className="hero-actions"><a className="btn btn-primary" href="#join">Khám phá Xoài Go <span>→</span></a><a className="btn btn-soft" href="#how">Cách hoạt động</a></div>
+          <div className="hero-stats"><div><strong>Ưu đãi</strong><span>Quanh bạn</span></div><div><strong>Mua chung</strong><span>Giá tốt hơn</span></div><div><strong>Cộng đồng</strong><span>Địa phương</span></div></div>
         </div>
-        <div className="hero-visual">
-          <div className="hero-photo"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=85" alt="Quầy rau củ tươi tại cửa hàng địa phương"/></div>
-          <div className="photo-stamp"><img src="/xoai-mark.svg" alt=""/><span>LOCAL<br/>FINDS</span></div>
-          <div className="floating-note note-top"><span className="note-symbol">✳</span><div><strong>Ưu đãi thành viên</strong><small>Giá trị thiết thực mỗi ngày</small></div></div>
-          <div className="floating-note note-bottom"><span className="note-symbol green">↗</span><div><strong>Mua chung cộng đồng</strong><small>Gom nhu cầu · Tốt hơn cùng nhau</small></div></div>
-          <span className="visual-caption">GOOD LOCAL. GOOD PEOPLE. BETTER VALUE.</span>
+        <div className="hero-visual hero-collage" aria-label="Ẩm thực, cộng đồng và giỏ hàng Xoài Go">
+          <div className="hero-woman"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=88" alt="Nữ khách hàng trẻ trong cộng đồng Xoài Go"/><div className="brand-print"><img src="/xoai-mark.svg" alt=""/><b>Xoài Go</b><small>Cùng nhau mua tốt hơn.</small></div></div>
+          <div className="hero-dish"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=88" alt="Món ăn tinh tế được trình bày trên đĩa"/></div>
+          <div className="hero-basket"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=88" alt="Giỏ rau củ và thực phẩm tươi ngon"/></div>
+          <div className="hero-note">Cùng nhau<br/><em>mua tốt hơn</em> <span>✳</span></div>
         </div>
       </section>
-
+      <section className="feature-ribbon wrap">
+        <article><span className="feature-icon">♨</span><div><b>Ưu đãi quán quen</b><small>Giảm giá và đặc quyền cho thành viên</small></div></article>
+        <article><span className="feature-icon">🛒</span><div><b>Mua chung giá tốt</b><small>Gom nhu cầu, chia sẻ lợi ích</small></div></article>
+        <article><span className="feature-icon">⌖</span><div><b>Khám phá quanh bạn</b><small>Nhiều quán ngon ngay trong khu vực</small></div></article>
+        <article><span className="feature-icon">✳</span><div><b>Cộng đồng tiêu dùng</b><small>Cùng nhau mua tốt hơn mỗi ngày</small></div></article>
+      </section>
       <section className="marquee"><div>ĐI CHỢ VUI HƠN <b>✳</b> ƯU ĐÃI THIẾT THỰC <b>✳</b> MUA CHUNG CỘNG ĐỒNG <b>✳</b> ỦNG HỘ CỬA HÀNG ĐỊA PHƯƠNG <b>✳</b> CÙNG NHAU MUA TỐT HƠN <b>✳</b></div></section>
 
       <section className="intro wrap" id="community">
@@ -59,11 +63,17 @@ export default function Home() {
 
       <section className="benefit-grid wrap">
         <article className="benefit-card benefit-feature">
-          <div className="benefit-image"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1000&q=85" alt="Không gian một cửa hàng ăn uống địa phương"/></div>
-          <div className="benefit-content"><span className="card-index">01 / MEMBER PERKS</span><h3>Đặc quyền<br/>dành cho thành viên.</h3><p>Những ưu đãi cụ thể từ cửa hàng tham gia — để mỗi lần ghé quán đều có thêm một lý do vui.</p></div>
+          <div className="benefit-image"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1000&q=85" alt="Món ăn được trình bày sang trọng trên đĩa"/></div>
+          <div className="benefit-content"><span className="card-index">01 / MEMBER PERKS</span><h3>Ăn ngon hơn.<br/>Ưu đãi thật hơn.</h3><p>Những ưu đãi cụ thể từ cửa hàng tham gia — để mỗi lần ghé quán đều có thêm một lý do vui.</p></div>
         </article>
-        <article className="benefit-card benefit-warm"><span className="card-index">02 / GROUP BUYING</span><div className="big-symbol">↗</div><h3>Mua chung,<br/><em>lợi ích chung.</em></h3><p>Khi nhiều người cùng có nhu cầu, sức mua cộng đồng có thể tạo ra điều kiện tốt hơn.</p><span className="card-decoration">CÙNG NHAU MUA TỐT HƠN</span></article>
-        <article className="benefit-card benefit-green"><span className="card-index">03 / LOCAL DISCOVERY</span><div className="big-symbol">⌖</div><h3>Gần nhà hơn.<br/>Đáng thử hơn.</h3><p>Khám phá cửa hàng, món ngon và sản phẩm địa phương ngay trong cộng đồng của mình.</p><div className="green-orbit">X</div></article>
+        <article className="benefit-card benefit-warm">
+          <div className="benefit-image"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=85" alt="Khách hàng nữ cùng ấn phẩm thương hiệu Xoài Go"/></div>
+          <div className="benefit-content"><span className="card-index">02 / XOÀI COMMUNITY</span><h3>Cộng đồng<br/><em>cùng sẻ chia.</em></h3><p>Kết nối người tiêu dùng và cửa hàng địa phương bằng những trải nghiệm gần gũi.</p></div>
+        </article>
+        <article className="benefit-card benefit-green">
+          <div className="benefit-image"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=85" alt="Giỏ hàng thực phẩm xanh tươi bắt mắt"/></div>
+          <div className="benefit-content"><span className="card-index">03 / GROUP BUYING</span><h3>Giỏ hàng đầy.<br/><em>Giá tốt hơn.</em></h3><p>Gom nhu cầu mua sắm để tận dụng sức mua cộng đồng.</p></div>
+        </article>
       </section>
 
       <section className="how-section" id="how">
