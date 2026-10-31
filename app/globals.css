@@ -2080,3 +2080,10 @@ footer { background:#fff; }
   font-weight:800;
   letter-spacing:-.8px;
 }
+
+
+/* Keep the supplied portrait food photo fully visible inside the existing frame. */
+.benefit-feature .benefit-image { background:#2f261d; }
+.benefit-feature .benefit-image img { object-fit:contain; }
+/* Preserve the supplied merchant/community photo proportions without distortion. */
+.merchant-photo img { object-fit:cover; object-position:center center; }
