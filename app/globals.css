@@ -982,3 +982,24 @@ footer { background: #F8FBF9; }
 @media (max-width:560px) {
   .hero-single { height:auto; aspect-ratio: 1 / 1; margin-top:4px; }
 }
+
+
+/* HERO ART — use the approved complete reference image as one artwork */
+.hero-art {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  background: #fffdf8;
+  line-height: 0;
+}
+.hero-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  object-fit: contain;
+}
+.hero-art-spacer { display: none; }
+@media (max-width: 700px) {
+  .hero-art img { width: 100%; height: auto; }
+}
