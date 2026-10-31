@@ -50,7 +50,7 @@ export default function Home() {
             <a className="btn btn-primary" href="#join">Tải ứng dụng <span>→</span></a>
             <a className="btn btn-soft" href="#community">Khám phá ưu đãi</a>
           </div>
-          <div className="hero-stats">
+          <div className="hero-stats desktop-hero-stats">
             <div><strong>1.000+</strong><span>Thành viên sớm</span></div>
             <div><strong>50+</strong><span>Quán đối tác</span></div>
             <div><strong>Nhiều hơn</strong><span>Mỗi ngày</span></div>
@@ -58,6 +58,14 @@ export default function Home() {
         </div>
 
       </section>
+      <div className="mobile-hero-art" aria-label="Hình ảnh giới thiệu Xoài Go">
+        <img src="https://i.ibb.co/JW6qRQSr/5c20bff2-6a73-41ab-a43f-f21bd99693e3.png" alt="Hình ảnh giới thiệu cộng đồng Xoài Go" />
+      </div>
+      <div className="hero-stats mobile-hero-stats">
+        <div><strong>1.000+</strong><span>Thành viên sớm</span></div>
+        <div><strong>50+</strong><span>Quán đối tác</span></div>
+        <div><strong>Nhiều hơn</strong><span>Mỗi ngày</span></div>
+      </div>
       <section className="feature-ribbon wrap">
         <article><span className="feature-icon">♜</span><div><b>Ưu đãi quán quen</b><small>Giảm giá và đặc quyền<br/>chỉ dành cho thành viên</small></div></article>
         <article><span className="feature-icon">🛒</span><div><b>Mua chung giá tốt</b><small>Gom nhu cầu, nhập sỉ,<br/>chi phí hợp lý hơn</small></div></article>
