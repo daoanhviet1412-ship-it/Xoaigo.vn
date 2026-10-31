@@ -28,31 +28,51 @@ export default function Home() {
           <img className="brand-primary" src="/xoai-logo.svg" alt="Xoài Go — Cùng nhau mua tốt hơn." />
         </a>
         <nav aria-label="Điều hướng chính">
-          <a href="#how">Cách hoạt động</a><a href="#community">Cộng đồng</a><a href="#merchant">Đối tác cửa hàng</a><a href="#faq">Hỏi đáp</a>
+          <a className="active" href="#">Trang chủ</a>
+          <a href="#community">Ưu đãi</a>
+          <a href="#how">Mua chung</a>
+          <a href="#merchant">Khám phá quán</a>
+          <a href="#merchant">Dành cho đối tác</a>
+          <a href="#about">Về Xoài Go</a>
         </nav>
-        <a className="nav-cta" href="#join">Khám phá Xoài <span>↗</span></a>
+        <div className="nav-actions">
+          <span className="location-pill"><span>⌖</span> Đà Nẵng <b>⌄</b></span>
+          <a className="nav-cta" href="#join">Tải ứng dụng</a>
+        </div>
       </header>
 
       <section className="hero wrap">
         <div className="hero-copy">
           <div className="eyebrow"><i/> CỘNG ĐỒNG TIÊU DÙNG ĐÀ NẴNG</div>
           <h1>Cùng nhau<br/><em>mua tốt hơn.</em></h1>
-          <p className="hero-lead">Ưu đãi tại những quán ngon quanh bạn, mua chung giá tốt và khám phá những lựa chọn đáng tin cậy trong cộng đồng Xoài Go.</p>
-          <div className="hero-actions"><a className="btn btn-primary" href="#join">Khám phá Xoài Go <span>→</span></a><a className="btn btn-soft" href="#how">Cách hoạt động</a></div>
-          <div className="hero-stats"><div><strong>Ưu đãi</strong><span>Quanh bạn</span></div><div><strong>Mua chung</strong><span>Giá tốt hơn</span></div><div><strong>Cộng đồng</strong><span>Địa phương</span></div></div>
+          <p className="hero-lead"><strong>Ưu đãi</strong> tại các quán ngon quanh bạn,<br className="desktop-break"/> mua chung giá tốt, và nhiều đặc quyền<br className="desktop-break"/> chỉ dành riêng cho thành viên <strong>Xoài Go.</strong></p>
+          <div className="hero-actions">
+            <a className="btn btn-primary" href="#join">Tải ứng dụng <span>→</span></a>
+            <a className="btn btn-soft" href="#community">Khám phá ưu đãi</a>
+          </div>
+          <div className="hero-stats">
+            <div><strong>1.000+</strong><span>Thành viên sớm</span></div>
+            <div><strong>50+</strong><span>Quán đối tác</span></div>
+            <div><strong>Nhiều hơn</strong><span>Mỗi ngày</span></div>
+          </div>
         </div>
-        <div className="hero-visual hero-collage" aria-label="Ẩm thực, cộng đồng và giỏ hàng Xoài Go">
-          <div className="hero-woman"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=88" alt="Nữ khách hàng trẻ trong cộng đồng Xoài Go"/><div className="brand-print"><img src="/xoai-mark.svg" alt=""/><b>Xoài Go</b><small>Cùng nhau mua tốt hơn.</small></div></div>
-          <div className="hero-dish"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=88" alt="Món ăn tinh tế được trình bày trên đĩa"/></div>
-          <div className="hero-basket"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=88" alt="Giỏ rau củ và thực phẩm tươi ngon"/></div>
+        <div className="hero-visual hero-collage" aria-label="Món ăn ngon, khách hàng Xoài Go và giỏ thực phẩm xanh">
+          <div className="hero-woman">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1100&q=90" alt="Nữ khách hàng trẻ trong cộng đồng Xoài Go"/>
+            <div className="brand-print"><img src="/xoai-mark.svg" alt=""/><b>Xoài Go</b><small>Cùng nhau mua tốt hơn.</small></div>
+          </div>
+          <div className="hero-dish"><img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=1000&q=90" alt="Món cá hồi áp chảo được trình bày trên đĩa"/></div>
+          <div className="hero-basket"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=90" alt="Giỏ rau củ quả xanh tươi"/></div>
           <div className="hero-note">Cùng nhau<br/><em>mua tốt hơn</em> <span>✳</span></div>
+          <div className="hero-note hero-note-left">Ăn ngon<br/><em>ưu đãi thật</em> <span>↝</span></div>
+          <div className="hero-note hero-note-right">Mua chung<br/><em>giá tốt hơn</em> <span>↝</span></div>
         </div>
       </section>
       <section className="feature-ribbon wrap">
-        <article><span className="feature-icon">♨</span><div><b>Ưu đãi quán quen</b><small>Giảm giá và đặc quyền cho thành viên</small></div></article>
-        <article><span className="feature-icon">🛒</span><div><b>Mua chung giá tốt</b><small>Gom nhu cầu, chia sẻ lợi ích</small></div></article>
-        <article><span className="feature-icon">⌖</span><div><b>Khám phá quanh bạn</b><small>Nhiều quán ngon ngay trong khu vực</small></div></article>
-        <article><span className="feature-icon">✳</span><div><b>Cộng đồng tiêu dùng</b><small>Cùng nhau mua tốt hơn mỗi ngày</small></div></article>
+        <article><span className="feature-icon">♜</span><div><b>Ưu đãi quán quen</b><small>Giảm giá và đặc quyền<br/>chỉ dành cho thành viên</small></div></article>
+        <article><span className="feature-icon">🛒</span><div><b>Mua chung giá tốt</b><small>Gom nhu cầu, nhập sỉ,<br/>chi phí hợp lý hơn</small></div></article>
+        <article><span className="feature-icon">▤</span><div><b>Khám phá quanh bạn</b><small>Nhiều quán ngon<br/>ngay trong khu vực</small></div></article>
+        <article><span className="feature-icon">♟</span><div><b>Cộng đồng tiêu dùng</b><small>Cùng nhau mua tốt hơn<br/>mỗi ngày</small></div></article>
       </section>
       <section className="marquee"><div>ĐI CHỢ VUI HƠN <b>✳</b> ƯU ĐÃI THIẾT THỰC <b>✳</b> MUA CHUNG CỘNG ĐỒNG <b>✳</b> ỦNG HỘ CỬA HÀNG ĐỊA PHƯƠNG <b>✳</b> CÙNG NHAU MUA TỐT HƠN <b>✳</b></div></section>
 
