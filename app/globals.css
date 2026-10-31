@@ -1571,3 +1571,53 @@ footer { background: #F8FBF9; }
     line-height: 1.4;
   }
 }
+
+
+/* MOBILE ORDER: CTA buttons → hero artwork → early-member stats. */
+.mobile-hero-art,
+.mobile-hero-stats { display:none; }
+@media (max-width:700px) {
+  .hero.wrap::after { content:none !important; display:none !important; }
+  .desktop-hero-stats { display:none !important; }
+  .mobile-hero-art {
+    display:block;
+    width:100%;
+    margin:0 auto;
+    padding:0;
+    line-height:0;
+    background:#fff;
+  }
+  .mobile-hero-art img {
+    display:block;
+    width:100%;
+    height:auto;
+    object-fit:contain;
+  }
+  .mobile-hero-stats {
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:0;
+    width:calc(100% - 38px);
+    margin:18px auto 8px;
+    text-align:center;
+  }
+  .mobile-hero-stats > div {
+    min-width:0;
+    padding:0 7px;
+    border-right:1px solid #E3ECE5;
+  }
+  .mobile-hero-stats > div:last-child { border-right:0; }
+  .mobile-hero-stats strong {
+    display:block;
+    color:#087C3E;
+    font-size:clamp(16px,4.5vw,21px);
+    line-height:1.35;
+  }
+  .mobile-hero-stats span {
+    display:block;
+    color:#66736A;
+    font-size:10px;
+    line-height:1.45;
+  }
+  .feature-ribbon.wrap { margin-top:18px !important; }
+}
