@@ -1,0 +1,39 @@
+.reg-section{padding:88px 0 96px;scroll-margin-top:90px}
+.reg-heading{max-width:650px;margin:0 auto 34px;text-align:center}
+.reg-heading h2{margin:15px 0 12px;color:#183D2B;font-size:clamp(32px,4vw,46px);letter-spacing:-1.5px;line-height:1.15}
+.reg-heading h2 em{color:#16864B}
+.reg-heading>p{color:#68796F;font-size:14px;line-height:1.7}
+.reg-card{max-width:780px;margin:0 auto;border:1px solid #E1ECE4;border-radius:22px;background:#fff;box-shadow:0 16px 48px rgba(20,75,43,.07);overflow:hidden}
+.reg-tabs{display:grid;grid-template-columns:1fr 1fr;padding:8px;background:#F2F8F4;gap:8px}
+.reg-tabs button{min-height:48px;border:0;border-radius:13px;background:transparent;color:#567260;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.reg-tabs button.is-active{background:#fff;color:#087C3E;box-shadow:0 3px 12px rgba(22,80,45,.09)}
+.reg-form-wrap{padding:34px 42px 40px}
+.reg-form-wrap h3{margin:0 0 9px;color:#183D2B;font-size:25px;letter-spacing:-.5px}
+.reg-description{margin:0 0 25px;color:#68796F;font-size:14px;line-height:1.7}
+.reg-form-wrap form{display:grid;gap:17px}
+.reg-field{display:grid;gap:8px;color:#315641;font-size:14px;font-weight:700}
+.reg-field input,.reg-field select,.reg-field textarea{width:100%;min-height:48px;padding:12px 14px;border:1px solid #D8E7DD;border-radius:10px;background:#fff;color:#183326;font-family:inherit;font-size:16px;line-height:1.45;outline:none}
+.reg-field textarea{resize:vertical}
+.reg-field input:focus,.reg-field select:focus,.reg-field textarea:focus{border-color:#13864B;box-shadow:0 0 0 3px rgba(19,134,75,.10)}
+.reg-two-col{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.reg-fieldset{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;border:0;padding:0;margin:0}
+.reg-fieldset legend{grid-column:1/-1;margin-bottom:2px;color:#315641;font-size:14px;font-weight:700}
+.reg-fieldset legend span{font-size:12px;font-weight:400;color:#718176}
+.reg-choice{display:flex;align-items:center;gap:8px;min-height:44px;padding:9px 11px;border:1px solid #E1ECE4;border-radius:10px;color:#526B5B;font-size:13px;line-height:1.4}
+.reg-choice input,.reg-consent input{width:18px;height:18px;flex:0 0 18px;accent-color:#13864B}
+.reg-consent{display:flex;align-items:flex-start;gap:10px;color:#405E4B;font-size:13px;line-height:1.6}
+.reg-consent input{margin-top:2px}
+.reg-privacy{color:#728177;font-size:13px;line-height:1.65}
+.reg-privacy p{margin:0 0 7px}
+.reg-privacy a{color:#087C3E;text-decoration:underline}
+.reg-privacy summary{cursor:pointer;color:#087C3E;font-weight:700}
+.reg-privacy ul{padding-left:20px}
+.reg-privacy li{margin:6px 0}
+.reg-draft-note{font-style:italic}
+.reg-submit{min-height:48px;border:0;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700}
+.reg-submit:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.reg-error,.reg-success{margin:0;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.5}
+.reg-error{background:#FFF0EE;color:#A83224}
+.reg-success{background:#EAF5EE;color:#12683C}
+.reg-honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}
+@media(max-width:700px){.reg-section{width:calc(100% - 28px);padding:64px 0 70px}.reg-form-wrap{padding:25px 18px 28px}.reg-form-wrap h3{font-size:22px}.reg-two-col{grid-template-columns:1fr}.reg-fieldset{grid-template-columns:1fr}.reg-choice{min-height:44px}.reg-tabs button{font-size:13px}.reg-heading h2{font-size:34px}}
