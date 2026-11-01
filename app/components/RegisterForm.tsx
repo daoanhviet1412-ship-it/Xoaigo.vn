@@ -29,6 +29,7 @@ export default function RegisterForm() {
       setConsent(false);
       setCooperation([]);
       setOpenedAt(Date.now());
+      window.setTimeout(() => document.getElementById("dang-ky")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
     };
     syncHash();
     window.addEventListener("hashchange", syncHash);
