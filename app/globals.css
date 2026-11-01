@@ -2087,3 +2087,10 @@ footer { background:#fff; }
 .benefit-feature .benefit-image img { object-fit:contain; }
 /* Preserve the supplied merchant/community photo proportions without distortion. */
 .merchant-photo img { object-fit:cover; object-position:center center; }
+
+
+/* Match card 2.2 and 2.3 headline text color to card 2.1. */
+.benefit-warm .benefit-content h3 em,
+.benefit-green .benefit-content h3 em {
+  color:#183D2B;
+}
