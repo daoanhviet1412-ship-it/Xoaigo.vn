@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import RegisterForm from "./components/RegisterForm";
 
 const perks = [
   { n: "01", title: "Đặc quyền tại cửa hàng", text: "Thành viên tiếp cận ưu đãi được công bố rõ ràng từ các cửa hàng tham gia Xoài Go." },
@@ -43,7 +44,7 @@ export default function Home() {
         </nav>
         <div className="nav-actions">
           <label className="location-pill location-picker"><span>⌖</span><select aria-label="Chọn thành phố" value={city} onChange={(event) => setCity(event.target.value)}><option>Đà Nẵng</option><option>Hà Nội</option><option>Hồ Chí Minh</option></select><b>⌄</b></label>
-          <a className="nav-cta" href="#join">Tải ứng dụng</a>
+          <a className="nav-cta" href="?source=menu#dang-ky">Đăng ký sớm</a>
         </div>
       </header>
 
@@ -53,13 +54,13 @@ export default function Home() {
           <h1>Cùng nhau<br/><em>mua tốt hơn.</em></h1>
           <p className="hero-lead"><strong>Ưu đãi</strong> tại các quán ngon quanh bạn,<br className="desktop-break"/> mua chung giá tốt, và nhiều đặc quyền<br className="desktop-break"/> chỉ dành riêng cho thành viên <strong>Xoài Go.</strong></p>
           <div className="hero-actions">
-            <a className="btn btn-primary" href="#join">Tải ứng dụng <span>→</span></a>
+            <a className="btn btn-primary" href="?source=hero#dang-ky">Đăng ký sớm <span>→</span></a>
             <a className="btn btn-soft" href="#community">Khám phá ưu đãi</a>
           </div>
           <div className="hero-stats desktop-hero-stats">
-            <div><strong>1.000+</strong><span>Thành viên sớm</span></div>
-            <div><strong>50+</strong><span>Quán đối tác</span></div>
-            <div><strong>Nhiều hơn</strong><span>Mỗi ngày</span></div>
+            <div><strong>1.000</strong><span>Mục tiêu thành viên đầu tiên</span></div>
+            <div><strong>50</strong><span>Mục tiêu quán đối tác</span></div>
+            <div><strong>Cùng nhau</strong><span>Phát triển mỗi ngày</span></div>
           </div>
         </div>
 
@@ -68,9 +69,9 @@ export default function Home() {
         <img src="https://i.ibb.co/JW6qRQSr/5c20bff2-6a73-41ab-a43f-f21bd99693e3.png" alt="Hình ảnh giới thiệu cộng đồng Xoài Go" />
       </div>
       <div className="hero-stats mobile-hero-stats">
-        <div><strong>1.000+</strong><span>Thành viên sớm</span></div>
-        <div><strong>50+</strong><span>Quán đối tác</span></div>
-        <div><strong>Nhiều hơn</strong><span>Mỗi ngày</span></div>
+        <div><strong>1.000</strong><span>Mục tiêu thành viên</span></div>
+        <div><strong>50</strong><span>Mục tiêu quán đối tác</span></div>
+        <div><strong>Cùng nhau</strong><span>Phát triển mỗi ngày</span></div>
       </div>
       <section className="feature-ribbon wrap">
         <article><span className="feature-icon">♜</span><div><b>Ưu đãi quán quen</b><small>Giảm giá và đặc quyền<br/>chỉ dành cho thành viên</small></div></article>
@@ -104,11 +105,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="merchant-section" id="merchant"><div className="wrap merchant-layout"><div className="merchant-photo"><img src="https://i.ibb.co/pvKYRDNQ/Bu-a-to-i-a-m-cu-ng-du-o-i-e-n-ma-y.png" alt="Nữ nhân viên Việt Nam đứng tại quầy cà phê, chào khách; phía sau là kệ cà phê và bảng menu"/></div><div className="merchant-copy"><span className="eyebrow">DÀNH CHO CỬA HÀNG ĐỊA PHƯƠNG</span><h2>Khách hàng mới.<br/><em>Cơ hội phát triển mới.</em></h2><p>Xoài Go mong muốn đồng hành cùng những cửa hàng có sản phẩm và dịch vụ tốt, muốn tiếp cận cộng đồng khách hàng gần mình hơn.</p><div className="merchant-points"><div><b>01</b><span>Giới thiệu cửa hàng và ưu đãi đến cộng đồng</span></div><div><b>02</b><span>Thử nghiệm chương trình mua chung theo nhu cầu</span></div><div><b>03</b><span>Thêm một kênh xây dựng khách hàng quay lại</span></div></div><a className="btn btn-primary" href="#join">Tìm hiểu cơ hội hợp tác <span>↗</span></a></div></div></section>
+      <section className="merchant-section" id="merchant"><div className="wrap merchant-layout"><div className="merchant-photo"><img src="https://i.ibb.co/pvKYRDNQ/Bu-a-to-i-a-m-cu-ng-du-o-i-e-n-ma-y.png" alt="Nữ nhân viên Việt Nam đứng tại quầy cà phê, chào khách; phía sau là kệ cà phê và bảng menu"/></div><div className="merchant-copy"><span className="eyebrow">DÀNH CHO CỬA HÀNG ĐỊA PHƯƠNG</span><h2>Khách hàng mới.<br/><em>Cơ hội phát triển mới.</em></h2><p>Xoài Go mong muốn đồng hành cùng những cửa hàng có sản phẩm và dịch vụ tốt, muốn tiếp cận cộng đồng khách hàng gần mình hơn.</p><div className="merchant-points"><div><b>01</b><span>Giới thiệu cửa hàng và ưu đãi đến cộng đồng</span></div><div><b>02</b><span>Thử nghiệm chương trình mua chung theo nhu cầu</span></div><div><b>03</b><span>Thêm một kênh xây dựng khách hàng quay lại</span></div></div><a className="btn btn-primary" href="?source=merchant#dang-ky-quan">Tìm hiểu cơ hội hợp tác <span>↗</span></a></div></div></section>
 
       <section className="faq-section wrap" id="faq"><div className="faq-heading"><span className="eyebrow">BẠN CÓ THỂ ĐANG THẮC MẮC</span><h2>Hỏi nhanh,<br/><em>hiểu rõ về Xoài.</em></h2><p>Những nguyên tắc cốt lõi trong mô hình Xoài Go.</p></div><div className="faq-list">{faqs.map(([q, a], i) => <details key={q} className="faq-item"><summary><span>{q}</span><b>+</b></summary><p>{a}</p></details>)}</div></section>
 
-      <section className="join-section" id="join"><div className="wrap join-inner"><div><span className="eyebrow light">XOÀI GO · ĐÀ NẴNG</span><h2>Cùng nhau mua tốt hơn.<br/><em>Bắt đầu từ những điều gần gũi.</em></h2><p>Xoài đang hoàn thiện nền tảng và kết nối những cửa hàng đầu tiên. Hẹn gặp bạn trong cộng đồng.</p></div><a className="btn btn-light" href="#merchant">Tôi muốn đồng hành <span>↗</span></a></div></section>
+      <RegisterForm />
+
+      <section className="join-section" id="join"><div className="wrap join-inner"><div><span className="eyebrow light">XOÀI GO · ĐÀ NẴNG</span><h2>Cùng nhau mua tốt hơn.<br/><em>Bắt đầu từ những điều gần gũi.</em></h2><p>Xoài đang hoàn thiện nền tảng và kết nối những cửa hàng đầu tiên. Hẹn gặp bạn trong cộng đồng.</p></div><a className="btn btn-light" href="?source=closing#dang-ky-quan">Đăng ký đối tác <span>↗</span></a></div></section>
 
       <footer><div className="wrap footer-main"><a className="brand footer-brand" href="#"><img className="brand-primary" src="/xoai-logo.svg" alt="Xoài Go — Cùng nhau mua tốt hơn." /></a><div className="footer-tagline">Cùng nhau mua tốt hơn.</div><nav><a href="#how">Cách hoạt động</a><a href="#merchant">Đối tác</a><a href="#faq">Hỏi đáp</a></nav></div><div className="wrap footer-bottom"><span>© 2026 Xoài Go. Đang trong giai đoạn hoàn thiện nền tảng.</span><span>Made for local communities <b>✳</b></span></div></footer>
     </main>
