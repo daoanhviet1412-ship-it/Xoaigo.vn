@@ -1,3 +1,34 @@
+function setupSheets() {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var raw = spreadsheet.getSheetByName("RAW") || spreadsheet.insertSheet("RAW");
+  var headers = [
+    "submitted_at", "id", "type", "name", "phone", "location", "interest",
+    "store_name", "category", "cooperation", "note", "consent",
+    "consent_version", "source", "duplicate", "status", "owner", "internal_note"
+  ];
+  if (raw.getLastRow() === 0) raw.appendRow(headers);
+
+  var summary = spreadsheet.getSheetByName("TONG_HOP") || spreadsheet.insertSheet("TONG_HOP");
+  summary.clear();
+  summary.getRange("A1:B7").setValues([
+    ["Chỉ số", "Giá trị"],
+    ["Tổng khách hợp lệ", ""],
+    ["Tổng cửa hàng hợp lệ", ""],
+    ["Khách quan tâm ưu đãi", ""],
+    ["Khách quan tâm mua chung", ""],
+    ["Khách quan tâm cả hai", ""],
+    ["Đăng ký trong 7 ngày gần nhất", ""]
+  ]);
+  summary.getRange("B2").setFormula('=COUNTIFS(RAW!C:C,"CUSTOMER",RAW!O:O,"<>TRUE")');
+  summary.getRange("B3").setFormula('=COUNTIFS(RAW!C:C,"MERCHANT",RAW!O:O,"<>TRUE")');
+  summary.getRange("B4").setFormula('=COUNTIFS(RAW!C:C,"CUSTOMER",RAW!G:G,"offers",RAW!O:O,"<>TRUE")');
+  summary.getRange("B5").setFormula('=COUNTIFS(RAW!C:C,"CUSTOMER",RAW!G:G,"group",RAW!O:O,"<>TRUE")');
+  summary.getRange("B6").setFormula('=COUNTIFS(RAW!C:C,"CUSTOMER",RAW!G:G,"both",RAW!O:O,"<>TRUE")');
+  summary.getRange("B7").setFormula('=COUNTIFS(RAW!A:A,">="&TEXT(TODAY()-7,"yyyy-MM-dd"),RAW!O:O,"<>TRUE")');
+  summary.setFrozenRows(1);
+  raw.setFrozenRows(1);
+}
+
 function doPost(e) {
   var lock = LockService.getScriptLock();
   try {
