@@ -56,7 +56,7 @@ export default function Home() {
         </a>
         <nav aria-label="Điều hướng chính">
           <a className="active" href="#">Trang chủ</a>
-          <a href="#community">Ưu đãi</a>
+          <a href="https://datmon-user.vercel.app" target="_blank" rel="noreferrer">Đặt đồ ăn</a>
           <a href="#how">Mua chung</a>
           <a href="#merchant">Khám phá quán</a>
           <a href="#merchant">Dành cho đối tác</a>
