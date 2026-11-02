@@ -110,15 +110,15 @@ export default function Home() {
       </section>
       <section className="benefit-grid wrap" aria-label="Quyền lợi dành cho khách hàng">
         <article className="benefit-card benefit-feature">
-          <div className="benefit-image"><img src="https://raw.githubusercontent.com/daoanhviet1412-ship-it/Xoaigo.vn/main/public/Khuye%CC%82%CC%81n%20ma%CC%83i%2010%25%20be%CC%82n%20ca%CC%82%CC%80u%20Ro%CC%82%CC%80ng.png" alt="Món ăn tại cửa hàng địa phương dành cho thành viên Xoài Go"/></div>
+          <div className="benefit-image"><img src="https://cdn.jsdelivr.net/gh/daoanhviet1412-ship-it/Xoaigo.vn@main/public/Khuye%CC%82%CC%81n%20ma%CC%83i%2010%25%20be%CC%82n%20ca%CC%82%CC%80u%20Ro%CC%82%CC%80ng.png" alt="Món ăn tại cửa hàng địa phương dành cho thành viên Xoài Go"/></div>
           <div className="benefit-content"><span className="card-index">01 / MEMBER PERKS</span><h3>Ưu đãi<br/><em>thành viên.</em></h3><p>Hưởng mức giá và những ưu đãi riêng tại các cửa hàng đối tác Xoài Go.</p></div>
         </article>
         <article className="benefit-card benefit-warm">
-          <div className="benefit-image"><img src="https://raw.githubusercontent.com/daoanhviet1412-ship-it/Xoaigo.vn/main/public/Mua%20sa%CC%86%CC%81m%20rau%20qua%CC%89%20be%CC%82n%20Ca%CC%82%CC%80u%20Ro%CC%82%CC%80ng.png" alt="Người tiêu dùng cùng tham gia mua sắm"/></div>
+          <div className="benefit-image"><img src="https://cdn.jsdelivr.net/gh/daoanhviet1412-ship-it/Xoaigo.vn@main/public/Mua%20sa%CC%86%CC%81m%20rau%20qua%CC%89%20be%CC%82n%20Ca%CC%82%CC%80u%20Ro%CC%82%CC%80ng.png" alt="Người tiêu dùng cùng tham gia mua sắm"/></div>
           <div className="benefit-content"><span className="card-index">02 / GROUP BUYING</span><h3>Mua chung<br/><em>giá tốt.</em></h3><p>Góp nhu cầu cùng cộng đồng để có cơ hội mua hàng với mức giá tốt hơn.</p></div>
         </article>
         <article className="benefit-card benefit-green">
-          <div className="benefit-image"><img src="https://raw.githubusercontent.com/daoanhviet1412-ship-it/Xoaigo.vn/main/public/Giao%20di%CC%A3ch%20tha%CC%82n%20thie%CC%A3%CC%82n%20be%CC%82n%20ca%CC%82%CC%80u%20Ro%CC%82%CC%80ng.png" alt="Thực phẩm tươi tại cửa hàng"/></div>
+          <div className="benefit-image"><img src="https://cdn.jsdelivr.net/gh/daoanhviet1412-ship-it/Xoaigo.vn@main/public/Giao%20di%CC%A3ch%20tha%CC%82n%20thie%CC%A3%CC%82n%20be%CC%82n%20ca%CC%82%CC%80u%20Ro%CC%82%CC%80ng.png" alt="Thực phẩm tươi tại cửa hàng"/></div>
           <div className="benefit-content"><span className="card-index">03 / CONSUMER RIGHTS</span><h3>Bảo vệ<br/><em>quyền lợi tiêu dùng.</em></h3><p>Minh bạch thông tin giá và điều kiện giao dịch; ghi nhận phản hồi, hỗ trợ kết nối với cửa hàng khi có vấn đề phát sinh.</p></div>
         </article>
       </section>
