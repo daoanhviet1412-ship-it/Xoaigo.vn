@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./register.css";
+import "./premium-sections.css";
 
 export const metadata: Metadata = {
   title: "Xoài Go — Cùng nhau mua tốt hơn",
