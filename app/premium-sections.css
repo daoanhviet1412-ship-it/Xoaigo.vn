@@ -967,50 +967,61 @@ main > footer .footer-main { padding: 25px 0 !important; }
 }
 
 
-/* Mobile Hero: move the two main actions onto the artwork, keeping faces clear. */
+/* Mobile Hero CTA placement: overlay at the TOP of the artwork, not after it. */
 @media (max-width: 700px) {
   .hero-copy .hero-actions { display: none !important; }
-  .mobile-hero-art {
+  main .mobile-hero-art {
+    display: block !important;
     position: relative !important;
-    overflow: hidden;
+    width: 100% !important;
+    overflow: hidden !important;
+    line-height: 0 !important;
   }
-  .mobile-hero-art img {
-    width: 100%;
-    height: auto;
+  main .mobile-hero-art > img {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
   }
-  .mobile-hero-overlay-actions {
-    position: absolute;
-    left: 14px;
-    bottom: 14px;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    max-width: calc(100% - 28px);
+  main .mobile-hero-art .mobile-hero-overlay-actions {
+    position: absolute !important;
+    top: 14px !important;
+    bottom: auto !important;
+    left: 14px !important;
+    right: 14px !important;
+    z-index: 20 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 7px !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
   }
-  .mobile-hero-cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 32px;
-    padding: 7px 11px;
-    border-radius: 22px;
-    font-size: 10px;
-    line-height: 1;
-    font-weight: 700;
-    white-space: nowrap;
-    box-shadow: 0 3px 12px rgba(18, 47, 28, .16);
+  main .mobile-hero-art .mobile-hero-cta {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 32px !important;
+    padding: 7px 11px !important;
+    border-radius: 22px !important;
+    font-size: 10px !important;
+    line-height: 1 !important;
+    font-weight: 700 !important;
+    white-space: nowrap !important;
+    box-shadow: 0 3px 12px rgba(18,47,28,.16) !important;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
-  .mobile-hero-cta-primary {
-    color: #fff;
-    background: rgba(8, 124, 62, .94);
+  main .mobile-hero-art .mobile-hero-cta-primary {
+    color: #fff !important;
+    background: rgba(8,124,62,.94) !important;
   }
-  .mobile-hero-cta-primary span { margin-left: 5px; }
-  .mobile-hero-cta-secondary {
-    color: #17452d;
-    background: rgba(255,255,255,.91);
-    border: 1px solid rgba(255,255,255,.75);
+  main .mobile-hero-art .mobile-hero-cta-primary span { margin-left: 5px !important; }
+  main .mobile-hero-art .mobile-hero-cta-secondary {
+    color: #17452d !important;
+    background: rgba(255,255,255,.91) !important;
+    border: 1px solid rgba(255,255,255,.75) !important;
   }
 }
