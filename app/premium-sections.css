@@ -965,3 +965,52 @@ main > footer .footer-main { padding: 25px 0 !important; }
   main > footer .footer-main nav { gap: 12px 18px !important; font-size: 11px !important; }
   main > footer .footer-bottom { font-size: 9px !important; }
 }
+
+
+/* Mobile Hero: move the two main actions onto the artwork, keeping faces clear. */
+@media (max-width: 700px) {
+  .hero-copy .hero-actions { display: none !important; }
+  .mobile-hero-art {
+    position: relative !important;
+    overflow: hidden;
+  }
+  .mobile-hero-art img {
+    width: 100%;
+    height: auto;
+  }
+  .mobile-hero-overlay-actions {
+    position: absolute;
+    left: 14px;
+    bottom: 14px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    max-width: calc(100% - 28px);
+  }
+  .mobile-hero-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding: 7px 11px;
+    border-radius: 22px;
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 3px 12px rgba(18, 47, 28, .16);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .mobile-hero-cta-primary {
+    color: #fff;
+    background: rgba(8, 124, 62, .94);
+  }
+  .mobile-hero-cta-primary span { margin-left: 5px; }
+  .mobile-hero-cta-secondary {
+    color: #17452d;
+    background: rgba(255,255,255,.91);
+    border: 1px solid rgba(255,255,255,.75);
+  }
+}
