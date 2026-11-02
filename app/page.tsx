@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RegisterForm from "./components/RegisterForm";
 
 const perks = [
@@ -27,6 +27,12 @@ const faqs = [
 
 export default function Home() {
   const [city, setCity] = useState("Đà Nẵng");
+
+  useEffect(() => {
+    if (!window.location.hash) {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
+  }, []);
 
   return (
     <main>
