@@ -2094,3 +2094,44 @@ footer { background:#fff; }
 .benefit-green .benefit-content h3 em {
   color:#183D2B;
 }
+
+
+/* Benefit section spacing + complete image framing (desktop and mobile). */
+.benefit-grid {
+  gap: 12px;
+  padding-top: 28px;
+}
+.benefit-grid .benefit-image {
+  height: 218px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: #F4F8F5;
+}
+.benefit-grid .benefit-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  object-position: center;
+}
+.benefit-grid .benefit-content {
+  padding-top: 19px;
+  padding-bottom: 22px;
+}
+@media (max-width: 900px) {
+  .benefit-grid { gap: 10px; }
+}
+@media (max-width: 700px) {
+  .benefit-grid {
+    gap: 9px;
+    padding-top: 18px;
+    padding-bottom: 55px;
+  }
+  .benefit-grid .benefit-image {
+    height: 205px;
+  }
+  .benefit-grid .benefit-content {
+    padding: 17px 20px 19px;
+  }
+}
