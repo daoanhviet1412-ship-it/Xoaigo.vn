@@ -3,8 +3,12 @@
  <linearGradient id="mango" x1="25" y1="20" x2="170" y2="185" gradientUnits="userSpaceOnUse"><stop stop-color="#FFD34D"/><stop offset=".52" stop-color="#FFB51B"/><stop offset="1" stop-color="#F07824"/></linearGradient>
  <linearGradient id="leaf" x1="88" y1="8" x2="170" y2="53" gradientUnits="userSpaceOnUse"><stop stop-color="#8BC34A"/><stop offset=".5" stop-color="#00A651"/><stop offset="1" stop-color="#087C3E"/></linearGradient>
 </defs>
-<path d="M91 61C66 65 42 92 25 121C8 151 9 173 28 181C51 192 103 176 141 150C178 124 183 88 158 68C140 54 113 54 91 61Z" fill="url(#mango)"/>
-<path d="M91 73C68 82 47 111 34 137C22 162 25 171 40 171C68 172 116 150 143 125C164 105 157 80 135 72C120 67 104 69 91 73Z" fill="#fff"/>
-<path d="M88 57C96 27 126 8 179 5C166 35 143 57 116 64C104 67 94 64 88 57Z" fill="url(#leaf)"/>
-<path d="M99 54C124 42 151 24 176 8" fill="none" stroke="#B8DF78" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+<g transform="translate(32 0) scale(.68)">
+ <path d="M91 61C66 65 42 92 25 121C8 151 9 173 28 181C51 192 103 176 141 150C178 124 183 88 158 68C140 54 113 54 91 61Z" fill="url(#mango)"/>
+ <path d="M91 73C68 82 47 111 34 137C22 162 25 171 40 171C68 172 116 150 143 125C164 105 157 80 135 72C120 67 104 69 91 73Z" fill="#fff"/>
+ <path d="M88 57C96 27 126 8 179 5C166 35 143 57 116 64C104 67 94 64 88 57Z" fill="url(#leaf)"/>
+ <path d="M99 54C124 42 151 24 176 8" fill="none" stroke="#B8DF78" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+</g>
+<text x="100" y="178" text-anchor="middle" font-family="Arial, sans-serif" font-size="27" font-weight="800" letter-spacing="-1.1"><tspan fill="#087C3E">Xoài</tspan><tspan fill="#F07824"> Go</tspan></text>
+<path d="M48 188 Q100 197 152 188" stroke="#FFB51B" stroke-width="3" stroke-linecap="round"/>
 </svg>
