@@ -2478,3 +2478,48 @@ section.benefit-grid.wrap .benefit-content p {
     padding: 18px 18px 21px !important;
   }
 }
+
+
+/* Benefit images: use their natural aspect ratio so the full original artwork
+   fills the card width without being reduced inside a fixed-ratio frame. */
+section.benefit-grid.wrap .benefit-image {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: #F3F6F2 !important;
+}
+section.benefit-grid.wrap .benefit-image img {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  object-position: center;
+  border-radius: 14px !important;
+  transform: none !important;
+}
+section.benefit-grid.wrap .benefit-content {
+  padding-top: 28px !important;
+}
+@media (max-width: 650px) {
+  section.benefit-grid.wrap .benefit-image {
+    width: 100% !important;
+    aspect-ratio: auto !important;
+    padding: 0 !important;
+  }
+  section.benefit-grid.wrap .benefit-image img {
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    border-radius: 12px !important;
+  }
+  section.benefit-grid.wrap .benefit-content {
+    padding: 22px 18px 21px !important;
+  }
+}
