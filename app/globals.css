@@ -2295,3 +2295,99 @@ section.benefit-grid.wrap .benefit-content p {
     overflow-wrap: anywhere;
   }
 }
+
+
+/* Customer benefit cards — prevent desktop overlap and keep supplied photos clear. */
+section.benefit-grid.wrap {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 18px !important;
+  align-items: stretch;
+  padding-top: 24px;
+  padding-bottom: 72px;
+}
+section.benefit-grid.wrap > .benefit-card {
+  position: relative;
+  display: grid !important;
+  grid-template-columns: minmax(260px, 34%) minmax(0, 1fr) !important;
+  grid-template-rows: minmax(0, auto) !important;
+  align-items: center;
+  min-width: 0;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 12px !important;
+  gap: 0;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid #DCE9DF !important;
+  border-radius: 20px !important;
+  background: #FFFFFF !important;
+}
+section.benefit-grid.wrap .benefit-image {
+  position: relative;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  aspect-ratio: 16 / 10;
+  padding: 8px;
+  overflow: hidden !important;
+  border-radius: 14px;
+  background: #F4F8F5 !important;
+}
+section.benefit-grid.wrap .benefit-image img {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  object-position: center;
+  border-radius: 10px;
+  transform: none !important;
+}
+section.benefit-grid.wrap .benefit-content {
+  position: relative;
+  align-self: center;
+  min-width: 0;
+  padding: 20px 30px !important;
+}
+section.benefit-grid.wrap .benefit-content h3 {
+  margin: 10px 0;
+}
+section.benefit-grid.wrap .benefit-content p {
+  max-width: 680px;
+  margin: 0;
+}
+@media (max-width: 700px) {
+  section.benefit-grid.wrap {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 13px !important;
+    padding-top: 18px;
+    padding-bottom: 52px;
+  }
+  section.benefit-grid.wrap > .benefit-card {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    gap: 0;
+    padding: 9px !important;
+    border-radius: 16px !important;
+  }
+  section.benefit-grid.wrap .benefit-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    padding: 6px;
+    border-radius: 11px;
+  }
+  section.benefit-grid.wrap .benefit-image img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    border-radius: 8px;
+  }
+  section.benefit-grid.wrap .benefit-content {
+    padding: 15px 10px 13px !important;
+  }
+}
