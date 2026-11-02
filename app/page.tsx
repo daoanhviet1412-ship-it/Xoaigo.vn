@@ -67,6 +67,10 @@ export default function Home() {
       </section>
       <div className="mobile-hero-art" aria-label="Hình ảnh giới thiệu Xoài Go">
         <img src="https://i.ibb.co/JW6qRQSr/5c20bff2-6a73-41ab-a43f-f21bd99693e3.png" alt="Hình ảnh giới thiệu cộng đồng Xoài Go" />
+        <div className="mobile-hero-overlay-actions">
+          <a className="mobile-hero-cta mobile-hero-cta-primary" href="?source=hero#dang-ky">Đăng ký sớm <span>→</span></a>
+          <a className="mobile-hero-cta mobile-hero-cta-secondary" href="#community">Khám phá ưu đãi</a>
+        </div>
       </div>
       <div className="hero-stats mobile-hero-stats">
         <div><strong>1.000</strong><span>Mục tiêu thành viên</span></div>
