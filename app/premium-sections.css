@@ -990,7 +990,8 @@ main > footer .footer-main { padding: 25px 0 !important; }
     right: 14px !important;
     z-index: 20 !important;
     display: flex !important;
-    align-items: center !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
     justify-content: flex-start !important;
     gap: 7px !important;
     width: auto !important;
