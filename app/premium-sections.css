@@ -792,3 +792,176 @@ main > footer .footer-bottom { color: #87938a !important; font-size: 11px !impor
     gap: 20px !important;
   }
 }
+
+
+/* V3 — fewer containers, compact mobile-first editorial layout.
+   The navigation, hero and feature ribbon above section 2 are intentionally untouched. */
+main > .intro#community {
+  width: min(1160px, calc(100% - 80px)) !important;
+  display: grid !important;
+  grid-template-columns: 1fr .9fr !important;
+  align-items: center !important;
+  gap: 42px !important;
+  padding: 54px 58px !important;
+  margin: 38px auto 34px !important;
+  text-align: left !important;
+  background: #f3f7f1 !important;
+  border-radius: 24px !important;
+}
+main > .intro#community .intro-heading,
+main > .intro#community .intro-copy { max-width: none !important; margin: 0 !important; }
+main > .intro#community .intro-heading h2 {
+  font-size: clamp(34px, 4vw, 48px) !important;
+  line-height: 1.12 !important;
+  margin-top: 14px !important;
+}
+main > .intro#community .intro-copy p { font-size: 14px !important; line-height: 1.75 !important; margin-bottom: 14px !important; }
+
+main > .benefit-grid[aria-label="Quyền lợi thành viên"] {
+  width: min(1160px, calc(100% - 80px)) !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+  padding: 0 !important;
+  margin: 0 auto 88px !important;
+  background: #fff !important;
+  border: 1px solid #e8eee8 !important;
+  border-radius: 22px !important;
+  overflow: hidden !important;
+  box-shadow: none !important;
+}
+main > .benefit-grid .benefit-card {
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  overflow: hidden !important;
+}
+main > .benefit-grid .benefit-card + .benefit-card { border-left: 1px solid #e8eee8 !important; }
+main > .benefit-grid .benefit-image { height: 150px !important; flex: 0 0 150px !important; }
+main > .benefit-grid .benefit-content { padding: 20px 21px 23px !important; }
+main > .benefit-grid .benefit-content h3 { font-size: 21px !important; margin: 10px 0 8px !important; }
+main > .benefit-grid .benefit-content p { font-size: 12px !important; line-height: 1.65 !important; }
+
+main > .how-section { padding: 78px 0 !important; }
+main > .how-section .how-layout { gap: 64px !important; }
+main > .how-section .how-visual { display: none !important; }
+main > .how-section .how-intro h2 { font-size: clamp(32px, 3.4vw, 42px) !important; }
+main > .how-section .step { padding: 18px 0 !important; }
+main > .how-section .how-trust-note {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border-top: 1px solid rgba(255,255,255,.24) !important;
+  padding: 16px 0 0 !important;
+  margin-top: 12px !important;
+}
+
+main > .merchant-section { padding: 82px 0 !important; }
+main > .merchant-section .merchant-layout { gap: 64px !important; }
+main > .merchant-section .merchant-photo { height: 450px !important; border-radius: 16px !important; }
+main > .merchant-section .merchant-points { margin: 22px 0 26px !important; }
+main > .merchant-section .merchant-points div { padding: 13px 0 !important; }
+
+main > .faq-section#faq { padding: 86px 0 !important; gap: 72px !important; }
+main > .faq-section .faq-item summary { padding: 18px 0 !important; }
+main > .faq-section .faq-item summary b {
+  width: auto !important; height: auto !important;
+  display: inline !important; background: transparent !important;
+  border-radius: 0 !important; font-size: 20px !important;
+}
+
+main > .reg-section { padding-top: 78px !important; padding-bottom: 84px !important; }
+main > .reg-section .reg-card { box-shadow: none !important; border-radius: 16px !important; }
+main > .join-section { padding: 48px 0 !important; }
+main > .join-section .join-inner { gap: 28px !important; }
+main > footer .footer-main { padding: 25px 0 !important; }
+
+@media (max-width: 700px) {
+  main > .intro#community {
+    width: calc(100% - 36px) !important;
+    display: block !important;
+    padding: 25px 23px 24px !important;
+    margin: 30px auto 22px !important;
+    border-radius: 17px !important;
+  }
+  main > .intro#community .intro-heading { margin-bottom: 12px !important; }
+  main > .intro#community .intro-heading h2 {
+    font-size: 29px !important;
+    line-height: 1.14 !important;
+    letter-spacing: -.9px !important;
+    margin-top: 9px !important;
+  }
+  main > .intro#community .intro-heading .eyebrow { font-size: 9px !important; }
+  main > .intro#community .intro-copy p { font-size: 12px !important; line-height: 1.65 !important; }
+  main > .intro#community .under-link { font-size: 11px !important; }
+
+  main > .benefit-grid[aria-label="Quyền lợi thành viên"] {
+    width: calc(100% - 36px) !important;
+    grid-template-columns: 1fr !important;
+    margin-bottom: 54px !important;
+    border-radius: 17px !important;
+  }
+  main > .benefit-grid .benefit-card {
+    display: grid !important;
+    grid-template-columns: 104px minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 0 !important;
+    padding: 13px !important;
+  }
+  main > .benefit-grid .benefit-card + .benefit-card {
+    border-left: 0 !important;
+    border-top: 1px solid #e8eee8 !important;
+  }
+  main > .benefit-grid .benefit-image {
+    width: 92px !important; height: 92px !important;
+    min-height: 0 !important; flex: none !important;
+    border-radius: 11px !important;
+  }
+  main > .benefit-grid .benefit-content { padding: 4px 2px 4px 12px !important; }
+  main > .benefit-grid .card-index { font-size: 8px !important; letter-spacing: .8px !important; }
+  main > .benefit-grid .benefit-content h3 {
+    font-size: 17px !important; line-height: 1.18 !important;
+    margin: 5px 0 !important; letter-spacing: -.3px !important;
+  }
+  main > .benefit-grid .benefit-content p { font-size: 10px !important; line-height: 1.5 !important; }
+
+  main > .how-section { padding: 58px 0 !important; }
+  main > .how-section .how-layout { width: calc(100% - 40px) !important; gap: 24px !important; }
+  main > .how-section .how-intro h2 { font-size: 29px !important; margin: 12px 0 !important; }
+  main > .how-section .how-intro > p { font-size: 12px !important; line-height: 1.65 !important; }
+  main > .how-section .step { grid-template-columns: 28px minmax(0,1fr) !important; gap: 10px !important; padding: 14px 0 !important; }
+  main > .how-section .step h3 { font-size: 14px !important; margin-bottom: 3px !important; }
+  main > .how-section .step p { font-size: 11px !important; line-height: 1.55 !important; }
+  main > .how-section .how-trust-note { font-size: 11px !important; line-height: 1.6 !important; }
+
+  main > .merchant-section { padding: 56px 0 !important; }
+  main > .merchant-section .merchant-layout { width: calc(100% - 40px) !important; gap: 22px !important; }
+  main > .merchant-section .merchant-photo { height: 210px !important; border-radius: 13px !important; }
+  main > .merchant-section .merchant-copy h2 { font-size: 29px !important; margin: 12px 0 !important; }
+  main > .merchant-section .merchant-copy > p { font-size: 12px !important; line-height: 1.65 !important; }
+  main > .merchant-section .merchant-points { margin: 15px 0 20px !important; }
+  main > .merchant-section .merchant-points div { grid-template-columns: 27px 1fr !important; gap: 8px !important; padding: 10px 0 !important; }
+  main > .merchant-section .merchant-points span { font-size: 11px !important; line-height: 1.5 !important; }
+
+  main > .faq-section#faq { width: calc(100% - 40px) !important; padding: 58px 0 !important; gap: 18px !important; }
+  main > .faq-section .faq-heading h2 { font-size: 29px !important; }
+  main > .faq-section .faq-heading > p { font-size: 11px !important; margin-top: 8px !important; }
+  main > .faq-section .faq-item summary { font-size: 12px !important; padding: 14px 0 !important; }
+  main > .faq-section .faq-item p { font-size: 11px !important; line-height: 1.65 !important; padding-bottom: 14px !important; }
+
+  main > .reg-section { padding: 58px 18px 64px !important; }
+  main > .reg-section .reg-heading h2 { font-size: 29px !important; }
+  main > .reg-section .reg-heading > p { font-size: 12px !important; }
+  main > .reg-section .reg-form-wrap { padding: 20px 16px 22px !important; }
+  main > .join-section { padding: 34px 0 !important; }
+  main > .join-section .join-inner { width: calc(100% - 40px) !important; gap: 13px !important; }
+  main > .join-section .join-inner h2 { font-size: 23px !important; }
+  main > .join-section .join-inner p { font-size: 11px !important; line-height: 1.6 !important; }
+  main > footer .footer-main { gap: 12px !important; }
+  main > footer .footer-main nav { gap: 12px 18px !important; font-size: 11px !important; }
+  main > footer .footer-bottom { font-size: 9px !important; }
+}
