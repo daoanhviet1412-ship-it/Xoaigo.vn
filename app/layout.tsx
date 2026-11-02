@@ -15,7 +15,8 @@ export const metadata: Metadata = {
     locale: "vi_VN",
     type: "website",
   },
-  icons: { icon: "/xoai-mark.svg" },
+  icons: { icon: "/xoai-mark.svg", apple: "/apple-icon" },
+  appleWebApp: { capable: true, title: "Xoài Go", statusBarStyle: "default" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
