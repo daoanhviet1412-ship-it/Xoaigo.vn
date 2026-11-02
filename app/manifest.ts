@@ -13,7 +13,7 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#087c3e",
     lang: "vi",
     icons: [
-      { src: "/xoai-logo.svg", sizes: "any", type: "image/svg+xml", purpose: "any" }
+      { src: "/xoai-app-icon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" }
     ]
   };
 }
