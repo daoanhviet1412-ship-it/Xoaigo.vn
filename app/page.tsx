@@ -26,6 +26,7 @@ const faqs = [
 
 export default function Home() {
   const [city, setCity] = useState("Đà Nẵng");
+  const [showAppPicker, setShowAppPicker] = useState(false);
 
   useEffect(() => {
     if (!window.location.hash) {
@@ -35,6 +36,20 @@ export default function Home() {
 
   return (
     <main>
+      {showAppPicker && (
+        <div role="presentation" onClick={() => setShowAppPicker(false)} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(20, 27, 22, .58)", display: "grid", placeItems: "center", padding: 20 }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="app-picker-title" onClick={(event) => event.stopPropagation()} style={{ width: "min(100%, 520px)", background: "#fffdf8", borderRadius: 22, padding: "30px 26px 26px", boxShadow: "0 24px 80px rgba(0,0,0,.22)", position: "relative" }}>
+            <button type="button" aria-label="Đóng" onClick={() => setShowAppPicker(false)} style={{ position: "absolute", right: 16, top: 14, border: 0, background: "transparent", fontSize: 26, cursor: "pointer", color: "#5d665d" }}>×</button>
+            <span className="eyebrow">CHỌN KHÔNG GIAN CỦA BẠN</span>
+            <h2 id="app-picker-title" style={{ fontSize: "clamp(25px, 5vw, 34px)", lineHeight: 1.15, margin: "12px 0 8px" }}>Bạn tham gia Xoài Go với vai trò nào?</h2>
+            <p style={{ color: "#697168", margin: "0 0 22px" }}>Chọn ứng dụng phù hợp để tiếp tục đăng nhập hoặc đăng ký.</p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <a href="https://datmon-user.vercel.app" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ minHeight: 100, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", gap: 8, padding: 18, textDecoration: "none" }}><strong>Ứng dụng khách</strong><span style={{ fontSize: 13, fontWeight: 400 }}>Khám phá ưu đãi, mua chung ↗</span></a>
+              <a href="https://datmon-shop.vercel.app" target="_blank" rel="noreferrer" className="btn btn-soft" style={{ minHeight: 100, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", gap: 8, padding: 18, textDecoration: "none" }}><strong>Ứng dụng quán</strong><span style={{ fontSize: 13, fontWeight: 400 }}>Quản lý cửa hàng, hợp tác ↗</span></a>
+            </div>
+          </section>
+        </div>
+      )}
       <header className="nav wrap">
         <a className="brand" href="#" aria-label="Xoài Go trang chủ">
           <img className="brand-primary" src="/xoai-logo.svg" alt="Xoài Go — Cùng nhau mua tốt hơn." />
@@ -49,7 +64,7 @@ export default function Home() {
         </nav>
         <div className="nav-actions">
           <label className="location-pill location-picker"><span>⌖</span><select aria-label="Chọn thành phố" value={city} onChange={(event) => setCity(event.target.value)}><option>Đà Nẵng</option><option>Hà Nội</option><option>Hồ Chí Minh</option></select><b>⌄</b></label>
-          <a className="nav-cta" href="https://datmon-user.vercel.app" target="_blank" rel="noreferrer">Vào Xoài Go</a>
+          <button className="nav-cta" type="button" onClick={() => setShowAppPicker(true)}>Đăng ký sớm</button>
         </div>
       </header>
 
@@ -59,7 +74,7 @@ export default function Home() {
           <h1>Cùng nhau<br/><em>mua tốt hơn.</em></h1>
           <p className="hero-lead"><strong>Ưu đãi</strong> tại các quán ngon quanh bạn,<br className="desktop-break"/> mua chung giá tốt, và nhiều đặc quyền<br className="desktop-break"/> chỉ dành riêng cho thành viên <strong>Xoài Go.</strong></p>
           <div className="hero-actions">
-            <a className="btn btn-primary" href="https://datmon-user.vercel.app" target="_blank" rel="noreferrer">Vào ứng dụng khách <span>→</span></a>
+            <button className="btn btn-primary" type="button" onClick={() => setShowAppPicker(true)}>Đăng ký sớm <span>→</span></button>
             <a className="btn btn-soft" href="#community">Khám phá ưu đãi</a>
           </div>
           <div className="hero-stats desktop-hero-stats">
@@ -73,7 +88,7 @@ export default function Home() {
       <div className="mobile-hero-art" aria-label="Hình ảnh giới thiệu Xoài Go">
         <img src="https://i.ibb.co/JW6qRQSr/5c20bff2-6a73-41ab-a43f-f21bd99693e3.png" alt="Hình ảnh giới thiệu cộng đồng Xoài Go" />
         <div className="mobile-hero-overlay-actions">
-          <a className="mobile-hero-cta mobile-hero-cta-primary" href="https://datmon-user.vercel.app" target="_blank" rel="noreferrer">Vào ứng dụng khách <span>→</span></a>
+          <button className="mobile-hero-cta mobile-hero-cta-primary" type="button" onClick={() => setShowAppPicker(true)}>Đăng ký sớm <span>→</span></button>
           <a className="mobile-hero-cta mobile-hero-cta-secondary" href="#community">Khám phá ưu đãi</a>
         </div>
       </div>
