@@ -103,6 +103,7 @@ export default function Home() {
         <article><span className="feature-icon">▤</span><div><b>Khám phá quanh bạn</b><small>Nhiều quán ngon<br/>ngay trong khu vực</small></div></article>
         <article><span className="feature-icon">♟</span><div><b>Cộng đồng tiêu dùng</b><small>Cùng nhau mua tốt hơn<br/>mỗi ngày</small></div></article>
       </section>
+      <section className="benefit-section-frame wrap">
       <section className="intro wrap" id="community">
         <div className="intro-heading"><span className="eyebrow">KHÔNG CHỈ LÀ MỘT ỨNG DỤNG ƯU ĐÃI</span><h2>Một cộng đồng nhỏ,<br/><em>thêm nhiều giá trị lớn.</em></h2></div>
         <div className="intro-copy"><p>Mỗi ngày chúng ta đều mua thực phẩm, ăn uống và sử dụng dịch vụ quanh nơi mình sống. Xoài Go muốn làm cho những giao dịch quen thuộc ấy trở nên có lợi hơn — bằng cách kết nối đúng người mua với đúng cửa hàng.</p><a className="under-link" href="#how">Tìm hiểu hành trình của bạn <span>↗</span></a></div>
@@ -120,6 +121,7 @@ export default function Home() {
           <div className="benefit-image"><img src="https://raw.githubusercontent.com/daoanhviet1412-ship-it/Xoaigo.vn/main/public/Giao%20di%CC%A3ch%20tha%CC%82n%20thie%CC%A3%CC%82n%20be%CC%82n%20ca%CC%82%CC%80u%20Ro%CC%82%CC%80ng.png" alt="Thực phẩm tươi tại cửa hàng"/></div>
           <div className="benefit-content"><span className="card-index">03 / CONSUMER RIGHTS</span><h3>Bảo vệ<br/><em>quyền lợi tiêu dùng.</em></h3><p>Minh bạch thông tin giá và điều kiện giao dịch; ghi nhận phản hồi, hỗ trợ kết nối với cửa hàng khi có vấn đề phát sinh.</p></div>
         </article>
+      </section>
       </section>
 
       <section className="merchant-section" id="merchant"><div className="wrap merchant-layout"><div className="merchant-photo"><img src="https://i.ibb.co/pvKYRDNQ/Bu-a-to-i-a-m-cu-ng-du-o-i-e-n-ma-y.png" alt="Nữ nhân viên Việt Nam đứng tại quầy cà phê, chào khách; phía sau là kệ cà phê và bảng menu"/></div><div className="merchant-copy"><span className="eyebrow">DÀNH CHO CỬA HÀNG ĐỊA PHƯƠNG</span><h2>Khách hàng mới.<br/><em>Cơ hội phát triển mới.</em></h2><p>Xoài Go mong muốn đồng hành cùng những cửa hàng có sản phẩm và dịch vụ tốt, muốn tiếp cận cộng đồng khách hàng gần mình hơn.</p><div className="merchant-points"><div><b>01</b><span>Tiếp cận khách hàng trong cộng đồng Xoài Go</span></div><div><b>02</b><span>Truyền thông và quảng bá cửa hàng, sản phẩm, dịch vụ đến người tiêu dùng</span></div><div><b>03</b><span>Đồng hành cùng phát triển thông qua kết nối nhu cầu và cơ hội kinh doanh</span></div></div><a className="btn btn-primary" href="https://datmon-shop.vercel.app" target="_blank" rel="noreferrer">Dành cho quán <span>↗</span></a></div></div></section>
