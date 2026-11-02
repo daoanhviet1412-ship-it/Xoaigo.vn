@@ -984,7 +984,7 @@ main > footer .footer-main { padding: 25px 0 !important; }
   }
   main .mobile-hero-art .mobile-hero-overlay-actions {
     position: absolute !important;
-    top: 14px !important;
+    top: 0 !important;
     bottom: auto !important;
     left: 14px !important;
     right: 14px !important;
