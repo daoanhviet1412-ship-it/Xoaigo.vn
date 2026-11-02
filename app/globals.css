@@ -2523,3 +2523,31 @@ section.benefit-grid.wrap .benefit-content {
     padding: 22px 18px 21px !important;
   }
 }
+
+
+/* Mobile benefit images: balanced frame, full photo visible, not edge-to-edge oversized. */
+@media (max-width: 650px) {
+  section.benefit-grid.wrap .benefit-image {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 100% !important;
+    height: 184px !important;
+    min-height: 184px !important;
+    max-height: 184px !important;
+    aspect-ratio: auto !important;
+    padding: 10px !important;
+    overflow: hidden !important;
+    background: #F3F6F2 !important;
+    border-radius: 12px !important;
+  }
+  section.benefit-grid.wrap .benefit-image img {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    object-position: center;
+    border-radius: 9px !important;
+  }
+}
