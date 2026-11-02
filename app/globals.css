@@ -2672,3 +2672,21 @@ section.benefit-grid.wrap .benefit-content {
     overflow-wrap: anywhere;
   }
 }
+
+
+/* Mobile section 2: crop/zoom photos to fill the rounded image frame. */
+@media (max-width: 650px) {
+  .benefit-section-frame > .benefit-grid.wrap .benefit-image {
+    padding: 0 !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+  }
+  .benefit-section-frame > .benefit-grid.wrap .benefit-image img {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    object-position: center;
+    border-radius: inherit !important;
+  }
+}
