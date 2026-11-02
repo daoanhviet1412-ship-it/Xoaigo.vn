@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     locale: "vi_VN",
     type: "website",
   },
-  icons: { icon: "/icon", apple: "/apple-icon" },
+  icons: { icon: "/xoai-logo.svg", apple: "/xoai-logo.svg" },
   appleWebApp: { capable: true, title: "Xoài Go", statusBarStyle: "default" },
 };
 
