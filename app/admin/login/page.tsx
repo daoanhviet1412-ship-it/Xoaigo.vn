@@ -1,35 +1,33 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 export default function AdminLoginPage() {
-  const searchParams = useSearchParams();
-  const nextPath = searchParams.get("next") || "/admin";
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [email,setEmail]=useState("");
+  const [password,setPassword]=useState("");
+  const [busy,setBusy]=useState(false);
+  const [error,setError]=useState("");
 
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event:FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
     setError("");
     try {
-      const supabase = createClient();
-      const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
-      if (authError) throw authError;
-      window.location.assign(nextPath.startsWith("/admin") ? nextPath : "/admin");
-    } catch (cause) {
+      const supabase=createClient();
+      const {error:authError}=await supabase.auth.signInWithPassword({email,password});
+      if(authError) throw authError;
+      const requestedPath=new URLSearchParams(window.location.search).get("next") || "/admin";
+      window.location.assign(requestedPath.startsWith("/admin") ? requestedPath : "/admin");
+    } catch(cause) {
       setError(cause instanceof Error ? cause.message : "Không thể đăng nhập. Vui lòng thử lại.");
     } finally {
       setBusy(false);
     }
   }
 
-  const configured = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
-
+  const configured=Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
   return (
     <main style={{minHeight:"100vh",display:"grid",placeItems:"center",padding:24,background:"#f4f8f4",fontFamily:"Arial,sans-serif",color:"#173d2b"}}>
       <section style={{width:"min(100%,420px)",padding:32,border:"1px solid #dce9df",borderRadius:22,background:"#fff",boxShadow:"0 18px 55px rgba(20,70,40,.08)"}}>
@@ -49,7 +47,7 @@ export default function AdminLoginPage() {
               <input required type="password" autoComplete="current-password" value={password} onChange={e=>setPassword(e.target.value)} style={{padding:13,border:"1px solid #d8e4dc",borderRadius:10,fontSize:15}}/>
             </label>
             {error && <p role="alert" style={{margin:0,color:"#b42318",fontSize:13}}>{error}</p>}
-            <button disabled={busy} type="submit" style={{padding:14,border:0,borderRadius:11,background:"#13864b",color:"#fff",fontWeight:800,cursor:"pointer",opacity:busy?.7:1}}>{busy?"Đang xác thực…":"Đăng nhập"}</button>
+            <button disabled={busy} type="submit" style={{padding:14,border:0,borderRadius:11,background:"#13864b",color:"#fff",fontWeight:800,cursor:"pointer",opacity:busy ? .7 : 1}}>{busy?"Đang xác thực…":"Đăng nhập"}</button>
           </form>
         )}
         <p style={{fontSize:11,color:"#849188",marginTop:24}}>Bảo mật theo phiên Supabase Auth. Quyền Admin được xác định ở database, không lấy từ lựa chọn trên giao diện.</p>
