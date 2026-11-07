@@ -48,8 +48,8 @@ export default async function AuditLogPage({ searchParams }: { searchParams: Sea
   if (uuidPattern.test(actor)) query = query.eq("actor_user_id", actor);
   if (uuidPattern.test(merchant)) query = query.eq("merchant_id", merchant);
   if (action) query = query.ilike("action", `%${action.replace(/[,%_]/g, "")}%`);
-  if (from) query = query.gte("occurred_at", `${from}T00:00:00.000Z`);
-  if (to) query = query.lte("occurred_at", `${to}T23:59:59.999Z`);
+  if (from) query = query.gte("occurred_at", `${from}T00:00:00.000+07:00`);
+  if (to) query = query.lte("occurred_at", `${to}T23:59:59.999+07:00`);
 
   const { data: events, error } = await query;
   const input: React.CSSProperties = { width: "100%", boxSizing: "border-box", padding: 10, border: "1px solid #dbe7de", borderRadius: 9, font: "inherit" };
@@ -97,7 +97,7 @@ export default async function AuditLogPage({ searchParams }: { searchParams: Sea
                 </tr></thead>
                 <tbody>{events.map((event) => (
                   <tr key={event.id} style={{ borderTop: "1px solid #edf2ee" }}>
-                    <td style={{ padding: "14px 16px", whiteSpace: "nowrap" }}>{new Date(event.occurred_at).toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short" })}</td>
+                    <td style={{ padding: "14px 16px", whiteSpace: "nowrap" }}>{new Date(event.occurred_at).toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short", timeZone: "Asia/Ho_Chi_Minh" })}</td>
                     <td style={{ padding: "14px 16px" }}><b>{label(event.action)}</b></td>
                     <td style={{ padding: "14px 16px" }}>{label(event.resource_type)}<small style={{ display: "block", marginTop: 4, color: "#87948c" }}>{event.resource_id ?? "—"}{event.merchant_id ? ` · Merchant ${event.merchant_id.slice(0, 8)}…` : ""}</small></td>
                     <td style={{ padding: "14px 16px" }}>{event.actor_kind}<small style={{ display: "block", marginTop: 4, color: "#87948c" }}>{event.actor_user_id ? event.actor_user_id.slice(0, 8) + "…" : "System"}</small></td>
