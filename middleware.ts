@@ -8,12 +8,19 @@ export async function middleware(request: NextRequest) {
   if (!url || !publishableKey) return NextResponse.next({ request });
 
   let response = NextResponse.next({ request });
+  let refreshedCookies: Array<{
+    name: string;
+    value: string;
+    options?: Parameters<typeof response.cookies.set>[2];
+  }> = [];
+
   const supabase = createServerClient(url, publishableKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll();
       },
       setAll(cookiesToSet) {
+        refreshedCookies = cookiesToSet;
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
         response = NextResponse.next({ request });
         cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
@@ -31,7 +38,7 @@ export async function middleware(request: NextRequest) {
     redirectUrl.search = "";
     redirectUrl.searchParams.set("next", request.nextUrl.pathname);
     const redirectResponse = NextResponse.redirect(redirectUrl);
-    response.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie));
+    refreshedCookies.forEach(({ name, value, options }) => redirectResponse.cookies.set(name, value, options));
     return redirectResponse;
   }
 
@@ -40,7 +47,7 @@ export async function middleware(request: NextRequest) {
     redirectUrl.pathname = "/admin";
     redirectUrl.search = "";
     const redirectResponse = NextResponse.redirect(redirectUrl);
-    response.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie));
+    refreshedCookies.forEach(({ name, value, options }) => redirectResponse.cookies.set(name, value, options));
     return redirectResponse;
   }
 
