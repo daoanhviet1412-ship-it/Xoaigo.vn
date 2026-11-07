@@ -104,8 +104,7 @@ with grants(role_code, permission_code) as (
     ('policy_reviewer', 'audit.read'),
 
     ('merchant_owner', 'merchant.workspace'),
-    ('merchant_staff', 'merchant.workspace'),
-    ('member', 'users.read')
+    ('merchant_staff', 'merchant.workspace')
 )
 insert into public.role_permissions (role_id, permission_id)
 select r.id, p.id
