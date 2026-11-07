@@ -7,7 +7,7 @@ export default async function AdminHomePage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/admin/login");
 
-  const [{data:profile},{data:grants},{count:merchantCount},{count:pendingApprovalCount}] = await Promise.all([
+  const [{data:profile},{data:grants},{count:merchantCount},{count:pendingApprovalCount},{count:memberCount},{count:activeCampaignCount},{count:openOrderCount},{count:pendingMerchantCount}] = await Promise.all([
     supabase.from("profiles").select("display_name,status").eq("id",user.id).maybeSingle(),
     supabase.from("user_role_grants").select("id,merchant_id,roles(code,name)").eq("user_id",user.id).is("revoked_at",null),
     supabase.from("merchants").select("id",{count:"exact",head:true}),
@@ -20,7 +20,7 @@ export default async function AdminHomePage() {
   const cards=[
     ["Tổng số cửa hàng",String(merchantCount??0),"Dữ liệu trực tiếp từ Supabase"],
     ["Yêu cầu chờ duyệt",String(pendingApprovalCount??0),"Hàng đợi phê duyệt"],
-    ["Vai trò được cấp",String(roleCodes.length),"Quyền hiện tại của tài khoản"]
+    ["Thành viên",String(memberCount??0),"Hồ sơ thành viên"],\n    ["Chiến dịch đang chạy",String(activeCampaignCount??0),"Trạng thái từ dữ liệu chiến dịch"],\n    ["Đơn hàng đang xử lý",String(openOrderCount??0),"Đơn chưa hoàn tất hoặc hủy"],\n    ["Merchant chờ xử lý",String(pendingMerchantCount??0),"Đã gửi hoặc đang được xem xét"]
   ];
   return <main style={{minHeight:"100vh",background:"#f5f8f5",color:"#173d2b",fontFamily:"Arial,sans-serif"}}>
     <header style={{padding:"18px 32px",background:"#fff",borderBottom:"1px solid #e0eae3",display:"flex",justifyContent:"space-between",alignItems:"center",gap:20,flexWrap:"wrap"}}>
