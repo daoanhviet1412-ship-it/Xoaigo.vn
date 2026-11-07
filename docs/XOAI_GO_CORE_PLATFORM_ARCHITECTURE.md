@@ -208,3 +208,55 @@ Previously discussed example numbers are not treated as approved production poli
 ## 13. Definition of done
 
 A feature is complete only when its server-side behavior, database constraints/RLS, permission checks, audit events, error/empty/loading states, automated tests and Preview behavior are verified. A visual prototype alone is not complete. No financial feature is enabled with unapproved rules or unverified legal/provider arrangements.
+
+
+---
+
+## 14. Verified implementation update — 2026-11-07
+
+This section supersedes earlier baseline statements in sections 3, 4, 11 and 12 where they say Supabase access, schema, RLS, identity or admin implementation have not yet been verified. The earlier statements accurately describe the initial audit date but are no longer current.
+
+### Verified systems
+- Repository: `daoanhviet1412-ship-it/Xoaigo.vn`.
+- Working branch: `feature/xoai-core-platform`; latest checked head is tracked separately in the project journal.
+- Vercel project: `xoaigo`, Preview deployments only.
+- Supabase project: `Xoaigovn`, project ref `ozqluwawvasrsiydgeci`.
+- Do not access or modify the separate VGarden operations system.
+
+### Database implementation
+- Migrations 0001–0019 are stored on the feature branch and applied to Xoaigovn.
+- Public schema includes the identity/RBAC, merchant/member, catalog/campaign, commerce order, policy/approval/audit domains plus ledger, idempotency and reconciliation foundations.
+- RLS is enabled on all current public application tables. The idempotency table intentionally has no client data access policy; a deny policy makes that explicit.
+- Privileged command implementations live in the private schema; public RPC wrappers use SECURITY INVOKER. Anonymous EXECUTE is revoked for the privileged commands described in the migration set.
+- Policy set and policy version draft commands require `policies.write`; policy submission requires `policies.submit`; budget proposal submission requires `budgets.write`.
+- Budget review permission is checked by request type using `budgets.review`; other approval types require `approvals.review`.
+- Ledger foundation contains a chart-of-accounts table, immutable journal transaction/line structure, deferred balance checks, idempotency records and reconciliation batch/item structures. No application write commands or client insert grants exist for the ledger/reconciliation foundation. No account mapping, balances or payment execution is enabled.
+
+### Current Admin routes
+- `/admin/login`, `/admin`, `/admin/merchants`, `/admin/members`, `/admin/approvals`, `/admin/policies`, `/admin/budgets`, `/admin/ledger`, `/admin/reconciliation`, `/admin/audit`.
+- Policy and budget proposal pages create governance requests only. Approval does not execute payloads or create financial postings.
+- Ledger and reconciliation pages are read-only and show explicit empty states until approved account mapping and external data sources exist.
+
+### Verification performed
+- Policy set creation, policy version draft creation, policy approval submission and budget proposal submission were executed as the Platform Owner inside a rollback-only SQL transaction. The test confirmed command paths work and left zero fixtures afterward.
+- A balanced journal was accepted by deferred database constraints in a rollback-only transaction. An unbalanced journal was rejected with `journal_must_balance_before_posting`.
+- Function metadata was checked: private privileged implementations are SECURITY DEFINER; public wrappers are SECURITY INVOKER; anon has no EXECUTE and authenticated has EXECUTE where needed.
+- Supabase Health Advisor returned no lints. Security Advisor still reports leaked password protection disabled. Performance Advisor's unused-index findings are expected before real traffic and are informational.
+- The current Auth user count is one Platform Owner. No second independent maker/checker account is available for a full two-user E2E review test.
+- Preview SSO is enabled. A READY deployment proves build output, not successful interactive runtime acceptance.
+
+### Explicitly blocked pending product/legal decisions
+- Membership price, renewal/cancellation and eligibility.
+- Discount funding and merchant cost-sharing.
+- Points earn/redeem/expiry/holds/refunds and liability treatment.
+- Budget funding ownership, allocation and release.
+- Merchant/platform commission, tax treatment and settlement cadence.
+- Group-buy minimums, deadlines, cancellation and refunds.
+- Merchant KYC and suspension policy.
+- Chart of accounts, accounting recognition rules and merchant obligation calculations.
+- Any customer-fund custody, wallet, payout or payment execution.
+- Auth leaked-password protection and MFA/session settings require a deliberate security-settings change and verification.
+
+### Release status
+- Feature branch and Preview only. No merge to `main`, no production deployment and no VGarden changes are authorized by this implementation record.
+- A feature is not considered operationally complete until it has actual user/session E2E, role matrix, domain-specific invariants and accepted Preview behavior.
