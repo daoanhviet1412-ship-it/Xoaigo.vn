@@ -82,7 +82,7 @@ export function ApprovalReviewQueue({ items }: { items: ApprovalItem[] }) {
         </div>
         <div style={{ color: "#5d6d63", fontSize: 13, lineHeight: 1.6 }}>
           <div><b>Người gửi:</b> {item.requester_name || item.requested_by}</div>
-          <div><b>Thời gian:</b> {new Date(item.requested_at).toLocaleString("vi-VN")}</div>
+          <div><b>Thời gian:</b> {new Date(item.requested_at).toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" })}</div>
           <div><b>Lý do đề xuất:</b> {item.reason}</div>
         </div>
         <details>
