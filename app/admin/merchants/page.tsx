@@ -12,7 +12,7 @@ export default async function MerchantsPage() {
   const [{data:profile},{data:grants},{data:merchants,error},{data:rolePermissions}] = await Promise.all([
     supabase.from("profiles").select("display_name,status").eq("id",user.id).maybeSingle(),
     supabase.from("user_role_grants").select("id,roles(code,name)").eq("user_id",user.id).is("revoked_at",null),
-    supabase.from("merchants").select("id,display_name,legal_name,business_type,onboarding_status,status,contact_phone,created_at").order("created_at",{ascending:false}).limit(100),
+    supabase.from("merchants").select("id,display_name,legal_name,business_type,onboarding_status,status,contact_phone,contact_email,slug,created_at").order("created_at",{ascending:false}).limit(100),
     supabase.from("role_permissions").select("roles(code),permissions(code)")
   ]);
   if(!profile || profile.status!=="active") return <main style={{padding:36}}>Tài khoản chưa được kích hoạt.</main>;
@@ -20,6 +20,7 @@ export default async function MerchantsPage() {
   const allowed=roleCodes.some(code=>["platform_owner","platform_admin","ops_manager","ops_agent"].includes(code));
   const permissionCodes=(rolePermissions??[]).filter(item=>roleCodes.includes(item.roles?.code??"")).map(item=>item.permissions?.code).filter((value):value is string=>Boolean(value));
   const canCreate=permissionCodes.includes("merchants.create");
+  const canUpdate=permissionCodes.includes("merchants.update");
   if(!allowed) return <main style={{padding:36}}>Bạn không có quyền truy cập danh sách cửa hàng.</main>;
 
   return <main style={{minHeight:"100vh",background:"#f5f8f5",color:"#173d2b",fontFamily:"Arial,sans-serif"}}>
@@ -37,7 +38,7 @@ export default async function MerchantsPage() {
         {error?<p style={{padding:20,color:"#b42318"}}>Không thể tải danh sách: {error.message}</p>:!merchants?.length?<p style={{padding:24,color:"#718176"}}>Chưa có cửa hàng. Tạo hồ sơ đầu tiên để bắt đầu.</p>:
         <div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
           <thead><tr style={{textAlign:"left",background:"#f8fbf8",color:"#718176"}}>{["Cửa hàng","Loại hình","Điện thoại","Onboarding","Tài khoản","Hồ sơ"].map(h=><th key={h} style={{padding:"13px 16px",whiteSpace:"nowrap"}}>{h}</th>)}</tr></thead>
-          <tbody>{merchants.map(m=><tr key={m.id} style={{borderTop:"1px solid #edf2ee"}}><td style={{padding:"14px 16px"}}><b>{m.display_name}</b><small style={{display:"block",marginTop:4,color:"#87948c"}}>{m.legal_name}</small></td><td style={{padding:"14px 16px"}}>{m.business_type||"—"}</td><td style={{padding:"14px 16px"}}>{m.contact_phone||"—"}</td><td style={{padding:"14px 16px"}}>{m.onboarding_status}</td><td style={{padding:"14px 16px"}}>{m.status}</td><td style={{padding:"14px 16px"}}>{canCreate && <MerchantEditForm merchant={m}/>}</td></tr>)}</tbody>
+          <tbody>{merchants.map(m=><tr key={m.id} style={{borderTop:"1px solid #edf2ee"}}><td style={{padding:"14px 16px"}}><b>{m.display_name}</b><small style={{display:"block",marginTop:4,color:"#87948c"}}>{m.legal_name}</small></td><td style={{padding:"14px 16px"}}>{m.business_type||"—"}</td><td style={{padding:"14px 16px"}}>{m.contact_phone||"—"}</td><td style={{padding:"14px 16px"}}>{m.onboarding_status}</td><td style={{padding:"14px 16px"}}>{m.status}</td><td style={{padding:"14px 16px"}}>{canUpdate && <MerchantEditForm merchant={m}/>}</td></tr>)}</tbody>
         </table></div>}
       </section>
     </section>
