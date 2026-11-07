@@ -1607,6 +1607,7 @@ export type Database = {
           p_campaign_id: string
           p_currency: string
           p_funding_source: string
+          p_idempotency_key: string
           p_merchant_id: string
           p_purpose: string
           p_reason: string
@@ -1615,6 +1616,7 @@ export type Database = {
       }
       submit_policy_approval_request: {
         Args: {
+          p_idempotency_key: string
           p_policy_set_id: string
           p_proposed_config: Json
           p_reason: string
