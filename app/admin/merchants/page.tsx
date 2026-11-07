@@ -11,11 +11,14 @@ export default async function MerchantsPage() {
   const [{data:profile},{data:grants},{data:merchants,error},{data:rolePermissions}] = await Promise.all([
     supabase.from("profiles").select("display_name,status").eq("id",user.id).maybeSingle(),
     supabase.from("user_role_grants").select("id,roles(code,name)").eq("user_id",user.id).is("revoked_at",null),
-    supabase.from("merchants").select("id,display_name,legal_name,business_type,onboarding_status,status,contact_phone,created_at").order("created_at",{ascending:false}).limit(100)
+    supabase.from("merchants").select("id,display_name,legal_name,business_type,onboarding_status,status,contact_phone,created_at").order("created_at",{ascending:false}).limit(100),
+    supabase.from("role_permissions").select("roles(code),permissions(code)")
   ]);
   if(!profile || profile.status!=="active") return <main style={{padding:36}}>Tài khoản chưa được kích hoạt.</main>;
   const roleCodes=(grants??[]).map(g=>g.roles?.code).filter((v):v is string=>Boolean(v));
   const allowed=roleCodes.some(code=>["platform_owner","platform_admin","ops_manager","ops_agent"].includes(code));
+  const permissionCodes=(rolePermissions??[]).filter(item=>roleCodes.includes(item.roles?.code??"")).map(item=>item.permissions?.code).filter((value):value is string=>Boolean(value));
+  const canCreate=permissionCodes.includes("merchants.create");
   if(!allowed) return <main style={{padding:36}}>Bạn không có quyền truy cập danh sách cửa hàng.</main>;
 
   return <main style={{minHeight:"100vh",background:"#f5f8f5",color:"#173d2b",fontFamily:"Arial,sans-serif"}}>
@@ -24,10 +27,10 @@ export default async function MerchantsPage() {
       <p style={{fontSize:11,fontWeight:800,letterSpacing:2,color:"#16864b"}}>MERCHANT MANAGEMENT</p>
       <h1 style={{fontSize:32,margin:"8px 0"}}>Quản lý cửa hàng</h1>
       <p style={{color:"#718176",fontSize:14}}>Tạo hồ sơ và theo dõi trạng thái onboarding. Hồ sơ mới luôn ở trạng thái Nháp.</p>
-      <section style={{padding:22,marginTop:24,background:"#fff",border:"1px solid #e0eae3",borderRadius:18}}>
+      {canCreate && <section style={{padding:22,marginTop:24,background:"#fff",border:"1px solid #e0eae3",borderRadius:18}}>
         <h2 style={{fontSize:17,margin:"0 0 18px"}}>Thêm cửa hàng</h2>
         <MerchantCreateForm/>
-      </section>
+      </section>}
       <section style={{marginTop:24,background:"#fff",border:"1px solid #e0eae3",borderRadius:18,overflow:"hidden"}}>
         <div style={{padding:20,borderBottom:"1px solid #e8efe9",display:"flex",justifyContent:"space-between"}}><b>Danh sách cửa hàng</b><span style={{fontSize:12,color:"#718176"}}>{merchants?.length??0} hồ sơ hiển thị</span></div>
         {error?<p style={{padding:20,color:"#b42318"}}>Không thể tải danh sách: {error.message}</p>:!merchants?.length?<p style={{padding:24,color:"#718176"}}>Chưa có cửa hàng. Tạo hồ sơ đầu tiên để bắt đầu.</p>:
