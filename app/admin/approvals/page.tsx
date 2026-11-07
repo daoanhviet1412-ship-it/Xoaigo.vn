@@ -14,6 +14,7 @@ export default async function ApprovalsPage() {
     supabase.from("approval_requests")
       .select("id,request_type,resource_type,resource_id,proposed_payload,reason,status,requested_at,requested_by,requester:profiles!approval_requests_requested_by_fkey(display_name)")
       .eq("status", "pending")
+      .neq("request_type", "marketing_budget_proposal")
       .order("requested_at", { ascending: true })
       .limit(100),
   ]);
