@@ -21,10 +21,10 @@ export function MerchantCreateForm() {
       const {error:rpcError}=await supabase.rpc("admin_create_merchant",{
         p_legal_name:String(form.get("legal_name")||""),
         p_display_name:String(form.get("display_name")||""),
-        p_business_type:String(form.get("business_type")||"") || null,
-        p_contact_phone:String(form.get("contact_phone")||"") || null,
-        p_contact_email:String(form.get("contact_email")||"") || null,
-        p_slug:String(form.get("slug")||"") || null,
+        p_business_type:String(form.get("business_type")||"") || undefined,
+        p_contact_phone:String(form.get("contact_phone")||"") || undefined,
+        p_contact_email:String(form.get("contact_email")||"") || undefined,
+        p_slug:String(form.get("slug")||"") || undefined,
       });
       if(rpcError) throw rpcError;
       setSuccess("Đã tạo hồ sơ cửa hàng ở trạng thái Nháp.");
