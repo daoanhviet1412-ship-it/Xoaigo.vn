@@ -25,7 +25,7 @@ export default async function AdminHomePage() {
   return <main style={{minHeight:"100vh",background:"#f5f8f5",color:"#173d2b",fontFamily:"Arial,sans-serif"}}>
     <header style={{padding:"18px 32px",background:"#fff",borderBottom:"1px solid #e0eae3",display:"flex",justifyContent:"space-between",alignItems:"center",gap:20,flexWrap:"wrap"}}>
       <div><b style={{color:"#13864b",letterSpacing:1.5}}>XOÀI GO</b><span style={{marginLeft:12,color:"#708076",fontSize:13}}>Control Center</span></div>
-      <nav style={{display:"flex",gap:18,fontSize:13,flexWrap:"wrap"}}><a href="/admin" style={{color:"#13864b",fontWeight:700}}>Tổng quan</a><a href="/admin/merchants">Cửa hàng</a><a href="/admin/members">Thành viên</a></nav>
+      <nav style={{display:"flex",gap:18,fontSize:13,flexWrap:"wrap"}}><a href="/admin" style={{color:"#13864b",fontWeight:700}}>Tổng quan</a><a href="/admin/merchants">Cửa hàng</a><a href="/admin/members">Thành viên</a><a href="/admin/audit">Nhật ký</a></nav>
       <div style={{fontSize:13,color:"#65766b"}}>{profile.display_name||user.email}</div>
     </header>
     <section style={{padding:32,maxWidth:1200,margin:"0 auto"}}>
