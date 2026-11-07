@@ -39,10 +39,10 @@ export function MerchantEditForm({ merchant }: { merchant: Merchant }) {
         p_merchant_id: merchant.id,
         p_legal_name: legal.trim(),
         p_display_name: display.trim(),
-        p_business_type: type.trim() || null,
-        p_contact_phone: phone.trim() || null,
-        p_contact_email: email.trim() || null,
-        p_slug: slug.trim() || null,
+        p_business_type: type.trim(),
+        p_contact_phone: phone.trim(),
+        p_contact_email: email.trim(),
+        p_slug: slug.trim(),
       });
       if (error) throw new Error(error.message);
       setMessage("Đã cập nhật hồ sơ và ghi audit log. Trạng thái onboarding không thay đổi.");
