@@ -7,7 +7,7 @@ export default async function AdminHomePage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/admin/login");
 
-  const [{data:profile},{data:grants},{count:merchantCount},{count:pendingApprovalCount},{count:memberCount},{count:activeCampaignCount},{count:openOrderCount},{count:pendingMerchantCount},{count:pointsAccountCount},{count:openObligationCount},{count:overduePayableCount}] = await Promise.all([
+  const [{data:profile,error:profileError},{data:grants,error:grantsError},{count:merchantCount,error:merchantError},{count:pendingApprovalCount,error:approvalError},{count:memberCount,error:memberError},{count:activeCampaignCount,error:campaignError},{count:openOrderCount,error:orderError},{count:pendingMerchantCount,error:onboardingError},{count:pointsAccountCount,error:pointsError},{count:openObligationCount,error:obligationError},{count:overduePayableCount,error:payableError}] = await Promise.all([
     supabase.from("profiles").select("display_name,status").eq("id",user.id).maybeSingle(),
     supabase.from("user_role_grants").select("id,merchant_id,roles(code,name)").eq("user_id",user.id).is("revoked_at",null),
     supabase.from("merchants").select("id",{count:"exact",head:true}),
@@ -20,6 +20,8 @@ export default async function AdminHomePage() {
     supabase.from("merchant_obligations").select("id",{count:"exact",head:true}).in("status",["draft","confirmed","disputed"]),
     supabase.from("merchant_obligations").select("id",{count:"exact",head:true}).eq("obligation_type","payable").eq("status","confirmed").lt("due_at",new Date().toISOString())
   ]);
+  const dashboardErrors = [profileError,grantsError,merchantError,approvalError,memberError,campaignError,orderError,onboardingError,pointsError,obligationError,payableError].filter(Boolean);
+  if(dashboardErrors.length) return <main style={{minHeight:"100vh",padding:40,background:"#f5f8f5",color:"#173d2b",fontFamily:"Arial,sans-serif"}}><h1>Chưa thể tải đầy đủ dữ liệu quản trị</h1><p>Một hoặc nhiều truy vấn Supabase gặp lỗi. Dashboard tạm ẩn các chỉ số để tránh hiển thị số 0 gây hiểu nhầm. Vui lòng kiểm tra quyền đọc, kết nối và thử tải lại.</p><a href="/admin" style={{color:"#13864b"}}>Tải lại dashboard</a></main>;
   if(!profile || profile.status!=="active") return <main style={{padding:40,fontFamily:"Arial,sans-serif",color:"#173d2b"}}><h1>Tài khoản chưa được kích hoạt</h1><p>Hồ sơ người dùng đang bị khóa hoặc chưa đồng bộ. Quyền truy cập quản trị đã bị từ chối.</p></main>;
   const roleCodes=(grants??[]).map(g=>g.roles?.code).filter((v):v is string=>Boolean(v));
   const hasPlatformAccess=roleCodes.some(code=>["platform_owner","platform_admin","ops_manager","ops_agent","finance_manager","finance_operator","policy_reviewer"].includes(code));
