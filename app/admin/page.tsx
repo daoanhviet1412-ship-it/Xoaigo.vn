@@ -9,22 +9,27 @@ export default async function AdminHomePage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/admin/login");
 
-  const [{ data: profile }, { data: grants }, { data: merchants }, { data: approvals }] = await Promise.all([
+  const [
+    { data: profile },
+    { data: grants },
+    { count: merchantCount },
+    { count: pendingApprovalCount },
+  ] = await Promise.all([
     supabase.from("profiles").select("display_name,status").eq("id",user.id).maybeSingle(),
-    supabase.from("user_role_grants").select("id,role_id,merchant_id,roles(code,name)").eq("user_id",user.id).is("revoked_at",null),
+    supabase.from("user_role_grants").select("id,merchant_id,roles(code,name)").eq("user_id",user.id).is("revoked_at",null),
     supabase.from("merchants").select("id",{count:"exact",head:true}),
     supabase.from("approval_requests").select("id",{count:"exact",head:true}).eq("status","pending")
   ]);
 
-  const roleCodes = (grants ?? []).map((grant:any) => (Array.isArray(grant.roles) ? grant.roles[0]?.code : grant.roles?.code)).filter(Boolean);
-  const hasPlatformAccess = roleCodes.some((code:string)=>["platform_owner","platform_admin","ops_manager","ops_agent","finance_manager","finance_operator","policy_reviewer"].includes(code));
+  const roleCodes = (grants ?? []).map((grant) => grant.roles?.code).filter((code): code is string => Boolean(code));
+  const hasPlatformAccess = roleCodes.some((code)=>["platform_owner","platform_admin","ops_manager","ops_agent","finance_manager","finance_operator","policy_reviewer"].includes(code));
   if (!hasPlatformAccess) {
     return <main style={{padding:40,fontFamily:"Arial,sans-serif",color:"#173d2b"}}><h1>Chưa được cấp quyền quản trị</h1><p>Tài khoản {user.email} đã xác thực nhưng chưa có role nền tảng hợp lệ. Liên hệ người quản trị để được cấp quyền.</p></main>;
   }
 
   const cards = [
-    ["Tổng số cửa hàng", String(merchants?.length ?? 0), "Dữ liệu hiện có trong hệ thống"],
-    ["Yêu cầu chờ duyệt", String(approvals?.length ?? 0), "Hàng đợi phê duyệt"],
+    ["Tổng số cửa hàng", String(merchantCount ?? 0), "Dữ liệu hiện có trong hệ thống"],
+    ["Yêu cầu chờ duyệt", String(pendingApprovalCount ?? 0), "Hàng đợi phê duyệt"],
     ["Vai trò được cấp", String(roleCodes.length), "Quyền hiện tại của tài khoản"],
   ];
 
