@@ -9,7 +9,7 @@ export default async function MembersPage() {
   const [{data:profile},{data:grants},{data:members,error}]=await Promise.all([
     supabase.from("profiles").select("status").eq("id",user.id).maybeSingle(),
     supabase.from("user_role_grants").select("id,roles(code)").eq("user_id",user.id).is("revoked_at",null),
-    supabase.from("member_profiles").select("user_id,member_code,joined_at,profiles(display_name,phone,status)").order("joined_at",{ascending:false}).limit(100)
+    supabase.from("member_profiles").select("user_id,member_code,joined_at,profiles!member_profiles_user_id_fkey(display_name,phone,status)").order("joined_at",{ascending:false}).limit(100)
   ]);
   if(profile?.status!=="active") return <main style={{padding:36}}>Tài khoản chưa được kích hoạt.</main>;
   const codes=(grants??[]).map(g=>g.roles?.code).filter((v):v is string=>Boolean(v));
