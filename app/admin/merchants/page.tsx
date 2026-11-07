@@ -8,7 +8,7 @@ export default async function MerchantsPage() {
   const {data:{user}}=await supabase.auth.getUser();
   if(!user) redirect("/admin/login");
 
-  const [{data:profile},{data:grants},{data:merchants,error}] = await Promise.all([
+  const [{data:profile},{data:grants},{data:merchants,error},{data:rolePermissions}] = await Promise.all([
     supabase.from("profiles").select("display_name,status").eq("id",user.id).maybeSingle(),
     supabase.from("user_role_grants").select("id,roles(code,name)").eq("user_id",user.id).is("revoked_at",null),
     supabase.from("merchants").select("id,display_name,legal_name,business_type,onboarding_status,status,contact_phone,created_at").order("created_at",{ascending:false}).limit(100)
