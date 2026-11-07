@@ -51,3 +51,17 @@ Status: Preview implementation guide; not production authorization.
 - `/admin/campaigns` lists campaigns and allows scoped users to create campaign drafts. Campaign creation does not activate the campaign or allocate a marketing budget.
 - Budget requests are submitted separately through `/admin/budgets` and must be reviewed by a different user with the budget review permission.
 - Merchant onboarding status transitions and product activation remain intentionally unavailable until review criteria and business rules are approved.
+
+
+## Additional admin modules
+- `/admin/orders` is a read-only order monitor. It does not accept, cancel, collect payment or refund.
+- `/admin/access` is a read-only RBAC and account inventory, guarded by `access.manage`. Role grant/revoke is intentionally not exposed until an approved access-change maker-checker command and a second administrator account are available.
+- `/admin/catalog` supports scoped draft product creation and merchant location creation. Products remain draft; no automatic publication.
+- `/admin/campaigns` supports scoped campaign draft creation only.
+- The dashboard shows live counts for merchants, pending approvals, members, active campaigns, orders in process and merchant onboarding items. It intentionally does not show fabricated revenue or wallet balances.
+
+## Idempotency
+- Policy and budget approval submission RPCs require a caller-supplied idempotency key.
+- Repeating the same command with the same key and same payload returns the original request ID. Reusing the key with a different payload is rejected.
+- The idempotency record and approval request are written in the same database transaction.
+- The idempotency table is private to privileged database commands and has no client read/write grants.
