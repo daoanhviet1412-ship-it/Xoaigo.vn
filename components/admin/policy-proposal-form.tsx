@@ -16,6 +16,7 @@ export function PolicyRegistryActions({ policySets }: { policySets: PolicySet[] 
   const [configText, setConfigText] = useState("{\n  \n}");
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
+  const [idempotencyKey, setIdempotencyKey] = useState("");
   const [message, setMessage] = useState<{ text: string; ok: boolean } | null>(null);
 
   const supabase = () => createClient();
@@ -121,16 +122,16 @@ export function PolicyRegistryActions({ policySets }: { policySets: PolicySet[] 
     <section style={{ border: "1px solid #e0eae3", borderRadius: 14, padding: 18, display: "grid", gap: 12 }}>
       <h2 style={{ margin: 0, fontSize: 18 }}>Tạo phiên bản và gửi duyệt</h2>
       <label style={{ display: "grid", gap: 5, fontSize: 12, fontWeight: 700 }}>Bộ chính sách
-        <select value={selectedId} onChange={e => setSelectedId(e.target.value)} style={input}>
+        <select value={selectedId} onChange={e => setSelectedId(e.target.value); setIdempotencyKey("");} style={input}>
           <option value="">Chọn bộ chính sách</option>
           {policySets.map(item => <option key={item.id} value={item.id}>{item.name} ({item.code})</option>)}
         </select>
       </label>
-      <label style={{ display: "grid", gap: 5, fontSize: 12, fontWeight: 700 }}>Cấu hình JSON<textarea value={configText} onChange={e => setConfigText(e.target.value)} rows={8} spellCheck={false} style={{ ...input, resize: "vertical", fontFamily: "monospace", fontSize: 12 }} /></label>
+      <label style={{ display: "grid", gap: 5, fontSize: 12, fontWeight: 700 }}>Cấu hình JSON<textarea value={configText} onChange={e => setConfigText(e.target.value); setIdempotencyKey("");} rows={8} spellCheck={false} style={{ ...input, resize: "vertical", fontFamily: "monospace", fontSize: 12 }} /></label>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
         <button disabled={busy || !selectedId} onClick={createDraft} style={button}>Lưu phiên bản nháp</button>
       </div>
-      <label style={{ display: "grid", gap: 5, fontSize: 12, fontWeight: 700 }}>Lý do gửi phê duyệt<textarea value={reason} onChange={e => setReason(e.target.value)} rows={3} maxLength={2000} style={{ ...input, resize: "vertical" }} placeholder="Căn cứ và mục tiêu của đề xuất…" /></label>
+      <label style={{ display: "grid", gap: 5, fontSize: 12, fontWeight: 700 }}>Lý do gửi phê duyệt<textarea value={reason} onChange={e => setReason(e.target.value); setIdempotencyKey("");} rows={3} maxLength={2000} style={{ ...input, resize: "vertical" }} placeholder="Căn cứ và mục tiêu của đề xuất…" /></label>
       <button disabled={busy || !selectedId} onClick={submitForReview} style={{ ...button, background: "#245c9b" }}>Gửi đề xuất vào hàng đợi</button>
     </section>
     {message && <p role={message.ok ? "status" : "alert"} style={{ margin: 0, color: message.ok ? "#16864b" : "#b42318", fontSize: 13 }}>{message.text}</p>}
