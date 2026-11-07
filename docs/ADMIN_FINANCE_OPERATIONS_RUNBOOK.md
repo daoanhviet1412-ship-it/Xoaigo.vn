@@ -65,3 +65,9 @@ Status: Preview implementation guide; not production authorization.
 - Repeating the same command with the same key and same payload returns the original request ID. Reusing the key with a different payload is rejected.
 - The idempotency record and approval request are written in the same database transaction.
 - The idempotency table is private to privileged database commands and has no client read/write grants.
+
+
+## Merchant profile updates
+- `/admin/merchants` now supports editing merchant legal/display names, business type, contact phone/email and slug for users with `merchants.update`.
+- The command writes an audit event and explicitly leaves merchant status and onboarding status unchanged.
+- KYC, merchant approval/rejection, suspension and publication remain separate workflows and are not exposed.
