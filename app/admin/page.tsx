@@ -21,6 +21,10 @@ export default async function AdminHomePage() {
     supabase.from("approval_requests").select("id",{count:"exact",head:true}).eq("status","pending")
   ]);
 
+  if (!profile || profile.status !== "active") {
+    return <main style={{padding:40,fontFamily:"Arial,sans-serif",color:"#173d2b"}}><h1>Tài khoản chưa được kích hoạt</h1><p>Hồ sơ người dùng đang bị khóa hoặc chưa đồng bộ. Quyền truy cập quản trị đã bị từ chối.</p></main>;
+  }
+
   const roleCodes = (grants ?? []).map((grant) => grant.roles?.code).filter((code): code is string => Boolean(code));
   const hasPlatformAccess = roleCodes.some((code)=>["platform_owner","platform_admin","ops_manager","ops_agent","finance_manager","finance_operator","policy_reviewer"].includes(code));
   if (!hasPlatformAccess) {
@@ -37,7 +41,7 @@ export default async function AdminHomePage() {
     <main style={{minHeight:"100vh",background:"#f5f8f5",color:"#173d2b",fontFamily:"Arial,sans-serif"}}>
       <header style={{padding:"22px 32px",background:"#fff",borderBottom:"1px solid #e0eae3",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
         <div><b style={{color:"#13864b",letterSpacing:1.5}}>XOÀI GO</b><span style={{marginLeft:12,color:"#708076",fontSize:13}}>Control Center</span></div>
-        <div style={{fontSize:13,color:"#65766b"}}>{profile?.display_name || user.email}</div>
+        <div style={{fontSize:13,color:"#65766b"}}>{profile.display_name || user.email}</div>
       </header>
       <section style={{padding:32,maxWidth:1200,margin:"0 auto"}}>
         <p style={{fontSize:11,fontWeight:800,letterSpacing:2,color:"#16864b"}}>OPERATIONS OVERVIEW</p>
