@@ -693,6 +693,66 @@ export type Database = {
           },
         ]
       }
+      merchant_obligations: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          currency: string
+          description: string
+          due_at: string | null
+          id: string
+          merchant_id: string
+          obligation_type: string
+          source_id: string | null
+          source_type: string
+          status: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          currency: string
+          description: string
+          due_at?: string | null
+          id?: string
+          merchant_id: string
+          obligation_type: string
+          source_id?: string | null
+          source_type: string
+          status?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          description?: string
+          due_at?: string | null
+          id?: string
+          merchant_id?: string
+          obligation_type?: string
+          source_id?: string | null
+          source_type?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_obligations_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "merchant_obligations_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       merchant_products: {
         Row: {
           category_id: string | null
@@ -848,6 +908,159 @@ export type Database = {
           id?: string
         }
         Relationships: []
+      }
+      points_accounts: {
+        Row: {
+          created_at: string
+          id: string
+          member_user_id: string
+          policy_version_id: string | null
+          program_code: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          member_user_id: string
+          policy_version_id?: string | null
+          program_code: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          member_user_id?: string
+          policy_version_id?: string | null
+          program_code?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "points_accounts_member_user_id_fkey"
+            columns: ["member_user_id"]
+            isOneToOne: false
+            referencedRelation: "member_profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "points_accounts_policy_version_id_fkey"
+            columns: ["policy_version_id"]
+            isOneToOne: false
+            referencedRelation: "policy_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      points_entries: {
+        Row: {
+          actor_user_id: string | null
+          entry_type: string
+          id: string
+          idempotency_key: string | null
+          occurred_at: string
+          points_account_id: string
+          points_delta: number
+          reason: string
+          reverses_entry_id: string | null
+          source_id: string | null
+          source_type: string
+        }
+        Insert: {
+          actor_user_id?: string | null
+          entry_type: string
+          id?: string
+          idempotency_key?: string | null
+          occurred_at?: string
+          points_account_id: string
+          points_delta: number
+          reason: string
+          reverses_entry_id?: string | null
+          source_id?: string | null
+          source_type: string
+        }
+        Update: {
+          actor_user_id?: string | null
+          entry_type?: string
+          id?: string
+          idempotency_key?: string | null
+          occurred_at?: string
+          points_account_id?: string
+          points_delta?: number
+          reason?: string
+          reverses_entry_id?: string | null
+          source_id?: string | null
+          source_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "points_entries_actor_user_id_fkey"
+            columns: ["actor_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "points_entries_points_account_id_fkey"
+            columns: ["points_account_id"]
+            isOneToOne: false
+            referencedRelation: "points_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "points_entries_reverses_entry_id_fkey"
+            columns: ["reverses_entry_id"]
+            isOneToOne: false
+            referencedRelation: "points_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      points_holds: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          points_account_id: string
+          points_amount: number
+          reason: string
+          resolved_at: string | null
+          source_id: string | null
+          source_type: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          points_account_id: string
+          points_amount: number
+          reason: string
+          resolved_at?: string | null
+          source_id?: string | null
+          source_type: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          points_account_id?: string
+          points_amount?: number
+          reason?: string
+          resolved_at?: string | null
+          source_id?: string | null
+          source_type?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "points_holds_points_account_id_fkey"
+            columns: ["points_account_id"]
+            isOneToOne: false
+            referencedRelation: "points_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       policy_sets: {
         Row: {
@@ -1150,6 +1363,121 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      settlement_batches: {
+        Row: {
+          batch_code: string
+          created_at: string
+          created_by: string
+          currency: string
+          id: string
+          merchant_id: string | null
+          period_end: string | null
+          period_start: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+        }
+        Insert: {
+          batch_code: string
+          created_at?: string
+          created_by: string
+          currency: string
+          id?: string
+          merchant_id?: string | null
+          period_end?: string | null
+          period_start?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+        }
+        Update: {
+          batch_code?: string
+          created_at?: string
+          created_by?: string
+          currency?: string
+          id?: string
+          merchant_id?: string | null
+          period_end?: string | null
+          period_start?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "settlement_batches_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "settlement_batches_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "settlement_batches_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      settlement_lines: {
+        Row: {
+          amount: number
+          batch_id: string
+          created_at: string
+          currency: string
+          description: string
+          id: string
+          obligation_id: string | null
+          source_id: string | null
+          source_type: string
+        }
+        Insert: {
+          amount: number
+          batch_id: string
+          created_at?: string
+          currency: string
+          description: string
+          id?: string
+          obligation_id?: string | null
+          source_id?: string | null
+          source_type: string
+        }
+        Update: {
+          amount?: number
+          batch_id?: string
+          created_at?: string
+          currency?: string
+          description?: string
+          id?: string
+          obligation_id?: string | null
+          source_id?: string | null
+          source_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "settlement_lines_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "settlement_batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "settlement_lines_obligation_id_fkey"
+            columns: ["obligation_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_obligations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_role_grants: {
         Row: {
