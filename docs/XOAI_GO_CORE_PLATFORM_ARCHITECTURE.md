@@ -260,3 +260,12 @@ This section supersedes earlier baseline statements in sections 3, 4, 11 and 12 
 ### Release status
 - Feature branch and Preview only. No merge to `main`, no production deployment and no VGarden changes are authorized by this implementation record.
 - A feature is not considered operationally complete until it has actual user/session E2E, role matrix, domain-specific invariants and accepted Preview behavior.
+
+
+### Additional verified modules — migrations 0020–0021
+- Points schema: member point accounts, append-only point entries and holds. No points earn/redeem/expiry formula or point-to-currency conversion is configured.
+- Merchant finance schema: merchant obligations and settlement batch/line records. No commission calculation, due-date schedule, tax treatment, settlement approval or payout operation is enabled.
+- Policy and marketing-budget approval submissions now require idempotency keys. Same key/same payload returns the original request ID; same key/different payload is rejected. Idempotency record creation and request creation are atomic.
+- Admin routes now include `/admin/orders` (read-only), `/admin/access` (read-only RBAC inventory guarded by `access.manage`), `/admin/catalog` (draft products and merchant locations), and `/admin/campaigns` (draft campaigns).
+- Dashboard KPIs now include live merchant, member, pending approval, active campaign, open order and merchant review counts. No fabricated revenue or balances are displayed.
+- Catalog, campaign and merchant-location command paths were exercised with rollback-only fixtures. Idempotent policy and budget submission paths were exercised with duplicate-key and changed-payload checks; fixtures were rolled back.
