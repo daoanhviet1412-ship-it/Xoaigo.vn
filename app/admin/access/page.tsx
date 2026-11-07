@@ -1,0 +1,22 @@
+import {redirect} from "next/navigation";
+import {createClient} from "@/lib/supabase/server";
+export default async function AccessPage(){
+ const supabase=await createClient();if(!supabase)return <main style={{padding:36}}>Preview chưa cấu hình Supabase.</main>;
+ const {data:{user}}=await supabase.auth.getUser();if(!user)redirect("/admin/login");
+ const [{data:profile},{data:grants},{data:rolePermissions},{data:users,error},{data:roles}]=await Promise.all([
+  supabase.from("profiles").select("status").eq("id",user.id).maybeSingle(),
+  supabase.from("user_role_grants").select("user_id,role_id,merchant_id,granted_at,revoked_at,roles(code,name)").order("granted_at",{ascending:false}).limit(300),
+  supabase.from("role_permissions").select("roles(code,name),permissions(code,description)"),
+  supabase.from("profiles").select("id,display_name,phone,status,created_at").order("created_at",{ascending:false}).limit(300),
+  supabase.from("roles").select("id,code,name,is_platform_role").order("code")
+ ]);
+ if(profile?.status!=="active")return <main style={{padding:36}}>Tài khoản chưa được kích hoạt.</main>;
+ const [{data:myGrants},{data:roleGrant}] = await Promise.all([
+  supabase.from("user_role_grants").select("roles(code)").eq("user_id",user.id).is("revoked_at",null),
+  supabase.from("user_role_grants").select("id").eq("user_id",user.id).is("revoked_at",null)
+ ]);
+ const myRoles=(myGrants??[]).map(g=>g.roles?.code);if(!myRoles.includes("platform_owner")&&!myRoles.includes("platform_admin"))return <main style={{padding:36}}>Bạn không có quyền xem quản trị truy cập.</main>;
+ const names=new Map((users??[]).map(u=>[u.id,u.display_name||u.id]));
+ const matrix=(roles??[]).map(role=>({role,permissions:(rolePermissions??[]).filter(p=>p.roles?.code===role.code).map(p=>p.permissions?.code).filter(Boolean)}));
+ return <main style={{minHeight:"100vh",background:"#f5f8f5",color:"#173d2b",fontFamily:"Arial,sans-serif"}}><header style={{padding:"20px 32px",background:"#fff",borderBottom:"1px solid #e0eae3",display:"flex",gap:18,flexWrap:"wrap"}}><a href="/admin" style={{color:"#13864b",fontWeight:800}}>XOÀI GO</a><a href="/admin/merchants">Cửa hàng</a><a href="/admin/orders">Đơn hàng</a><a href="/admin/audit">Nhật ký</a><span style={{color:"#13864b",fontWeight:700}}>Truy cập & vai trò</span></header><section style={{padding:32,maxWidth:1280,margin:"0 auto",display:"grid",gap:22}}><div><p style={{fontSize:11,fontWeight:800,letterSpacing:2,color:"#16864b"}}>IDENTITY & RBAC</p><h1 style={{fontSize:32,margin:"8px 0"}}>Quản trị truy cập</h1><p style={{color:"#718176",fontSize:14,lineHeight:1.7}}>Trang chỉ đọc danh sách người dùng, role grant và permission catalog. Không cấp/thu hồi quyền từ giao diện cho đến khi có quy trình phê duyệt access change và tài khoản maker-checker độc lập.</p></div><section style={{background:"#fff",border:"1px solid #e0eae3",borderRadius:16,overflow:"hidden"}}><div style={{padding:18,borderBottom:"1px solid #e8efe9",fontWeight:700}}>Tài khoản ({users?.length??0})</div>{error?<p style={{padding:18,color:"#b42318"}}>{error.message}</p>:<div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}><thead><tr>{["Người dùng","Điện thoại","Trạng thái","Role đang cấp"].map(h=><th key={h} style={{textAlign:"left",padding:12}}>{h}</th>)}</tr></thead><tbody>{(users??[]).map(u=><tr key={u.id} style={{borderTop:"1px solid #edf2ee"}}><td style={{padding:12}}><b>{u.display_name||"Chưa có tên"}</b><small style={{display:"block",color:"#87948c"}}>{u.id}</small></td><td style={{padding:12}}>{u.phone||"—"}</td><td style={{padding:12}}>{u.status}</td><td style={{padding:12}}>{(grants??[]).filter(g=>g.user_id===u.id&&!g.revoked_at).map(g=>g.roles?.code).filter(Boolean).join(", ")||"—"}</td></tr>)}</tbody></table></div>}</section><section style={{background:"#fff",border:"1px solid #e0eae3",borderRadius:16,overflow:"hidden"}}><div style={{padding:18,borderBottom:"1px solid #e8efe9",fontWeight:700}}>Role & quyền ({matrix.length})</div><div style={{display:"grid",gap:0}}>{matrix.map(({role,permissions})=><article key={role.id} style={{padding:16,borderBottom:"1px solid #edf2ee"}}><b>{role.name}</b><small style={{marginLeft:8,color:"#16864b"}}>{role.code}{role.is_platform_role?" · Platform role":""}</small><p style={{margin:"8px 0 0",fontSize:12,color:"#718176",lineHeight:1.7}}>{permissions.join(" · ")||"Chưa gán quyền"}</p></article>)}</div></section></section></main>;
+}
