@@ -18,7 +18,7 @@ begin
   if v_actor is null or not private.has_permission('merchants.create') then raise exception 'permission_denied'; end if;
   if length(trim(coalesce(p_legal_name,'')))=0 or length(trim(coalesce(p_display_name,'')))=0 then raise exception 'merchant_name_required'; end if;
   insert into public.merchants(legal_name,display_name,business_type,contact_phone,contact_email,slug,onboarding_status)
-  values(trim(p_legal_name),trim(p_display_name),nullif(trim(p_business_type),''),nullif(trim(p_contact_phone),''),nullif(lower(trim(p_contact_email)),''),nullif(lower(trim(p_slug),''),'draft')
+  values(trim(p_legal_name),trim(p_display_name),nullif(trim(p_business_type),''),nullif(trim(p_contact_phone),''),nullif(lower(trim(p_contact_email)),''),nullif(lower(trim(p_slug)),''),'draft')
   returning id into v_merchant_id;
   insert into public.audit_events(actor_user_id,actor_kind,action,resource_type,resource_id,merchant_id,outcome,metadata)
   values(v_actor,'user','merchant.created','merchant',v_merchant_id::text,v_merchant_id,'success',jsonb_build_object('onboarding_status','draft'));
