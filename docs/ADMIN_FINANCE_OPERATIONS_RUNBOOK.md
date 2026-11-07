@@ -43,3 +43,11 @@ Status: Preview implementation guide; not production authorization.
 - [ ] Business policy and finance/legal rules approved.
 - [ ] Preview accepted by product owner.
 - [ ] Production release separately authorized with rollback plan.
+
+
+## Merchant catalog and campaign drafts
+- `/admin/catalog` lists merchant products and locations visible under RLS. Authorized users can create a product in draft state and add a merchant location through audited database commands.
+- Product prices are stored as integer VND amounts. Creating a product does not publish it or make it orderable.
+- `/admin/campaigns` lists campaigns and allows scoped users to create campaign drafts. Campaign creation does not activate the campaign or allocate a marketing budget.
+- Budget requests are submitted separately through `/admin/budgets` and must be reviewed by a different user with the budget review permission.
+- Merchant onboarding status transitions and product activation remain intentionally unavailable until review criteria and business rules are approved.
