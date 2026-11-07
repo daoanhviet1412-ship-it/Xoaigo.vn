@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { MerchantCreateForm } from "@/components/admin/merchant-create-form";
+import { MerchantEditForm } from "@/components/admin/merchant-edit-form";
 
 export default async function MerchantsPage() {
   const supabase=await createClient();
@@ -35,8 +36,8 @@ export default async function MerchantsPage() {
         <div style={{padding:20,borderBottom:"1px solid #e8efe9",display:"flex",justifyContent:"space-between"}}><b>Danh sách cửa hàng</b><span style={{fontSize:12,color:"#718176"}}>{merchants?.length??0} hồ sơ hiển thị</span></div>
         {error?<p style={{padding:20,color:"#b42318"}}>Không thể tải danh sách: {error.message}</p>:!merchants?.length?<p style={{padding:24,color:"#718176"}}>Chưa có cửa hàng. Tạo hồ sơ đầu tiên để bắt đầu.</p>:
         <div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
-          <thead><tr style={{textAlign:"left",background:"#f8fbf8",color:"#718176"}}>{["Cửa hàng","Loại hình","Điện thoại","Onboarding","Tài khoản"].map(h=><th key={h} style={{padding:"13px 16px",whiteSpace:"nowrap"}}>{h}</th>)}</tr></thead>
-          <tbody>{merchants.map(m=><tr key={m.id} style={{borderTop:"1px solid #edf2ee"}}><td style={{padding:"14px 16px"}}><b>{m.display_name}</b><small style={{display:"block",marginTop:4,color:"#87948c"}}>{m.legal_name}</small></td><td style={{padding:"14px 16px"}}>{m.business_type||"—"}</td><td style={{padding:"14px 16px"}}>{m.contact_phone||"—"}</td><td style={{padding:"14px 16px"}}>{m.onboarding_status}</td><td style={{padding:"14px 16px"}}>{m.status}</td></tr>)}</tbody>
+          <thead><tr style={{textAlign:"left",background:"#f8fbf8",color:"#718176"}}>{["Cửa hàng","Loại hình","Điện thoại","Onboarding","Tài khoản","Hồ sơ"].map(h=><th key={h} style={{padding:"13px 16px",whiteSpace:"nowrap"}}>{h}</th>)}</tr></thead>
+          <tbody>{merchants.map(m=><tr key={m.id} style={{borderTop:"1px solid #edf2ee"}}><td style={{padding:"14px 16px"}}><b>{m.display_name}</b><small style={{display:"block",marginTop:4,color:"#87948c"}}>{m.legal_name}</small></td><td style={{padding:"14px 16px"}}>{m.business_type||"—"}</td><td style={{padding:"14px 16px"}}>{m.contact_phone||"—"}</td><td style={{padding:"14px 16px"}}>{m.onboarding_status}</td><td style={{padding:"14px 16px"}}>{m.status}</td><td style={{padding:"14px 16px"}}>{canCreate && <MerchantEditForm merchant={m}/>}</td></tr>)}</tbody>
         </table></div>}
       </section>
     </section>
