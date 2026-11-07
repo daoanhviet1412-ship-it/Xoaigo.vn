@@ -1558,6 +1558,18 @@ export type Database = {
         Args: { p_code: string; p_description?: string; p_name: string }
         Returns: string
       }
+      admin_update_merchant: {
+        Args: {
+          p_business_type: string
+          p_contact_email: string
+          p_contact_phone: string
+          p_display_name: string
+          p_legal_name: string
+          p_merchant_id: string
+          p_slug: string
+        }
+        Returns: string
+      }
       create_policy_version_draft: {
         Args: { p_config: Json; p_policy_set_id: string }
         Returns: string
