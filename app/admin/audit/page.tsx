@@ -36,6 +36,9 @@ export default async function AuditLogPage() {
         <a href="/admin" style={{ color: "#13864b", fontWeight: 800 }}>XOÀI GO</a>
         <a href="/admin/merchants">Cửa hàng</a>
         <a href="/admin/members">Thành viên</a>
+        <a href="/admin/approvals">Phê duyệt</a>
+        <a href="/admin/policies">Chính sách</a>
+        <a href="/admin/budgets">Ngân sách</a>
         <span style={{ color: "#13864b", fontWeight: 700 }}>Nhật ký hệ thống</span>
       </header>
       <section style={{ padding: 32, maxWidth: 1280, margin: "0 auto" }}>
