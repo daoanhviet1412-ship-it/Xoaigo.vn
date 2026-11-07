@@ -269,3 +269,9 @@ This section supersedes earlier baseline statements in sections 3, 4, 11 and 12 
 - Admin routes now include `/admin/orders` (read-only), `/admin/access` (read-only RBAC inventory guarded by `access.manage`), `/admin/catalog` (draft products and merchant locations), and `/admin/campaigns` (draft campaigns).
 - Dashboard KPIs now include live merchant, member, pending approval, active campaign, open order and merchant review counts. No fabricated revenue or balances are displayed.
 - Catalog, campaign and merchant-location command paths were exercised with rollback-only fixtures. Idempotent policy and budget submission paths were exercised with duplicate-key and changed-payload checks; fixtures were rolled back.
+
+
+### Merchant profile editing — migration 0022
+- Added an audited merchant profile update command for legal/display name, business type, contact fields and slug.
+- The command requires `merchants.update`; it does not change onboarding status, merchant account status, KYC state or publication state.
+- A rollback-only test confirmed the update path and audit transaction.
