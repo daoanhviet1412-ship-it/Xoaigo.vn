@@ -902,7 +902,52 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_create_merchant: {
+        Args: {
+          p_business_type?: string
+          p_contact_email?: string
+          p_contact_phone?: string
+          p_display_name: string
+          p_legal_name: string
+          p_slug?: string
+        }
+        Returns: string
+      }
+      merchant_create_campaign: {
+        Args: {
+          p_description?: string
+          p_ends_at?: string
+          p_merchant_id: string
+          p_name: string
+          p_starts_at?: string
+        }
+        Returns: string
+      }
+      merchant_create_location: {
+        Args: {
+          p_address_line?: string
+          p_city?: string
+          p_district?: string
+          p_is_primary?: boolean
+          p_merchant_id: string
+          p_name: string
+          p_phone?: string
+          p_ward?: string
+        }
+        Returns: string
+      }
+      merchant_create_product: {
+        Args: {
+          p_category_id?: string
+          p_description?: string
+          p_image_url?: string
+          p_merchant_id: string
+          p_name: string
+          p_price_amount: number
+          p_sku?: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       account_status: "active" | "suspended" | "closed"
