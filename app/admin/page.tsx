@@ -11,7 +11,11 @@ export default async function AdminHomePage() {
     supabase.from("profiles").select("display_name,status").eq("id",user.id).maybeSingle(),
     supabase.from("user_role_grants").select("id,merchant_id,roles(code,name)").eq("user_id",user.id).is("revoked_at",null),
     supabase.from("merchants").select("id",{count:"exact",head:true}),
-    supabase.from("approval_requests").select("id",{count:"exact",head:true}).eq("status","pending")
+    supabase.from("approval_requests").select("id",{count:"exact",head:true}).eq("status","pending"),
+    supabase.from("member_profiles").select("user_id",{count:"exact",head:true}),
+    supabase.from("marketing_campaigns").select("id",{count:"exact",head:true}).eq("status","active"),
+    supabase.from("commerce_orders").select("id",{count:"exact",head:true}).in("status",["placed","accepted","preparing","ready"]),
+    supabase.from("merchants").select("id",{count:"exact",head:true}).in("onboarding_status",["submitted","under_review"])
   ]);
   if(!profile || profile.status!=="active") return <main style={{padding:40,fontFamily:"Arial,sans-serif",color:"#173d2b"}}><h1>Tài khoản chưa được kích hoạt</h1><p>Hồ sơ người dùng đang bị khóa hoặc chưa đồng bộ. Quyền truy cập quản trị đã bị từ chối.</p></main>;
   const roleCodes=(grants??[]).map(g=>g.roles?.code).filter((v):v is string=>Boolean(v));
@@ -20,7 +24,10 @@ export default async function AdminHomePage() {
   const cards=[
     ["Tổng số cửa hàng",String(merchantCount??0),"Dữ liệu trực tiếp từ Supabase"],
     ["Yêu cầu chờ duyệt",String(pendingApprovalCount??0),"Hàng đợi phê duyệt"],
-    ["Thành viên",String(memberCount??0),"Hồ sơ thành viên"],\n    ["Chiến dịch đang chạy",String(activeCampaignCount??0),"Trạng thái từ dữ liệu chiến dịch"],\n    ["Đơn hàng đang xử lý",String(openOrderCount??0),"Đơn chưa hoàn tất hoặc hủy"],\n    ["Merchant chờ xử lý",String(pendingMerchantCount??0),"Đã gửi hoặc đang được xem xét"]
+    ["Thành viên",String(memberCount??0),"Hồ sơ thành viên"],
+    ["Chiến dịch đang chạy",String(activeCampaignCount??0),"Trạng thái từ dữ liệu chiến dịch"],
+    ["Đơn hàng đang xử lý",String(openOrderCount??0),"Đơn chưa hoàn tất hoặc hủy"],
+    ["Merchant chờ xử lý",String(pendingMerchantCount??0),"Đã gửi hoặc đang được xem xét"]
   ];
   return <main style={{minHeight:"100vh",background:"#f5f8f5",color:"#173d2b",fontFamily:"Arial,sans-serif"}}>
     <header style={{padding:"18px 32px",background:"#fff",borderBottom:"1px solid #e0eae3",display:"flex",justifyContent:"space-between",alignItems:"center",gap:20,flexWrap:"wrap"}}>
@@ -35,7 +42,7 @@ export default async function AdminHomePage() {
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:16,marginTop:28}}>
         {cards.map(([label,value,caption])=><article key={label} style={{background:"#fff",border:"1px solid #e0eae3",borderRadius:18,padding:22}}><div style={{fontSize:13,color:"#6d7c72"}}>{label}</div><strong style={{display:"block",fontSize:34,margin:"12px 0 5px"}}>{value}</strong><small style={{color:"#87948c"}}>{caption}</small></article>)}
       </div>
-      <div style={{marginTop:24,padding:20,borderRadius:16,background:"#eaf5ee",color:"#326448",fontSize:13,lineHeight:1.7}}>Giai đoạn hiện tại: nền tảng dữ liệu, phân quyền, hồ sơ cửa hàng và thành viên đã được khởi tạo. Các module ngân sách, điểm thưởng, công nợ và sổ cái chưa mở vận hành; không hiển thị số dư tài chính giả.</div>
+      <div style={{marginTop:24,padding:20,borderRadius:16,background:"#eaf5ee",color:"#326448",fontSize:13,lineHeight:1.7}}>Dashboard chỉ hiển thị chỉ số có nguồn dữ liệu thật. Ngân sách, điểm, công nợ và sổ cái hiện là các module kiểm soát/đọc; chưa có số dư tài chính hoặc khoản tiền giả lập.</div>
     </section>
   </main>;
 }
