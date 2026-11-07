@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -12,11 +13,12 @@ export function MerchantCreateForm() {
 
   async function submit(event:FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formElement=event.currentTarget;
+    const form=new FormData(formElement);
     setBusy(true); setError(""); setSuccess("");
-    const form=new FormData(event.currentTarget);
     try {
       const supabase=createClient();
-      const {data,error:rpcError}=await supabase.rpc("admin_create_merchant",{
+      const {error:rpcError}=await supabase.rpc("admin_create_merchant",{
         p_legal_name:String(form.get("legal_name")||""),
         p_display_name:String(form.get("display_name")||""),
         p_business_type:String(form.get("business_type")||"") || null,
@@ -26,7 +28,7 @@ export function MerchantCreateForm() {
       });
       if(rpcError) throw rpcError;
       setSuccess("Đã tạo hồ sơ cửa hàng ở trạng thái Nháp.");
-      event.currentTarget.reset();
+      formElement.reset();
       router.refresh();
     } catch(cause) {
       setError(cause instanceof Error ? cause.message : "Không thể tạo cửa hàng.");
@@ -42,7 +44,7 @@ export function MerchantCreateForm() {
     <label style={{fontSize:12,fontWeight:700}}>Email<input name="contact_email" type="email" style={input}/></label>
     <label style={{fontSize:12,fontWeight:700}}>Slug<input name="slug" placeholder="ten-cua-hang" style={input}/></label>
     <div style={{gridColumn:"1/-1",display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
-      <button disabled={busy} type="submit" style={{border:0,borderRadius:10,padding:"12px 18px",background:"#13864b",color:"#fff",fontWeight:800,cursor:"pointer",opacity:busy?.7:1}}>{busy?"Đang lưu…":"Tạo hồ sơ cửa hàng"}</button>
+      <button disabled={busy} type="submit" style={{border:0,borderRadius:10,padding:"12px 18px",background:"#13864b",color:"#fff",fontWeight:800,cursor:"pointer",opacity:busy ? .7 : 1}}>{busy?"Đang lưu…":"Tạo hồ sơ cửa hàng"}</button>
       {success&&<span role="status" style={{fontSize:12,color:"#16864b"}}>{success}</span>}
       {error&&<span role="alert" style={{fontSize:12,color:"#b42318"}}>{error}</span>}
     </div>
