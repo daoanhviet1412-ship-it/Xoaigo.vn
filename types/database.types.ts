@@ -319,6 +319,222 @@ export type Database = {
           },
         ]
       }
+      idempotency_records: {
+        Row: {
+          actor_user_id: string | null
+          command: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          idempotency_key: string
+          request_hash: string
+          response_payload: Json | null
+          scope: string
+        }
+        Insert: {
+          actor_user_id?: string | null
+          command: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          idempotency_key: string
+          request_hash: string
+          response_payload?: Json | null
+          scope: string
+        }
+        Update: {
+          actor_user_id?: string | null
+          command?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          idempotency_key?: string
+          request_hash?: string
+          response_payload?: Json | null
+          scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "idempotency_records_actor_user_id_fkey"
+            columns: ["actor_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journal_lines: {
+        Row: {
+          account_id: string
+          created_at: string
+          credit_amount: number
+          debit_amount: number
+          description: string | null
+          id: string
+          line_number: number
+          merchant_id: string | null
+          transaction_id: string
+        }
+        Insert: {
+          account_id: string
+          created_at?: string
+          credit_amount?: number
+          debit_amount?: number
+          description?: string | null
+          id?: string
+          line_number: number
+          merchant_id?: string | null
+          transaction_id: string
+        }
+        Update: {
+          account_id?: string
+          created_at?: string
+          credit_amount?: number
+          debit_amount?: number
+          description?: string | null
+          id?: string
+          line_number?: number
+          merchant_id?: string | null
+          transaction_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_lines_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "ledger_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journal_lines_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journal_lines_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "journal_transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journal_transactions: {
+        Row: {
+          created_at: string
+          created_by: string
+          currency: string
+          description: string
+          effective_at: string
+          id: string
+          idempotency_key: string | null
+          posted_at: string | null
+          posted_by: string | null
+          reversal_of: string | null
+          source_id: string | null
+          source_type: string
+          status: string
+          transaction_code: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          currency: string
+          description: string
+          effective_at: string
+          id?: string
+          idempotency_key?: string | null
+          posted_at?: string | null
+          posted_by?: string | null
+          reversal_of?: string | null
+          source_id?: string | null
+          source_type: string
+          status?: string
+          transaction_code: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          currency?: string
+          description?: string
+          effective_at?: string
+          id?: string
+          idempotency_key?: string | null
+          posted_at?: string | null
+          posted_by?: string | null
+          reversal_of?: string | null
+          source_id?: string | null
+          source_type?: string
+          status?: string
+          transaction_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_transactions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journal_transactions_posted_by_fkey"
+            columns: ["posted_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journal_transactions_reversal_of_fkey"
+            columns: ["reversal_of"]
+            isOneToOne: false
+            referencedRelation: "journal_transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ledger_accounts: {
+        Row: {
+          account_class: string
+          account_code: string
+          account_name: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+        }
+        Insert: {
+          account_class: string
+          account_code: string
+          account_name: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+        }
+        Update: {
+          account_class?: string
+          account_code?: string
+          account_name?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ledger_accounts_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketing_campaigns: {
         Row: {
           created_at: string
@@ -784,6 +1000,103 @@ export type Database = {
         }
         Relationships: []
       }
+      reconciliation_batches: {
+        Row: {
+          batch_code: string
+          completed_at: string | null
+          created_at: string
+          created_by: string
+          currency: string
+          id: string
+          period_end: string | null
+          period_start: string | null
+          source_reference: string | null
+          source_system: string
+          status: string
+        }
+        Insert: {
+          batch_code: string
+          completed_at?: string | null
+          created_at?: string
+          created_by: string
+          currency: string
+          id?: string
+          period_end?: string | null
+          period_start?: string | null
+          source_reference?: string | null
+          source_system: string
+          status?: string
+        }
+        Update: {
+          batch_code?: string
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string
+          currency?: string
+          id?: string
+          period_end?: string | null
+          period_start?: string | null
+          source_reference?: string | null
+          source_system?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reconciliation_batches_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reconciliation_items: {
+        Row: {
+          batch_id: string
+          created_at: string
+          expected_amount: number | null
+          external_reference: string | null
+          id: string
+          internal_reference: string | null
+          observed_amount: number | null
+          resolution_note: string | null
+          resolved_at: string | null
+          status: string
+        }
+        Insert: {
+          batch_id: string
+          created_at?: string
+          expected_amount?: number | null
+          external_reference?: string | null
+          id?: string
+          internal_reference?: string | null
+          observed_amount?: number | null
+          resolution_note?: string | null
+          resolved_at?: string | null
+          status?: string
+        }
+        Update: {
+          batch_id?: string
+          created_at?: string
+          expected_amount?: number | null
+          external_reference?: string | null
+          id?: string
+          internal_reference?: string | null
+          observed_amount?: number | null
+          resolution_note?: string | null
+          resolved_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reconciliation_items_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "reconciliation_batches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       role_permissions: {
         Row: {
           permission_id: string
@@ -913,6 +1226,14 @@ export type Database = {
         }
         Returns: string
       }
+      admin_create_policy_set: {
+        Args: { p_code: string; p_description?: string; p_name: string }
+        Returns: string
+      }
+      create_policy_version_draft: {
+        Args: { p_config: Json; p_policy_set_id: string }
+        Returns: string
+      }
       merchant_create_campaign: {
         Args: {
           p_description?: string
@@ -945,6 +1266,30 @@ export type Database = {
           p_name: string
           p_price_amount: number
           p_sku?: string
+        }
+        Returns: string
+      }
+      review_approval_request: {
+        Args: { p_decision: string; p_reason: string; p_request_id: string }
+        Returns: string
+      }
+      submit_budget_approval_request: {
+        Args: {
+          p_amount: number
+          p_campaign_id: string
+          p_currency: string
+          p_funding_source: string
+          p_merchant_id: string
+          p_purpose: string
+          p_reason: string
+        }
+        Returns: string
+      }
+      submit_policy_approval_request: {
+        Args: {
+          p_policy_set_id: string
+          p_proposed_config: Json
+          p_reason: string
         }
         Returns: string
       }
