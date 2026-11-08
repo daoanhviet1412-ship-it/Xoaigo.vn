@@ -22,6 +22,16 @@ export default async function PoliciesPage() {
   if (!canRead) return <main style={{ padding: 36 }}>Bạn không có quyền xem danh mục chính sách.</main>;
 
   const setNames = new Map((policySets ?? []).map(item => [item.id, item.name]));
+  const configDate = (config: unknown, key: string): string | null => {
+    if (!config || typeof config !== "object" || Array.isArray(config)) return null;
+    const value = (config as Record<string, unknown>)[key];
+    return typeof value === "string" ? value : null;
+  };
+  const displayVersions = (versions ?? []).map(version => ({
+    ...version,
+    effectiveFromValue: version.effective_from ?? configDate(version.config, "effective_from"),
+    effectiveUntilValue: version.effective_until ?? configDate(version.config, "effective_until"),
+  }));
   return <main style={{ minHeight: "100vh", background: "#f5f8f5", color: "#173d2b", fontFamily: "Arial,sans-serif" }}>
     <header style={{ padding: "20px 32px", background: "#fff", borderBottom: "1px solid #e0eae3", display: "flex", gap: 18, flexWrap: "wrap" }}>
       <a href="/admin" style={{ color: "#13864b", fontWeight: 800 }}>XOÀI GO</a>
@@ -40,7 +50,7 @@ export default async function PoliciesPage() {
       </section>
       <section style={{ background: "#fff", border: "1px solid #e0eae3", borderRadius: 16, overflow: "hidden" }}>
         <div style={{ padding: 18, borderBottom: "1px solid #e8efe9", fontWeight: 700 }}>Lịch sử phiên bản ({versions?.length ?? 0})</div>
-        {versionError ? <p style={{ padding: 20, color: "#b42318" }}>Không thể tải phiên bản: {versionError.message}</p> : !versions?.length ? <p style={{ padding: 20, color: "#718176" }}>Chưa có phiên bản chính sách.</p> : <div style={{ overflowX: "auto" }}><table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}><thead><tr style={{ textAlign: "left", background: "#f8fbf8" }}>{["Bộ chính sách", "Phiên bản", "Trạng thái", "Hiệu lực từ", "Hiệu lực đến", "Tạo lúc"].map(h => <th key={h} style={{ padding: 12 }}>{h}</th>)}</tr></thead><tbody>{versions.map(v => <tr key={v.id} style={{ borderTop: "1px solid #edf2ee" }}><td style={{ padding: 12 }}>{setNames.get(v.policy_set_id) ?? v.policy_set_id}</td><td style={{ padding: 12 }}>v{v.version}</td><td style={{ padding: 12 }}>{v.status}</td><td style={{ padding: 12 }}>{v.effective_from ? new Date(v.effective_from).toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }) : "—"}</td><td style={{ padding: 12 }}>{v.effective_until ? new Date(v.effective_until).toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }) : "—"}</td><td style={{ padding: 12 }}>{new Date(v.created_at).toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" })}</td></tr>)}</tbody></table></div>}
+        {versionError ? <p style={{ padding: 20, color: "#b42318" }}>Không thể tải phiên bản: {versionError.message}</p> : !versions?.length ? <p style={{ padding: 20, color: "#718176" }}>Chưa có phiên bản chính sách.</p> : <div style={{ overflowX: "auto" }}><table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}><thead><tr style={{ textAlign: "left", background: "#f8fbf8" }}>{["Bộ chính sách", "Phiên bản", "Trạng thái", "Hiệu lực từ", "Hiệu lực đến", "Tạo lúc"].map(h => <th key={h} style={{ padding: 12 }}>{h}</th>)}</tr></thead><tbody>{displayVersions.map(v => <tr key={v.id} style={{ borderTop: "1px solid #edf2ee" }}><td style={{ padding: 12 }}>{setNames.get(v.policy_set_id) ?? v.policy_set_id}</td><td style={{ padding: 12 }}>v{v.version}</td><td style={{ padding: 12 }}>{v.status}</td><td style={{ padding: 12 }}>{v.effectiveFromValue ? new Date(v.effectiveFromValue).toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }) : "—"}</td><td style={{ padding: 12 }}>{v.effectiveUntilValue ? new Date(v.effectiveUntilValue).toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }) : "—"}</td><td style={{ padding: 12 }}>{new Date(v.created_at).toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" })}</td></tr>)}</tbody></table></div>}
       </section>
       {canWrite ? <PolicyRegistryActions policySets={policySets ?? []} /> : <p style={{ color: "#718176", fontSize: 13 }}>Tài khoản chỉ có quyền xem. Không có quyền tạo hoặc sửa bản nháp.</p>}
       <p style={{ color: "#87948c", fontSize: 12 }}>Chấp thuận hiện chỉ ghi nhận quyết định. Việc chuyển phiên bản sang trạng thái approved/hiệu lực cần quy trình thực thi riêng và điều kiện nghiệp vụ được xác nhận.</p>
