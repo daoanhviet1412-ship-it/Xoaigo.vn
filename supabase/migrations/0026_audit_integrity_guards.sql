@@ -176,6 +176,12 @@ security definer
 set search_path = ''
 as $$
 begin
+  if tg_op = 'DELETE' then
+    if old.status = 'settled' then
+      raise exception 'settled_obligation_is_immutable';
+    end if;
+    return old;
+  end if;
   if old.status = 'settled' then
     raise exception 'settled_obligation_is_immutable';
   end if;
