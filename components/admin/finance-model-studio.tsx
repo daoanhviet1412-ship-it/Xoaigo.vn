@@ -15,6 +15,8 @@ type RpcResult = { data: string | null; error: { message: string } | null };
 
 const money = (value: number) =>
   new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(Math.round(value)) + "đ";
+const points = (value: number) =>
+  new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(Math.round(value));
 
 const pct = (value: number) => new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 2 }).format(value) + "%";
 
@@ -265,13 +267,13 @@ export function FinanceModelStudio({ policySets, canWrite }: Props) {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(190px,1fr))", gap: 12 }}>
           {[
-            ["Điểm khách nhận (Pending)", money(result.earnedPoints), "Chỉ tính trên phần tiền thật"],
+            ["Điểm khách nhận (Pending)", points(result.earnedPoints) + " điểm", "Chỉ tính trên phần tiền thật"],
             ["Doanh thu Xoài từ tiền thật", money(result.xoaiCashRevenue), pct(cashXoaiRate) + " × tiền thật"],
             ["Doanh thu Xoài từ điểm dùng", money(result.xoaiPointsRevenue), pct(pointsRedemptionRate) + " × điểm sử dụng"],
             ["Tổng doanh thu/phí Xoài", money(result.totalXoaiRevenue), "Chưa phải dòng tiền ngân hàng"],
             ["Tổng phân bổ / khấu trừ", money(result.totalAllocation), "Điểm khách + phần Xoài trên tiền thật + phí trên điểm dùng"],
             ["Ví quán — biến động ròng minh họa", money(result.merchantWalletNet), "Điểm sử dụng ghi Có giá trị quán trừ tổng phân bổ"],
-            ["Ví khách — biến động điểm ròng", money(result.customerPointsNet) + " điểm", "Điểm Pending mới trừ điểm đã Redeem"],
+            ["Ví khách — biến động điểm ròng", points(result.customerPointsNet) + " điểm", "Điểm Pending mới trừ điểm đã Redeem"],
           ].map(([title, value, note]) => (
             <article key={title} style={{ border: "1px solid #e6eee8", borderRadius: 12, padding: 15, background: "#fbfdfb" }}>
               <div style={{ color: "#718176", fontSize: 11, fontWeight: 700 }}>{title}</div>
@@ -282,8 +284,8 @@ export function FinanceModelStudio({ policySets, canWrite }: Props) {
         </div>
         <div style={{ border: "1px solid #dce8df", borderRadius: 12, padding: 15, display: "grid", gap: 8 }}>
           <b style={{ fontSize: 13 }}>Chi tiết các entry mô phỏng</b>
-          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, fontSize: 12 }}><span>Ví khách · cộng điểm Pending</span><b>+{money(result.earnedPoints)} điểm</b></div>
-          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, fontSize: 12 }}><span>Ví khách · trừ điểm đã sử dụng</span><b>−{money(pointsPaid)} điểm</b></div>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, fontSize: 12 }}><span>Ví khách · cộng điểm Pending</span><b>+{points(result.earnedPoints)} điểm</b></div>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, fontSize: 12 }}><span>Ví khách · trừ điểm đã sử dụng</span><b>−{points(pointsPaid)} điểm</b></div>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 12, fontSize: 12 }}><span>Ví quán · giá trị điểm khách sử dụng</span><b>+{money(pointsPaid)}</b></div>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 12, fontSize: 12 }}><span>Ví quán · tổng phân bổ / khấu trừ minh họa</span><b>−{money(result.totalAllocation)}</b></div>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 12, fontSize: 12 }}><span>Ví doanh thu · Xoài</span><b>+{money(result.totalXoaiRevenue)}</b></div>
