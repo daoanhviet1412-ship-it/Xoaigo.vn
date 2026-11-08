@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -30,7 +30,7 @@ export function FinanceModelStudio({ policySets, canWrite }: Props) {
   const router = useRouter();
   const [scopeType, setScopeType] = useState("merchant");
   const [scopeName, setScopeName] = useState("Cửa hàng A");
-  const [effectiveFrom, setEffectiveFrom] = useState(localDateTimeValue);
+  const [effectiveFrom, setEffectiveFrom] = useState("");
   const [effectiveUntil, setEffectiveUntil] = useState("");
   const [cashCustomerRate, setCashCustomerRate] = useState(10);
   const [cashXoaiRate, setCashXoaiRate] = useState(5);
@@ -45,8 +45,10 @@ export function FinanceModelStudio({ policySets, canWrite }: Props) {
   const [message, setMessage] = useState<{ text: string; ok: boolean } | null>(null);
   const [savedId, setSavedId] = useState("");
 
+  useEffect(() => { setEffectiveFrom(localDateTimeValue()); }, []);
+
   const cashAllocationRate = cashCustomerRate + cashXoaiRate;
-  const amountValid = invoiceAmount >= 0 && cashPaid >= 0 && pointsPaid >= 0 &&
+  const amountValid = Number.isInteger(invoiceAmount) && Number.isInteger(cashPaid) && Number.isInteger(pointsPaid) && invoiceAmount >= 0 && cashPaid >= 0 && pointsPaid >= 0 &&
     Math.round(cashPaid + pointsPaid) === Math.round(invoiceAmount);
   const ratesValid = [cashCustomerRate, cashXoaiRate, pointsRedemptionRate].every(
     (rate) => Number.isFinite(rate) && rate >= 0 && rate <= 100
