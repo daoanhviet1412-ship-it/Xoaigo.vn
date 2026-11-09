@@ -202,5 +202,6 @@ export function runAcceptanceTests(){
  add("P30: không tự kích hoạt policy",base.policies.every(p=>p.version.startsWith("DEMO-")),"Policy chỉ thuộc DEMO.");
  add("P29: không giả lập COA đã duyệt",project(base).ledgerRows.every((r:any)=>r.debit==="Chưa ánh xạ COA"),"Accounting journal để chưa cấu hình.");
  }catch(error){add("Acceptance test harness",false,error instanceof Error?error.message:String(error));}
+ console.info("[XOAI_DEMO_ACCEPTANCE]",JSON.stringify({passed:out.filter(x=>x.pass).length,total:out.length,failed:out.filter(x=>!x.pass)}));
  return out;
 }
