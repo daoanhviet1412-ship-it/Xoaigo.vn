@@ -127,6 +127,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         .xoai-sidebar-foot { padding:16px 19px;border-top:1px solid var(--xoai-line);font-size:11px;color:#859188;display:flex;align-items:center;gap:8px;white-space:nowrap; }
         .xoai-status-dot,.xoai-live-dot { display:inline-block;width:7px;height:7px;border-radius:50%;background:#24a35a;flex-shrink:0; }
         .xoai-admin-main { min-height:100vh;margin-left:252px;transition:margin-left .2s ease; }
+        .xoai-admin-main > main > header:first-child { display:none !important; }
         .xoai-admin-main.sidebar-collapsed { margin-left:76px; }
         .xoai-topbar { height:64px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--xoai-line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:20; }
         .xoai-breadcrumb { display:flex;align-items:center;gap:10px;font-size:13px;color:#65756b; }
