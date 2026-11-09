@@ -53,7 +53,7 @@ export function migrateDemoState(raw:any):DemoState{
 export function project(state:DemoState,now=new Date().toISOString()){
  const p:any={merchantPointsPending:0,merchantPointsAvailable:0,xoaiDiscountPointsPending:0,xoaiDiscountPointsAvailable:0,cashFeeGross:0,cashFeeReversed:0,cashFeeNet:0,merchantDiscountPointsGross:0,merchantDiscountPointsReversed:0,merchantDiscountPointsNet:0,gmvGross:0,gmvReversed:0,gmvNet:0,cashPaid:0,cashPaidReversed:0,cashPaidNet:0,pointsRedeemed:0,pointsRedeemedReversed:0,pointsRedeemedNet:0,fees:0,feesReversed:0,feesNet:0,rewardIssued:0,rewardPending:0,rewardAvailable:0,rewardReversed:0,shortfall:0,orders:0,activeOrders:0,customers:[],stores:[],pointRows:[],walletRows:[],ledgerRows:[],reconciliationRows:[],withdrawals:[],cashbackOrders:[],cashbackPending:0,cashbackOverdue:0};
  const cm=new Map(demoCustomers.map(c=>[c.id,{...c,available:c.initialAvailable,pending:0,held:0,used:0,spent:0,orders:0}]));
- const sm=new Map(demoStores.map(s=>[s.id,{...s,backing:s.initialBacking,pendingBacking:0,pointsPending:0,pointsAvailable:0,gross:0,fee:0,net:0,count:0,negative:false}]));
+ const sm=new Map(demoStores.map(s=>[s.id,{...s,backing:s.initialBacking,pendingBacking:0,pointsPending:0,pointsAvailable:0,cashbackPending:0,gross:0,fee:0,net:0,count:0,negative:false}]));
  const sales=new Map<string,Extract<DemoEvent,{type:"SALE_CONFIRMED"}>>(),released=new Set<string>(),reversed=new Set<string>(),withdrawals=new Map<string,any>(),cashbackObligations=new Map<string,any>();
  const ordered=[...state.events].sort((a,b)=>new Date(eventTime(a)).getTime()-new Date(eventTime(b)).getTime());
  for(const e of ordered){
