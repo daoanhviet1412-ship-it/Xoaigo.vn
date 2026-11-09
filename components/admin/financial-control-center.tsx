@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { DEMO_TOTAL_POINT_SUPPLY, makeInitialState, migrateDemoState, money, number, project, type DemoState } from "@/lib/demo-engine";
 
-const STORAGE_KEY = "xoai-demo-engine-v3";
-const LEGACY_STORAGE_KEY = "xoai-demo-engine-v2";
+const STORAGE_KEY = "xoai-demo-engine-v4";
+const LEGACY_STORAGE_KEY = "xoai-demo-engine-v3";
 type WalletTab = "overview" | "customer" | "merchant" | "xoai" | "reserve" | "cash";
 const tabs: { id: WalletTab; label: string; href: string }[] = [
   { id: "overview", label: "Tổng quan", href: "/admin/finance" },
@@ -53,7 +53,7 @@ export function FinancialControlCenter({ wallet = "overview" }: { wallet?: strin
   const [scenarioNote, setScenarioNote] = useState("");
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_STORAGE_KEY);
+      const raw = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_STORAGE_KEY) ?? localStorage.getItem("xoai-demo-engine-v2");
       if (raw) {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed?.events) && Array.isArray(parsed?.policies)) {
@@ -72,7 +72,7 @@ export function FinancialControlCenter({ wallet = "overview" }: { wallet?: strin
     held: data.customers.reduce((sum: number, customer: { held: number }) => sum + customer.held, 0),
   }), [data]);
   const activeTab = tabs.some((tab) => tab.id === wallet) ? wallet as WalletTab : "overview";
-  const applyScenario = () => { const count=Number(orderCount); if(!Number.isInteger(count)||count<0||count>5000){setScenarioNote("Nhập số đơn từ 0 đến 5.000.");return;} const next=makeInitialState(new Date(),count); setState(next); try{localStorage.setItem(STORAGE_KEY,JSON.stringify(next));localStorage.removeItem(LEGACY_STORAGE_KEY);}catch{} setScenarioNote(`Đã tạo lại kịch bản ${number(count)} đơn. Các ví và chỉ số doanh thu đã được tính lại.`); };
+  const applyScenario = () => { const count=Number(orderCount); if(!Number.isInteger(count)||count<0||count>5000){setScenarioNote("Nhập số đơn từ 0 đến 5.000.");return;} const next=makeInitialState(new Date(),count); setState(next); try{localStorage.setItem(STORAGE_KEY,JSON.stringify(next));localStorage.removeItem(LEGACY_STORAGE_KEY); localStorage.removeItem("xoai-demo-engine-v2");}catch{} setScenarioNote(`Đã tạo lại kịch bản ${number(count)} đơn. Các ví và chỉ số doanh thu đã được tính lại.`); };
   const customerRows = data.customers.slice(0, 12);
   const merchantRows = data.stores.slice(0, 12);
 
@@ -98,11 +98,18 @@ export function FinancialControlCenter({ wallet = "overview" }: { wallet?: strin
         <div className="fc-stats">
           <Stat label="Giá trị hóa đơn DEMO" value={money(data.gmvNet)} note="GMV ròng sau sự kiện đảo" />
           <Stat label="Tiền khách trả theo DEMO" value={money(data.cashPaidNet)} note="Chưa có bằng chứng POS/ngân hàng" />
-          <Stat label="Phí snapshot" value={money(data.cashFeeNet)} note="Phí tiền mặt snapshot, chưa xác nhận đã thu" />
+          <Stat label="Doanh thu app tiền mặt (3%)" value={money(data.appRevenueCashNet)} note="Tính trên tiền khách trả; chưa xác nhận đã thu" />
           <Stat label="Tiền thực có" value="Chưa xác minh" note="Chưa kết nối sao kê hoặc bank register" />
         </div>
+        <section className="fc-section-label"><h2>Đối chiếu phân bổ 10% GMV</h2><span>Quy đổi theo 1 điểm = 1 VND giá trị sử dụng trong DEMO</span></section>
+        <div className="fc-stats">
+          <Stat label="Ví tổng khách" value={number(data.customerRewardNet)+" điểm"} note="Tổng điểm thưởng ròng của khách" />
+          <Stat label="Ví doanh thu app · điểm" value={number(data.appRevenuePointsNet)+" điểm"} note="10% phần điểm sử dụng theo policy mặc định" />
+          <Stat label="Ví doanh thu app · tiền mặt" value={money(data.appRevenueCashNet)} note="3% tiền mặt thực trả; chưa xác nhận thu" />
+          <Stat label="Tổng khách + app" value={money(data.customerAppAllocationNet)} note={"Mục tiêu 10% GMV: "+money(data.allocationTargetNet)+" · sai lệch "+money(data.allocationVarianceNet)} />
+        </div>
         <div className="fc-charts">
-          <Doughnut title="Cơ cấu phí snapshot" subtitle="Chưa có phân loại nguồn thu thực nhận" items={[]} unit="VND" />
+          <Doughnut title="Nguồn doanh thu app" subtitle="Chưa có đối soát nguồn thu thực nhận" items={[]} unit="VND" />
           <section className="fc-panel"><div className="fc-panel-head"><div><h2>Đi đến thống kê từng ví</h2><p>Chọn từng phân hệ để xem chỉ số và dữ liệu tương ứng.</p></div></div><div className="fc-wallet-links">{tabs.slice(1).map((tab) => <Link key={tab.id} href={tab.href}>{tab.label}<span>→</span></Link>)}</div></section>
         </div>
       </>}
@@ -112,7 +119,7 @@ export function FinancialControlCenter({ wallet = "overview" }: { wallet?: strin
           <Stat label="Available" value={number(customerBalances.available)} note="Số điểm khả dụng khách có thể chi" />
           <Stat label="Pending" value={number(customerBalances.pending)} note="Chưa đủ điều kiện giải phóng" />
           <Stat label="Held" value={number(customerBalances.held)} note="Tạm giữ" />
-          <Stat label="Đã tiêu ròng" value={number(data.pointsRedeemedNet)} note="Chỉ số luồng, không phải số dư" />
+          <Stat label="Đã tiêu ròng" value={number(data.pointsRedeemedNet)} note="Chỉ số luồng, không phải số dư" /><Stat label="Điểm thưởng ròng đã ghi" value={number(data.customerRewardNet)} note="Tổng điểm cộng vào Ví tổng khách" />
         </section>
         <Doughnut title="Cơ cấu ví Khách" subtitle="Số dư theo trạng thái" items={[{label:"Available",value:customerBalances.available},{label:"Pending",value:customerBalances.pending},{label:"Held",value:customerBalances.held}]} unit="điểm" />
         <section className="fc-panel"><div className="fc-panel-head"><div><h2>Danh sách ví Khách (12 mẫu)</h2><p>Dữ liệu tổng hợp từ synthetic customers của DEMO.</p></div></div><div className="fc-table-wrap"><table><thead><tr><th>Mã thành viên</th><th>Thành viên</th><th>Available</th><th>Pending</th><th>Held</th></tr></thead><tbody>{customerRows.map((customer: { id: string; name: string; available: number; pending: number; held: number }) => <tr key={customer.id}><td>{customer.id}</td><td>{customer.name}</td><td>{number(customer.available)}</td><td>{number(customer.pending)}</td><td>{number(customer.held)}</td></tr>)}</tbody></table></div></section>
@@ -121,9 +128,9 @@ export function FinancialControlCenter({ wallet = "overview" }: { wallet?: strin
 
       {activeTab === "merchant" && <><section className="fc-stats"><Stat label="Số quán trong bộ DEMO" value={number(data.stores.length)} note="Synthetic stores" /><Stat label="Điểm Quán Pending" value={number(data.merchantPointsPending)} note="Chờ điều kiện P32" /><Stat label="Điểm Quán Available" value={number(data.merchantPointsAvailable)} note="Đã qua Pending trong DEMO" /><Stat label="Cashback chờ quán bổ sung" value={number(data.cashbackPending)} note="App đã ghi nhận nghĩa vụ hoàn điểm" /><Stat label="Cashback quá hạn 3 ngày" value={number(data.cashbackOverdue)} note="Cảnh báo đỏ · giao dịch không bị chặn" /><Stat label="Backing DEMO (VND)" value={money(data.stores.reduce((sum: number, store: { backing: number; pendingBacking: number }) => sum + store.backing, 0))} note="Nguồn mô phỏng cũ, không phải điểm" /></section>{data.cashbackOrders.length > 0 && <section className="fc-panel"><div className="fc-panel-head"><div><h2>Theo dõi nghĩa vụ hoàn điểm</h2><p>App tính cashback trên phần tiền mặt khách trả; nguồn hoàn điểm được trừ từ Ví điểm quán.</p></div></div><div className="fc-table-wrap"><table><thead><tr><th>Mã đơn</th><th>Mã quán</th><th>Điểm cashback</th><th>Hạn xử lý</th><th>Trạng thái</th></tr></thead><tbody>{data.cashbackOrders.map((order: { saleEventId: string; orderId: string; storeId: string; points: number; dueAt: string; status: string; overdue: boolean }) => <tr key={order.saleEventId}><td>{order.orderId}</td><td>{order.storeId}</td><td>{number(order.points)}</td><td>{new Date(order.dueAt).toLocaleString("vi-VN")}</td><td><span className={order.overdue && order.status !== "Đã trừ Ví điểm quán" ? "fc-status-overdue" : "fc-status-pending"}>{order.status}</span></td></tr>)}</tbody></table></div></section>}<section className="fc-panel"><h2>Quán trong bộ DEMO</h2><div className="fc-table-wrap"><table><thead><tr><th>Mã quán</th><th>Tên quán</th><th>Điểm Pending</th><th>Điểm Available</th><th>Cashback đang chờ</th><th>Backing DEMO (VND)</th></tr></thead><tbody>{merchantRows.map((store: { id: string; name: string; backing: number; pendingBacking: number; pointsPending: number; pointsAvailable: number; cashbackPending: number }) => <tr key={store.id}><td>{store.id}</td><td>{store.name}</td><td>{number(store.pointsPending)}</td><td>{number(store.pointsAvailable)}</td><td>{number(store.cashbackPending ?? 0)}</td><td>{money(store.backing)}</td></tr>)}</tbody></table></div></section></>}
 
-      {activeTab === "xoai" && <><section className="fc-stats"><Stat label="Điểm chiết khấu Pending" value={number(data.xoaiDiscountPointsPending)} note="Phần chiết khấu của quán dành cho Xoài" /><Stat label="Điểm chiết khấu Available" value={number(data.xoaiDiscountPointsAvailable)} note="Đã qua điều kiện P32 trong DEMO" /><Stat label="Tổng chiết khấu điểm phát sinh ròng" value={number(data.merchantDiscountPointsNet)} note="Luồng điểm, không phải VND" /><Stat label="Phí tiền mặt ròng" value={money(data.cashFeeNet)} note="VND, theo dõi riêng với điểm" /></section><div className="fc-empty-card"><b>Chưa có sổ điểm hết hạn của khách chuyển về ví Xoài.</b><span>Phần điểm chiết khấu từ giao dịch đã được tách riêng trong engine DEMO. Luồng điểm hết hạn 6 tháng chưa được mô phỏng.</span></div></>}
+      {activeTab === "xoai" && <><section className="fc-stats"><Stat label="Điểm chiết khấu Pending" value={number(data.xoaiDiscountPointsPending)} note="Phần chiết khấu của quán dành cho Xoài" /><Stat label="Điểm chiết khấu Available" value={number(data.xoaiDiscountPointsAvailable)} note="Đã qua điều kiện P32 trong DEMO" /><Stat label="Tổng chiết khấu điểm phát sinh ròng" value={number(data.merchantDiscountPointsNet)} note="Luồng điểm, không phải VND" /><Stat label="Doanh thu app tiền mặt (3%)" value={money(data.appRevenueCashNet)} note="VND, chưa xác nhận đã thu" /><Stat label="Doanh thu app từ điểm" value={number(data.appRevenuePointsNet)} note="Điểm app hưởng trên phần điểm khách sử dụng" /><Stat label="Tổng doanh thu app quy đổi" value={money(data.appRevenueEquivalentNet)} note="Giá trị quy đổi, không gộp đơn vị số dư" /></section><div className="fc-empty-card"><b>Chưa có sổ điểm hết hạn của khách chuyển về ví Xoài.</b><span>Phần điểm chiết khấu từ giao dịch đã được tách riêng trong engine DEMO. Luồng điểm hết hạn 6 tháng chưa được mô phỏng.</span></div></>}
       {activeTab === "reserve" && <><section className="fc-stats"><Stat label="Tổng cung điểm" value={number(DEMO_TOTAL_POINT_SUPPLY)} note="Số tham chiếu cố định" /><Stat label="Điểm trong 100 Ví Quán ban đầu" value={number(data.merchantPointsAvailable)} note="500.000 điểm/quán trước phát sinh" /><Stat label="Quỹ điểm chưa phân bổ" value={number(data.pointReserveAvailable)} note="Phần còn lại của tổng cung" /><Stat label="Số quán" value={number(data.stores.length)} note="100 ví Quán DEMO" /></section><Doughnut title="Cơ cấu tổng cung điểm" subtitle="Tổng cung luôn giữ cố định 1 tỷ điểm" items={[{label:"Ví Quán ban đầu",value:data.merchantPointsAvailable},{label:"Quỹ chưa phân bổ",value:data.pointReserveAvailable}]} unit="điểm" /></>}
-      {activeTab === "cash" && <><section className="fc-stats"><Stat label="GMV ròng DEMO" value={money(data.gmvNet)} note="Không phải tiền thực thu" /><Stat label="Tiền khách trả DEMO" value={money(data.cashPaidNet)} note="Chưa đối chiếu độc lập" /><Stat label="Phí snapshot" value={money(data.cashFeeNet)} note="Chưa xác nhận đã thu" /><Stat label="Tiền thực có" value="Chưa xác minh" note="Chưa có kết nối ngân hàng" /></section><Doughnut title="Cơ cấu số dư tiền theo tài khoản" subtitle="Chưa có bank register hoặc cash register" items={[]} unit="VND" /><div className="fc-empty-card"><b>Chưa có tài khoản tiền thực có được xác minh.</b><span>Không hiển thị phí dự kiến thành phí đã thu; không suy diễn số dư ví nghiệp vụ thành số dư ngân hàng.</span></div></>}
+      {activeTab === "cash" && <><section className="fc-stats"><Stat label="GMV ròng DEMO" value={money(data.gmvNet)} note="Không phải tiền thực thu" /><Stat label="Tiền khách trả DEMO" value={money(data.cashPaidNet)} note="Chưa đối chiếu độc lập" /><Stat label="Doanh thu app tiền mặt (3%)" value={money(data.appRevenueCashNet)} note="Chưa xác nhận đã thu" /><Stat label="Doanh thu app quy đổi" value={money(data.appRevenueEquivalentNet)} note="Gồm tiền mặt + giá trị điểm quy đổi; không phải tiền thực có" /><Stat label="Tiền thực có" value="Chưa xác minh" note="Chưa có kết nối ngân hàng" /></section><Doughnut title="Cơ cấu số dư tiền theo tài khoản" subtitle="Chưa có bank register hoặc cash register" items={[]} unit="VND" /><div className="fc-empty-card"><b>Chưa có tài khoản tiền thực có được xác minh.</b><span>Không hiển thị phí dự kiến thành phí đã thu; không suy diễn số dư ví nghiệp vụ thành số dư ngân hàng.</span></div></>}
 
       <footer className="fc-footer"><span>{loaded ? "Đã đọc dữ liệu từ localStorage DEMO trên trình duyệt này." : "Đang tải dữ liệu DEMO..."}</span><Link href="/admin/ledger">Mở sổ sự kiện →</Link><Link href="/admin/reconciliation">Mở đối soát →</Link></footer>
     </div>
