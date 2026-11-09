@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type DemoStore={id:string;name:string;category:string;area:string;status:string;initialBacking:number};
+export type DemoStore={id:string;name:string;category:string;area:string;status:string;initialBacking:number;initialPoints:number};
 export type DemoCustomer={id:string;name:string;phone:string;area:string;initialAvailable:number;status:string};
 export type DemoPolicy={version:string;rewardRate:number;cashFeeRate:number;merchantDiscountRate:number;platformFeeRate?:number;effectiveAt:string;storeId:string;actor:string;reason:string};
 export type DemoEvent=
@@ -15,10 +15,10 @@ export type DemoEvent=
 export type DemoState={version:3;events:DemoEvent[];policies:DemoPolicy[];clock:string};
 export const money=(n:number)=>new Intl.NumberFormat("vi-VN",{maximumFractionDigits:0}).format(n)+" ₫";
 export const number=(n:number)=>new Intl.NumberFormat("vi-VN",{maximumFractionDigits:0}).format(n);
-export const demoStores:DemoStore[]=Array.from({length:100},(_,i)=>({id:"XO-MER-"+String(i+1).padStart(4,"0"),name:["Mộc Xanh Coffee","Tiệm Trà Mây","Bếp Nhà Nhiên","Góc Phố Nhỏ","Nắng Garden"][i%5]+" "+(i+1),category:["Cà phê","Trà sữa","Nhà hàng","Quán ăn","Đồ uống","Làm đẹp","Thời trang","Siêu thị mini"][i%8],area:["Hải Châu","Thanh Khê","Sơn Trà","Ngũ Hành Sơn","Liên Chiểu","Cẩm Lệ","Hòa Vang"][i%7],status:(i+1)%17===0?"Tạm ngưng":"Đang hoạt động",initialBacking:2_000_000+(i%6)*500_000}));
+export const demoStores:DemoStore[]=Array.from({length:100},(_,i)=>({id:"XO-MER-"+String(i+1).padStart(4,"0"),name:["Mộc Xanh Coffee","Tiệm Trà Mây","Bếp Nhà Nhiên","Góc Phố Nhỏ","Nắng Garden"][i%5]+" "+(i+1),category:["Cà phê","Trà sữa","Nhà hàng","Quán ăn","Đồ uống","Làm đẹp","Thời trang","Siêu thị mini"][i%8],area:["Hải Châu","Thanh Khê","Sơn Trà","Ngũ Hành Sơn","Liên Chiểu","Cẩm Lệ","Hòa Vang"][i%7],status:(i+1)%17===0?"Tạm ngưng":"Đang hoạt động",initialBacking:2_000_000+(i%6)*500_000,initialPoints:500_000}));
 const first=["Minh","Anh","Hương","Tuấn","Linh","Trang","Nam","Thảo","Quân","Vy","Hải","Ngọc","Phúc","My","Duy","Lan","Khoa","Trâm","Long","Chi"];
 const last=["Nguyễn","Trần","Lê","Phạm","Hoàng","Huỳnh","Phan","Võ","Đặng","Bùi","Đỗ","Ngô"];
-export const demoCustomers:DemoCustomer[]=Array.from({length:1000},(_,i)=>({id:"XO-MB-"+String(i+1).padStart(6,"0"),name:last[i%last.length]+" "+first[(i*3+1)%first.length]+" "+first[(i*11+5)%first.length],phone:"09"+String(10000000+i*7919).slice(0,8),area:["Hải Châu","Thanh Khê","Sơn Trà","Ngũ Hành Sơn","Liên Chiểu","Cẩm Lệ","Hòa Vang"][i%7],initialAvailable:500+(i*137)%9500,status:i%53===0?"Tạm khóa":"Hoạt động"}));
+export const demoCustomers:DemoCustomer[]=Array.from({length:1000},(_,i)=>({id:"XO-MB-"+String(i+1).padStart(6,"0"),name:last[i%last.length]+" "+first[(i*3+1)%first.length]+" "+first[(i*11+5)%first.length],phone:"09"+String(10000000+i*7919).slice(0,8),area:["Hải Châu","Thanh Khê","Sơn Trà","Ngũ Hành Sơn","Liên Chiểu","Cẩm Lệ","Hòa Vang"][i%7],initialAvailable:0,status:i%53===0?"Tạm khóa":"Hoạt động"}));
 export function batchSchedule(iso:string){
  const local=new Date(new Date(iso).getTime()+7*3600000);let y=local.getUTCFullYear(),m=local.getUTCMonth(),d=local.getUTCDate();
  if(local.getUTCHours()>=17){const next=new Date(Date.UTC(y,m,d+1));y=next.getUTCFullYear();m=next.getUTCMonth();d=next.getUTCDate();}
@@ -26,11 +26,16 @@ export function batchSchedule(iso:string){
  return {batchAt:new Date(batchAt).toISOString(),releaseAt:new Date(batchAt+48*3600000).toISOString()};
 }
 function eventTime(e:DemoEvent){return "occurredAt" in e?e.occurredAt:"releasedAt" in e?e.releasedAt:"confirmedAt" in e?e.confirmedAt:"requestedAt" in e?e.requestedAt:"approvedAt" in e?e.approvedAt:"effectiveAt" in e?e.effectiveAt:"";}
-export function makeInitialState(now=new Date()):DemoState{
+export const DEMO_TOTAL_POINT_SUPPLY=1_000_000_000;
+export function makeInitialState(now=new Date(),orderCount=250):DemoState{
  const policies=demoStores.map((s,i)=>({version:"DEMO-POLICY-"+(i+1)+".1",rewardRate:[8,6,10,5,7][i%5],cashFeeRate:[4,3,5,4,2][i%5],merchantDiscountRate:10,platformFeeRate:[4,3,5,4,2][i%5],effectiveAt:"2026-11-01T00:00:00.000Z",storeId:s.id,actor:"SYSTEM_DEMO",reason:"Seed policy DEMO"}));
  const events:DemoEvent[]=[];
- for(let i=0;i<12;i++){const store=demoStores[i%5],customer=demoCustomers[i%8],amount=[185000,225000,96000,420000,135000,92000][i%6],policy=policies[i%5],occurredAt=new Date(now.getTime()-(i+1)*86400000).toISOString(),schedule=batchSchedule(occurredAt);
-  events.push({type:"SALE_CONFIRMED",id:"EV-SEED-"+String(i+1).padStart(4,"0"),orderId:"XO-SEED-"+String(i+1).padStart(4,"0"),customerId:customer.id,storeId:store.id,grossAmount:amount,pointsRedeemed:0,cashPaid:amount,rewardPoints:Math.floor(amount*policy.rewardRate/100),feeAmount:Math.round(amount*policy.cashFeeRate/100),cashFeeAmount:Math.round(amount*policy.cashFeeRate/100),merchantDiscountPoints:0,merchantPointsAllocated:0,merchantCashbackPoints:(i===0||i===11)?Math.floor(amount*policy.rewardRate/100):0,policy,occurredAt,batchAt:schedule.batchAt,releaseAt:schedule.releaseAt});
+ const safeOrderCount=Math.max(0,Math.min(5000,Math.floor(orderCount)));
+ for(let i=0;i<safeOrderCount;i++){
+  const store=demoStores[i%demoStores.length],customer=demoCustomers[i%demoCustomers.length],amount=[185000,225000,96000,420000,135000,92000,310000,275000][i%8],policy=policies[i%demoStores.length],occurredAt=new Date(now.getTime()-(1+(i%7))*86400000).toISOString(),schedule=batchSchedule(occurredAt),cashback=Math.floor(amount*policy.rewardRate/100);
+  const sale:Extract<DemoEvent,{type:"SALE_CONFIRMED"}>={type:"SALE_CONFIRMED",id:"EV-SEED-"+String(i+1).padStart(4,"0"),orderId:"XO-SEED-"+String(i+1).padStart(4,"0"),customerId:customer.id,storeId:store.id,grossAmount:amount,pointsRedeemed:0,cashPaid:amount,rewardPoints:cashback,feeAmount:Math.round(amount*policy.cashFeeRate/100),cashFeeAmount:Math.round(amount*policy.cashFeeRate/100),merchantDiscountPoints:0,merchantPointsAllocated:0,merchantCashbackPoints:cashback,policy,occurredAt,batchAt:schedule.batchAt,releaseAt:schedule.releaseAt};
+  events.push(sale);
+  if(new Date(schedule.releaseAt).getTime()<=now.getTime())events.push({type:"PENDING_RELEASED",id:"EV-SEED-RELEASE-"+String(i+1).padStart(4,"0"),saleEventId:sale.id,releasedAt:schedule.releaseAt});
  }
  return {version:3,events,policies,clock:now.toISOString()};
 }
@@ -51,9 +56,9 @@ export function migrateDemoState(raw:any):DemoState{
  return {version:3,events,policies,clock:raw.clock??new Date().toISOString()};
 }
 export function project(state:DemoState,now=new Date().toISOString()){
- const p:any={merchantPointsPending:0,merchantPointsAvailable:0,xoaiDiscountPointsPending:0,xoaiDiscountPointsAvailable:0,cashFeeGross:0,cashFeeReversed:0,cashFeeNet:0,merchantDiscountPointsGross:0,merchantDiscountPointsReversed:0,merchantDiscountPointsNet:0,gmvGross:0,gmvReversed:0,gmvNet:0,cashPaid:0,cashPaidReversed:0,cashPaidNet:0,pointsRedeemed:0,pointsRedeemedReversed:0,pointsRedeemedNet:0,fees:0,feesReversed:0,feesNet:0,rewardIssued:0,rewardPending:0,rewardAvailable:0,rewardReversed:0,shortfall:0,orders:0,activeOrders:0,customers:[],stores:[],pointRows:[],walletRows:[],ledgerRows:[],reconciliationRows:[],withdrawals:[],cashbackOrders:[],cashbackPending:0,cashbackOverdue:0};
+ const p:any={merchantPointsPending:0,merchantPointsAvailable:demoStores.reduce((n,s)=>n+s.initialPoints,0),pointSupplyTotal:DEMO_TOTAL_POINT_SUPPLY,pointReserveAvailable:DEMO_TOTAL_POINT_SUPPLY-demoStores.reduce((n,s)=>n+s.initialPoints,0),xoaiDiscountPointsPending:0,xoaiDiscountPointsAvailable:0,cashFeeGross:0,cashFeeReversed:0,cashFeeNet:0,merchantDiscountPointsGross:0,merchantDiscountPointsReversed:0,merchantDiscountPointsNet:0,gmvGross:0,gmvReversed:0,gmvNet:0,cashPaid:0,cashPaidReversed:0,cashPaidNet:0,pointsRedeemed:0,pointsRedeemedReversed:0,pointsRedeemedNet:0,fees:0,feesReversed:0,feesNet:0,rewardIssued:0,rewardPending:0,rewardAvailable:0,rewardReversed:0,shortfall:0,orders:0,activeOrders:0,customers:[],stores:[],pointRows:[],walletRows:[],ledgerRows:[],reconciliationRows:[],withdrawals:[],cashbackOrders:[],cashbackPending:0,cashbackOverdue:0};
  const cm=new Map(demoCustomers.map(c=>[c.id,{...c,available:c.initialAvailable,pending:0,held:0,used:0,spent:0,orders:0}]));
- const sm=new Map(demoStores.map(s=>[s.id,{...s,backing:s.initialBacking,pendingBacking:0,pointsPending:0,pointsAvailable:0,cashbackPending:0,gross:0,fee:0,net:0,count:0,negative:false}]));
+ const sm=new Map(demoStores.map(s=>[s.id,{...s,backing:s.initialBacking,pendingBacking:0,pointsPending:0,pointsAvailable:s.initialPoints,cashbackPending:0,gross:0,fee:0,net:0,count:0,negative:false}]));
  const sales=new Map<string,Extract<DemoEvent,{type:"SALE_CONFIRMED"}>>(),released=new Set<string>(),reversed=new Set<string>(),withdrawals=new Map<string,any>(),cashbackObligations=new Map<string,any>();
  const ordered=[...state.events].sort((a,b)=>new Date(eventTime(a)).getTime()-new Date(eventTime(b)).getTime());
  for(const e of ordered){
