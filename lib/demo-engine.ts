@@ -149,9 +149,9 @@ export function requestWithdrawal(state:DemoState,storeId:string,amount:number,n
 export function approveWithdrawal(state:DemoState,requestId:string,now:string,approver:string){const w=state.events.find(e=>e.type==="WITHDRAWAL_REQUESTED"&&e.id===requestId);if(!w)throw new Error("Không tìm thấy yêu cầu rút.");if(state.events.some(e=>e.type==="WITHDRAWAL_APPROVED"&&e.requestId===requestId))throw new Error("Yêu cầu đã được duyệt.");const event:Extract<DemoEvent,{type:"WITHDRAWAL_APPROVED"}>={type:"WITHDRAWAL_APPROVED",id:"EV-APPROVE-"+crypto.randomUUID(),requestId,approvedAt:now,approver};return {...state,events:[event,...state.events]};}
 export function runAcceptanceTests(){
  const initial=makeInitialState(new Date("2026-11-09T02:00:00.000Z")),out:{name:string;pass:boolean;detail:string}[]=[];
- const noReward=updatePolicy(initial,demoStores[0].id,0,4,"Acceptance funding setup","2026-11-09T08:00:00.000Z");
+ const noReward=updatePolicy(initial,demoStores[0].id,8,4,"Acceptance funding setup","2026-11-09T08:00:00.000Z");
  let fundedBase=noReward;
- for(const idx of [67,68,69])fundedBase=appendSale(fundedBase,{customerId:demoCustomers[idx].id,storeId:demoStores[0].id,amount:200000,redeem:9000,occurredAt:"2026-11-09T08:00:00.000Z",rewardRate:0,feeRate:4});
+ for(const idx of [67,68,69])fundedBase=appendSale(fundedBase,{customerId:demoCustomers[idx].id,storeId:demoStores[0].id,amount:200000,redeem:0,occurredAt:"2026-11-09T08:00:00.000Z",rewardRate:8,feeRate:4});
  fundedBase=releaseEligible(fundedBase,"2026-11-11T10:01:00.000Z");
  const base=updatePolicy(fundedBase,demoStores[0].id,8,4,"Acceptance cashback policy","2026-11-12T12:00:00.000Z");
  const add=(name:string,pass:boolean,detail:string)=>out.push({name,pass,detail});
