@@ -161,7 +161,7 @@ export function runAcceptanceTests(){
  add("P28A: policy chưa đến hiệu lực không áp dụng ngược",historicalSnapshot.policy.rewardRate===8&&historicalSnapshot.policy.cashFeeRate===4,"Giao dịch trước mốc hiệu lực giữ policy cũ");
 
  const noCashbackPolicy=updatePolicy(base,store.id,0,4,"Fund merchant wallet for cashback test","2026-11-09T08:00:00.000Z");
- const fundingInput={customerId:customer.id,storeId:store.id,amount:200000,redeem:1000,occurredAt:"2026-11-09T08:00:00.000Z",rewardRate:0,feeRate:4};
+ const fundingInput={customerId:demoCustomers[68].id,storeId:store.id,amount:200000,redeem:9000,occurredAt:"2026-11-09T08:00:00.000Z",rewardRate:0,feeRate:4};
  const funded=appendSale(noCashbackPolicy,fundingInput),fundedSale=funded.events.find(x=>x.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>;
  const fundedReleased=releaseEligible(funded,new Date(new Date(fundedSale.releaseAt).getTime()+1000).toISOString());
  const cashbackPolicy=updatePolicy(fundedReleased,store.id,8,4,"Enable cashback test","2026-11-12T12:00:00.000Z");
