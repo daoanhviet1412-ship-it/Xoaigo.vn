@@ -161,7 +161,7 @@ export function runAcceptanceTests(){
  add("P32: trước 17:00 vào batch cùng ngày",a.batchAt==="2026-11-09T10:00:00.000Z",a.batchAt);
  add("P32: từ 17:00 vào batch ngày kế tiếp",b.batchAt==="2026-11-10T10:00:00.000Z",b.batchAt);
  add("P32: giải phóng sau 48 giờ liên tục",a.releaseAt==="2026-11-11T10:00:00.000Z",a.releaseAt);
- const customer=project(fundedBase).customers.find((x:any)=>x.available>=100)??project(fundedBase).customers[0],store=demoStores[0],input={customerId:customer.id,storeId:store.id,amount:200000,redeem:customer.available+1,occurredAt:"2026-11-12T13:00:00.000Z",rewardRate:7,feeRate:3};
+ const customer=project(fundedBase).customers.find((x:any)=>x.id===demoCustomers[67].id)??project(fundedBase).customers[67],store=demoStores[0],input={customerId:customer.id,storeId:store.id,amount:200000,redeem:customer.available+1,occurredAt:"2026-11-12T13:00:00.000Z",rewardRate:7,feeRate:3};
  add("P31: chặn sử dụng điểm vượt Available",!!validateSale(base,input),validateSale(base,input)??"Không hợp lệ");
  const valid={...input,redeem:100},withSale=appendSale(base,valid),sale=withSale.events.find(e=>e.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>;
  add("P28A: policy snapshot khóa 7% khách + 3% app",sale.policy.rewardRate===7&&sale.policy.cashFeeRate===3&&sale.policy.merchantDiscountRate===10,JSON.stringify(sale.policy));
@@ -196,7 +196,7 @@ export function runAcceptanceTests(){
  const cashbackReversed=reverseSale(cashbackSale,cashbackEvent.id,"Test cashback reversal","2026-11-12T14:00:00.000Z");
  add("Cashback: đảo giao dịch hoàn lại điểm đã trừ Ví quán",project(cashbackReversed).stores.find((x:any)=>x.id===store.id)?.pointsAvailable===project(cashbackSale).stores.find((x:any)=>x.id===store.id)?.pointsAvailable+7000,"Reversal khôi phục debit cashback.");
  add("P31: không tự kết luận gian lận",true,"Không có fraud verdict tự động.");
- const reversalProjected=project(reverseSale(withSale,sale.id,"test reversal","2026-11-09T09:00:00.000Z"));
+ const reversalProjected=project(reverseSale(withSale,sale.id,"test reversal","2026-11-12T14:00:00.000Z"));
  add("P31: đảo giao dịch phải đảo cả phần phân bổ điểm",reversalProjected.merchantPointsPending===0&&reversalProjected.xoaiDiscountPointsPending===0,"Không để sót nghĩa vụ điểm Pending.");
  add("P30: không tự kích hoạt policy",base.policies.every(p=>p.version.startsWith("DEMO-")),"Policy chỉ thuộc DEMO.");
  add("P29: không giả lập COA đã duyệt",project(base).ledgerRows.every((r:any)=>r.debit==="Chưa ánh xạ COA"),"Accounting journal để chưa cấu hình.");
