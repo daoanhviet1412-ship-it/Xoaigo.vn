@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { makeInitialState, money, number, project, type DemoState } from "@/lib/demo-engine";
+import { makeInitialState, migrateDemoState, money, number, project, type DemoState } from "@/lib/demo-engine";
 
-const STORAGE_KEY = "xoai-demo-engine-v2";
+const STORAGE_KEY = "xoai-demo-engine-v3";
+const LEGACY_STORAGE_KEY = "xoai-demo-engine-v2";
 type WalletTab = "overview" | "customer" | "merchant" | "xoai" | "reserve" | "cash";
 const tabs: { id: WalletTab; label: string; href: string }[] = [
   { id: "overview", label: "Tổng quan", href: "/admin/finance" },
@@ -50,10 +51,14 @@ export function FinancialControlCenter({ wallet = "overview" }: { wallet?: strin
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (parsed?.version === 2 && Array.isArray(parsed.events) && Array.isArray(parsed.policies)) setState(parsed);
+        if (Array.isArray(parsed?.events) && Array.isArray(parsed?.policies)) {
+          const migrated = migrateDemoState(parsed);
+          setState(migrated);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+        }
       }
     } catch { /* Keep the safe seed DEMO when browser storage is unavailable. */ }
     setLoaded(true);
