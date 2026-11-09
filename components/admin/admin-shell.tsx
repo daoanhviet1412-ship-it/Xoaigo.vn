@@ -62,7 +62,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       </div>
       <nav className="xoai-nav">
         {groups.map((group) => {
-          const isOpen = expanded[group.title] ?? true;
+          const isOpen = collapsed ? true : (expanded[group.title] ?? true);
           return <div className="xoai-nav-group" key={group.title}>
             {group.title === "Tổng quan" ? null : (
               <button className="xoai-group-title" onClick={() => setExpanded((old) => ({ ...old, [group.title]: !isOpen }))} title={collapsed ? group.title : undefined}>
