@@ -152,6 +152,7 @@ export function approveWithdrawal(state:DemoState,requestId:string,now:string,ap
 export function runAcceptanceTests(){
  const initial=makeInitialState(new Date("2026-11-09T02:00:00.000Z")),out:{name:string;pass:boolean;detail:string}[]=[];
  const add=(name:string,pass:boolean,detail:string)=>out.push({name,pass,detail});
+ try{
  const noReward=updatePolicy(initial,demoStores[0].id,7,3,"Acceptance funding setup","2026-11-09T08:00:00.000Z");
  let fundedBase=noReward;
  for(let i=0;i<22;i++)fundedBase=appendSale(fundedBase,{customerId:demoCustomers[67].id,storeId:demoStores[0].id,amount:200000,redeem:0,occurredAt:"2026-11-09T08:00:00.000Z",rewardRate:7,feeRate:3});
@@ -200,5 +201,6 @@ export function runAcceptanceTests(){
  add("P31: đảo giao dịch phải đảo cả phần phân bổ điểm",reversalProjected.merchantPointsPending===0&&reversalProjected.xoaiDiscountPointsPending===0,"Không để sót nghĩa vụ điểm Pending.");
  add("P30: không tự kích hoạt policy",base.policies.every(p=>p.version.startsWith("DEMO-")),"Policy chỉ thuộc DEMO.");
  add("P29: không giả lập COA đã duyệt",project(base).ledgerRows.every((r:any)=>r.debit==="Chưa ánh xạ COA"),"Accounting journal để chưa cấu hình.");
+ }catch(error){add("Acceptance test harness",false,error instanceof Error?error.message:String(error));}
  return out;
 }
