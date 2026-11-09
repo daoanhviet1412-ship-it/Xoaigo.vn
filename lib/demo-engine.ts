@@ -40,8 +40,7 @@ export function makeInitialState(now=new Date(),orderCount=250):DemoState{
  return {version:4,events,policies,clock:now.toISOString()};
 }
 export function migrateDemoState(raw:any):DemoState{
- if(raw?.version===4&&Array.isArray(raw.events)&&Array.isArray(raw.policies))return raw as DemoState;
- if(![2,3].includes(raw?.version)||!Array.isArray(raw.events)||!Array.isArray(raw.policies))return makeInitialState();
+ if(![2,3,4].includes(raw?.version)||!Array.isArray(raw.events)||!Array.isArray(raw.policies))return makeInitialState();
  const migratePolicy=(p:any):DemoPolicy=>({...p,rewardRate:7,cashFeeRate:3,platformFeeRate:3,merchantDiscountRate:10,reason:(p.reason??"")+" · Chuẩn hóa về policy cố định 7% khách + 3% app tiền mặt; 10% app trên điểm sử dụng"});
  const policies=raw.policies.map(migratePolicy);
  const events:DemoEvent[]=raw.events.map((event:any)=>{
@@ -170,6 +169,8 @@ export function runAcceptanceTests(){
  add("P28A: policy snapshot khóa 7% khách + 3% app",sale.policy.rewardRate===7&&sale.policy.cashFeeRate===3&&sale.policy.merchantDiscountRate===10,JSON.stringify(sale.policy));
  add("P29: thưởng và phí tiền mặt chỉ tính trên phần tiền mặt",sale.grossAmount===200000&&sale.cashPaid===199900&&sale.pointsRedeemed===100&&sale.rewardPoints===Math.floor(199900*7/100)&&sale.cashFeeAmount===Math.round(199900*3/100),"Tiền mặt thực trả là cơ sở tính 7% + 3%.");
  add("P28: phần điểm sử dụng chia 10% app / 90% quán",sale.merchantDiscountPoints===10&&sale.merchantPointsAllocated===90&&sale.merchantCashbackPoints===sale.rewardPoints,"100 điểm dùng: 10 điểm app, 90 điểm phân bổ quán; cashback khách do quán bảo đảm.");
+ const sweepAmounts=[1,99,100,999,10000,99999,1000000,1234567].flatMap(amount=>[0,Math.floor(amount*0.1),Math.floor(amount*0.3),Math.floor(amount*0.5),amount].map(redeem=>({amount,redeem})));
+ add("P28: kiểm thử invariant 10% trên nhiều mức GMV và điểm dùng",sweepAmounts.every(x=>{const v=calculateSaleAmounts({...x,rewardRate:7,cashFeeRate:3,merchantDiscountRate:10});return v.allocationTotal===v.allocationTarget&&v.allocationVariance===0&&v.merchantDiscountPoints+v.merchantPointsAllocated===x.redeem;}),"Mọi giao dịch phải thỏa: điểm khách + doanh thu app quy đổi = đúng 10% GMV; điểm dùng chia đủ 10% app / 90% quán.");
  const example=calculateSaleAmounts({amount:1000000,redeem:300000,rewardRate:7,cashFeeRate:3,merchantDiscountRate:10});
  add("P28: ví dụ 1 triệu phân bổ đúng 10% GMV",example.cashPaid===700000&&example.rewardPoints===49000&&example.appCashRevenue===21000&&example.appPointsRevenue===30000&&example.appRevenueEquivalent===51000&&example.merchantPointsAllocated===270000&&example.allocationTarget===100000&&example.allocationTotal===100000&&example.allocationVariance===0,"49.000 điểm khách + 21.000 VND app + 30.000 điểm app = 100.000; quán nhận 270.000 điểm.");
  const mixedState=appendSale(base,{...valid,amount:1000000,redeem:300000}),baseProjection=project(base),mixed=project(mixedState);
