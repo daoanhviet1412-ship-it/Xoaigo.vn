@@ -151,6 +151,12 @@ export function runAcceptanceTests(){
  add("P28A: policy mới chỉ áp dụng giao dịch mới và có lý do",snap.policy.rewardRate===9&&snap.policy.cashFeeRate===3&&snap.policy.merchantDiscountRate===10&&snap.policy.reason==="Test policy change","Snapshot lưu version, actor, reason và thời điểm");
  const huge=appendSale(base,{customerId:customer.id,storeId:store.id,amount:100000000,redeem:0,occurredAt:"2026-11-09T08:00:00.000Z",rewardRate:8,feeRate:4}),hugeSale=huge.events.find(x=>x.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>,blocked=releaseEligible(huge,"2026-11-12T10:00:00.000Z");
  add("P31: thiếu backing thì không giải phóng Pending",!blocked.events.some(x=>x.type==="PENDING_RELEASED"&&x.saleEventId===hugeSale.id),"Backing thấp hơn nghĩa vụ cần giải phóng");
+ const releasedState=releaseEligible(withSale,"2026-11-12T10:00:00.000Z"),releasedReverse=reverseSale(releasedState,sale.id,"Reversal after release","2026-11-12T11:00:00.000Z"),releasedProjection=project(releasedReverse);
+ add("P31: đảo sau giải phóng thu hồi đúng điểm phân bổ",releasedProjection.merchantPointsAvailable===0&&releasedProjection.xoaiDiscountPointsAvailable===0&&releasedProjection.shortfall===0,"Thu hồi điểm Quán/Xoài và xử lý điểm thưởng khách trong giới hạn số dư");
+ const futurePolicy=updatePolicy(base,store.id,9,3,"Future policy effective time","2026-11-09T08:00:00.000Z",12),historicalSale=appendSale(futurePolicy,{...valid,occurredAt:"2026-11-09T07:00:00.000Z",redeem:0});
+ const historicalSnapshot=historicalSale.events.find(x=>x.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>;
+ add("P28A: policy chưa đến hiệu lực không áp dụng ngược",historicalSnapshot.policy.rewardRate===8&&historicalSnapshot.policy.cashFeeRate===4,"Giao dịch trước mốc hiệu lực giữ policy cũ");
+
  add("P31: không tự kết luận gian lận",true,"Không có fraud verdict tự động");
  const reversalProjected=project(reverseSale(withSale,sale.id,"test reversal","2026-11-09T09:00:00.000Z"));
  add("P31: đảo giao dịch phải đảo cả phần phân bổ điểm",reversalProjected.merchantPointsPending===0&&reversalProjected.xoaiDiscountPointsPending===0,"Không để sót nghĩa vụ điểm Pending sau reversal");
