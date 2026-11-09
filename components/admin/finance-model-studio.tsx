@@ -153,12 +153,50 @@ export function FinanceModelStudio({ policySets, canWrite }: Props) {
         },
         points_policy: {
           points_per_vnd: 1,
-          pending_delay_value: 2,
-          pending_delay_unit: "day",
-          pending_delay_convention: "unresolved_48h_or_calendar_days",
+          pending_batch: {
+            cutoff_time: "17:00",
+            time_zone: "Asia/Ho_Chi_Minh",
+            before_cutoff: "same_day_batch",
+            at_or_after_cutoff: "next_day_batch",
+            release_delay_value: 48,
+            release_delay_unit: "hour",
+            release_delay_starts_from: "batch_cutoff_timestamp",
+            release_requires_all_guards: true,
+          },
           pending_points_are_spendable: false,
           cashout_enabled: false,
           transfer_enabled: false,
+        },
+        merchant_balance_policy: {
+          backing_source: "available_balance_only",
+          credit_limit_enabled: false,
+          negative_balance_visible: true,
+          negative_balance_alert: true,
+          pending_release_blocked_when_backing_insufficient: true,
+        },
+        transaction_confirmation: {
+          flow: ["customer_scans_merchant_qr", "customer_enters_amount", "customer_selects_points_if_any", "merchant_confirms_completion"],
+          pos_integration_planned: true,
+          accounting_software_integration_planned: true,
+        },
+        withdrawal_policy: {
+          direct_instant_withdrawal: false,
+          request_status: "pending",
+          approval: "director_daily_manual_approval",
+          customer_points_cashout_allowed: false,
+        },
+        reversal_policy: {
+          deduct_remaining_customer_points: true,
+          shortfall_tracking: true,
+          auto_cash_collection_from_customer: false,
+        },
+        rounding_policy: {
+          component_rounding: "whole_units",
+          remainder_algorithm: "pending_accounting_and_technical_approval",
+        },
+        account_unlock_policy: {
+          auto_unlock_when_balance_conditions_resolved: true,
+          manual_admin_approval_when_under_review: true,
         },
         controls: {
           transaction_policy_snapshot_required: true,
