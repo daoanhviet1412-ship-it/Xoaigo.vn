@@ -44,7 +44,10 @@ export function project(state:DemoState){
   if(e.type==="SALE_CONFIRMED"){
    sales.set(e.id,e);p.gmvGross+=e.grossAmount;p.orders++;p.cashPaid+=e.cashPaid;p.pointsRedeemed+=e.pointsRedeemed;p.fees+=e.feeAmount;p.rewardIssued+=e.rewardPoints;
    const c=cm.get(e.customerId);if(c){c.available-=e.pointsRedeemed;c.used+=e.pointsRedeemed;c.pending+=e.rewardPoints;c.spent+=e.grossAmount;c.orders++;}
-   const s=sm.get(e.storeId);if(s){s.gross+=e.grossAmount;s.fee+=e.feeAmount;s.pendingBacking+=e.rewardPoints+e.feeAmount;}
+   const s=sm.get(e.storeId);if(s){s.gross+=e.grossAmount;s.fee+=e.feeAmount;s.pendingBacking+=e.rewardPoints+e.feeAmount;s.count++;}
+   p.walletRows.push({id:e.id+"-customer-pending",owner:e.customerId,kind:"Điểm thưởng Pending",amount:e.rewardPoints,status:"Pending · chưa sử dụng",source:e.orderId});
+   if(e.pointsRedeemed)p.walletRows.push({id:e.id+"-customer-redeem",owner:e.customerId,kind:"Sử dụng điểm Available",amount:-e.pointsRedeemed,status:"Đã ghi nhận DEMO",source:e.orderId});
+   p.walletRows.push({id:e.id+"-merchant-backing",owner:e.storeId,kind:"Backing cho nghĩa vụ Pending",amount:e.rewardPoints+e.feeAmount,status:"Đang bảo đảm DEMO",source:e.orderId});
    p.pointRows.push({id:e.id+"-earn",customerId:e.customerId,kind:"Thưởng",amount:e.rewardPoints,bucket:"Pending",source:e.orderId,releaseAt:e.releaseAt});
    if(e.pointsRedeemed)p.pointRows.push({id:e.id+"-redeem",customerId:e.customerId,kind:"Sử dụng",amount:-e.pointsRedeemed,bucket:"Available",source:e.orderId});
    p.ledgerRows.push({id:e.id,source:e.orderId,layer:"Sự kiện vận hành",debit:"Chưa ánh xạ COA",credit:"Chưa ánh xạ COA",status:"Event demo"});
@@ -53,12 +56,13 @@ export function project(state:DemoState){
    const c=cm.get(sale.customerId);if(c){c.pending-=sale.rewardPoints;c.available+=sale.rewardPoints;}
    const s=sm.get(sale.storeId);if(s){s.pendingBacking=Math.max(0,s.pendingBacking-sale.rewardPoints-sale.feeAmount);s.backing-=sale.rewardPoints+sale.feeAmount;}
    released.add(sale.id);p.rewardAvailable+=sale.rewardPoints;
-   p.walletRows.push({id:e.id,owner:sale.storeId,kind:"Giải phóng Pending",amount:sale.rewardPoints+sale.feeAmount,status:"Đã giải phóng DEMO",source:sale.orderId});
+   p.walletRows.push({id:e.id+"-customer",owner:sale.customerId,kind:"Chuyển điểm thưởng sang Available",amount:sale.rewardPoints,status:"Available · DEMO",source:sale.orderId});
+   p.walletRows.push({id:e.id+"-merchant",owner:sale.storeId,kind:"Giải phóng backing Pending",amount:sale.rewardPoints+sale.feeAmount,status:"Đã giải phóng DEMO",source:sale.orderId});
   }else if(e.type==="SALE_REVERSED"){
    const sale=sales.get(e.saleEventId);if(!sale||reversed.has(sale.id))continue;reversed.add(sale.id);p.gmvReversed+=sale.grossAmount;
    const c=cm.get(sale.customerId);if(c){if(released.has(sale.id)){const recover=Math.min(c.available,sale.rewardPoints);c.available-=recover;p.shortfall+=sale.rewardPoints-recover;c.used=Math.max(0,c.used-sale.pointsRedeemed);}else c.pending=Math.max(0,c.pending-sale.rewardPoints);c.available+=sale.pointsRedeemed;}
    const s=sm.get(sale.storeId);if(s){s.pendingBacking=Math.max(0,s.pendingBacking-sale.rewardPoints-sale.feeAmount);if(released.has(sale.id))s.backing+=sale.rewardPoints+sale.feeAmount;s.gross-=sale.grossAmount;s.fee-=sale.feeAmount;s.count=Math.max(0,s.count-1);}
-   p.rewardReversed+=sale.rewardPoints;p.pointRows.push({id:e.id,customerId:sale.customerId,kind:"Điều chỉnh đảo",amount:-sale.rewardPoints,bucket:"Adjustment",source:sale.orderId});
+   p.rewardReversed+=sale.rewardPoints;p.walletRows.push({id:e.id+"-customer",owner:sale.customerId,kind:"Điều chỉnh đảo điểm thưởng",amount:-sale.rewardPoints,status:"Adjustment · DEMO",source:sale.orderId});p.walletRows.push({id:e.id+"-merchant",owner:sale.storeId,kind:"Điều chỉnh backing giao dịch đảo",amount:-(sale.rewardPoints+sale.feeAmount),status:"Adjustment · DEMO",source:sale.orderId});p.pointRows.push({id:e.id,customerId:sale.customerId,kind:"Điều chỉnh đảo",amount:-sale.rewardPoints,bucket:"Adjustment",source:sale.orderId});
    p.ledgerRows.push({id:e.id,source:sale.orderId,layer:"Sự kiện điều chỉnh",debit:"Liên kết giao dịch gốc",credit:"Chưa ánh xạ COA",status:"Reversal demo"});
   }else if(e.type==="MERCHANT_TOPUP"){const s=sm.get(e.storeId);if(s)s.backing+=e.amount;p.walletRows.push({id:e.id,owner:e.storeId,kind:"Nạp DEMO đã xác nhận",amount:e.amount,status:"Confirmed DEMO",source:e.reference});}
   else if(e.type==="POINTS_HELD"){const c=cm.get(e.customerId);if(c){const held=Math.min(c.available,e.points);c.available-=held;c.held+=held;p.pointRows.push({id:e.id,customerId:e.customerId,kind:"Giữ điểm",amount:-held,bucket:"Held",source:e.reason});}}
