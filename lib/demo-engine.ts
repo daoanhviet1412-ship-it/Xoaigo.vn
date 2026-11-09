@@ -159,7 +159,7 @@ export function runAcceptanceTests(){
  add("P32: trước 17:00 vào batch cùng ngày",a.batchAt==="2026-11-09T10:00:00.000Z",a.batchAt);
  add("P32: từ 17:00 vào batch ngày kế tiếp",b.batchAt==="2026-11-10T10:00:00.000Z",b.batchAt);
  add("P32: giải phóng sau 48 giờ liên tục",a.releaseAt==="2026-11-11T10:00:00.000Z",a.releaseAt);
- const customer=demoCustomers[0],store=demoStores[0],input={customerId:customer.id,storeId:store.id,amount:200000,redeem:customer.initialAvailable+1,occurredAt:"2026-11-12T13:00:00.000Z",rewardRate:8,feeRate:4};
+ const customer=project(fundedBase).customers.find((c:any)=>c.available>=100)??project(fundedBase).customers[0],store=demoStores[0],input={customerId:customer.id,storeId:store.id,amount:200000,redeem:customer.available+1,occurredAt:"2026-11-12T13:00:00.000Z",rewardRate:8,feeRate:4};
  add("P31: chặn sử dụng điểm vượt Available",!!validateSale(base,input),validateSale(base,input)??"Không hợp lệ");
  const valid={...input,redeem:100},withSale=appendSale(base,valid),sale=withSale.events.find(e=>e.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>;
  add("P28A: snapshot riêng phí tiền mặt và chiết khấu điểm quán",sale.policy.rewardRate===8&&sale.policy.cashFeeRate===4&&sale.policy.merchantDiscountRate===10,JSON.stringify(sale.policy));
