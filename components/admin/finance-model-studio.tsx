@@ -308,8 +308,8 @@ export function FinanceModelStudio({ policySets, canWrite }: Props) {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(190px,1fr))", gap: 12 }}>
           {[
             ["Điểm khách nhận (Pending)", points(result.earnedPoints) + " điểm", "Chỉ tính trên phần tiền thật"],
-            ["Doanh thu Xoài từ tiền thật", money(result.xoaiCashRevenue), pct(cashXoaiRate) + " × tiền thật"],
-            ["Doanh thu Xoài từ điểm dùng", money(result.xoaiPointsRevenue), pct(pointsRedemptionRate) + " × điểm sử dụng"],
+            ["Doanh thu Xoài từ tiền thật", money(result.xoaiCashRevenue), pct(cashXoaiRate ?? 0) + " × tiền thật"],
+            ["Doanh thu Xoài từ điểm dùng", money(result.xoaiPointsRevenue), pct(pointsRedemptionRate ?? 0) + " × điểm sử dụng"],
             ["Tổng doanh thu/phí Xoài", money(result.totalXoaiRevenue), "Chưa phải dòng tiền ngân hàng"],
             ["Tổng phân bổ / khấu trừ", money(result.totalAllocation), "Điểm khách + phần Xoài trên tiền thật + phí trên điểm dùng"],
             ["Ví quán — biến động ròng minh họa", money(result.merchantWalletNet), "Điểm sử dụng ghi Có giá trị quán trừ tổng phân bổ"],
