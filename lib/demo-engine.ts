@@ -81,7 +81,7 @@ export function validateSale(state:DemoState,input:{customerId:string;storeId:st
  if(!Number.isInteger(input.amount)||input.amount<=0)return "Giá trị hóa đơn phải là số nguyên dương.";
  if(!Number.isInteger(input.redeem)||input.redeem<0||input.redeem>c.available)return "Điểm sử dụng vượt số dư Available; Pending/Held không được phép sử dụng.";
  if(input.redeem>input.amount)return "Điểm sử dụng không được vượt giá trị hóa đơn.";
- if(!Number.isFinite(input.rewardRate)||input.rewardRate<0||input.rewardRate>100||!Number.isFinite(input.feeRate)||input.feeRate<0||input.feeRate>100)return "Tỷ lệ DEMO phải nằm trong khoảng 0–100%.";
+ const cashFeeRate=input.cashFeeRate??input.feeRate??0,merchantDiscountRate=input.merchantDiscountRate??10;if(!Number.isFinite(input.rewardRate)||input.rewardRate<0||input.rewardRate>100||!Number.isFinite(cashFeeRate)||cashFeeRate<0||cashFeeRate>100||!Number.isFinite(merchantDiscountRate)||merchantDiscountRate<0||merchantDiscountRate>100)return "Tỷ lệ DEMO phải nằm trong khoảng 0–100%.";
  return null;
 }
 export function appendSale(state:DemoState,input:{customerId:string;storeId:string;amount:number;redeem:number;occurredAt:string;rewardRate:number;feeRate?:number;cashFeeRate?:number;merchantDiscountRate?:number}):DemoState{
