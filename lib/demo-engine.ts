@@ -27,7 +27,7 @@ export function batchSchedule(iso:string){
 }
 function eventTime(e:DemoEvent){return "occurredAt" in e?e.occurredAt:"releasedAt" in e?e.releasedAt:"confirmedAt" in e?e.confirmedAt:"requestedAt" in e?e.requestedAt:"approvedAt" in e?e.approvedAt:"effectiveAt" in e?e.effectiveAt:"";}
 export function makeInitialState(now=new Date()):DemoState{
- const policies=demoStores.map((s,i)=>({version:"DEMO-POLICY-"+(i+1)+".1",rewardRate:[8,6,10,5,7][i],platformFeeRate:[4,3,5,4,2][i],effectiveAt:"2026-11-01T00:00:00.000Z",storeId:s.id,actor:"SYSTEM_DEMO",reason:"Seed policy DEMO"}));
+ const policies=demoStores.map((s,i)=>({version:"DEMO-POLICY-"+(i+1)+".1",rewardRate:[8,6,10,5,7][i%5],platformFeeRate:[4,3,5,4,2][i%5],effectiveAt:"2026-11-01T00:00:00.000Z",storeId:s.id,actor:"SYSTEM_DEMO",reason:"Seed policy DEMO"}));
  const events:DemoEvent[]=[];
  for(let i=0;i<12;i++){const store=demoStores[i%5],customer=demoCustomers[i%8],amount=[185000,225000,96000,420000,135000,92000][i%6],policy=policies[i%5],occurredAt=new Date(now.getTime()-(i+1)*86400000).toISOString(),schedule=batchSchedule(occurredAt);
   events.push({type:"SALE_CONFIRMED",id:"EV-SEED-"+String(i+1).padStart(4,"0"),orderId:"XO-SEED-"+String(i+1).padStart(4,"0"),customerId:customer.id,storeId:store.id,grossAmount:amount,pointsRedeemed:0,cashPaid:amount,rewardPoints:Math.floor(amount*policy.rewardRate/100),feeAmount:Math.round(amount*policy.platformFeeRate/100),policy,occurredAt,batchAt:schedule.batchAt,releaseAt:schedule.releaseAt});
