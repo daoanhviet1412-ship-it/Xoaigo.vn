@@ -2,18 +2,15 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import {
-  ArrowDownRight, ArrowUpRight, Activity, AlertTriangle, ArrowRight,
-  BadgeCheck, Building2, CalendarDays, CircleDollarSign, Clock3, Coins,
-  CreditCard, ShoppingBag, Store, Users, Wallet, TrendingUp
+  Activity, AlertTriangle, ArrowRight, BadgeCheck, CalendarDays,
+  CircleDollarSign, Clock3, Coins, CreditCard, ShoppingBag, Store,
+  Users, Wallet, TrendingUp, ClipboardCheck, Megaphone
 } from "lucide-react";
 
 type SearchParams = Promise<{ period?: string }>;
 
 function money(value: number) {
   return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 }).format(value);
-}
-function compact(value: number) {
-  return new Intl.NumberFormat("vi-VN", { notation: "compact", maximumFractionDigits: 1 }).format(value);
 }
 function dateLabel(date: Date) {
   return date.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", timeZone: "Asia/Ho_Chi_Minh" });
