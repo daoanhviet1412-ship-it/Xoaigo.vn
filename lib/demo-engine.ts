@@ -12,7 +12,7 @@ export type DemoEvent=
  | {type:"POLICY_UPDATED";id:string;storeId:string;before:DemoPolicy;after:DemoPolicy;actor:string;reason:string;effectiveAt:string}
  | {type:"POINTS_HELD";id:string;customerId:string;points:number;reason:string;occurredAt:string}
  | {type:"POINTS_UNHELD";id:string;customerId:string;points:number;reason:string;occurredAt:string};
-export type DemoState={version:2;events:DemoEvent[];policies:DemoPolicy[];clock:string};
+export type DemoState={version:3;events:DemoEvent[];policies:DemoPolicy[];clock:string};
 export const money=(n:number)=>new Intl.NumberFormat("vi-VN",{maximumFractionDigits:0}).format(n)+" ₫";
 export const number=(n:number)=>new Intl.NumberFormat("vi-VN",{maximumFractionDigits:0}).format(n);
 export const demoStores:DemoStore[]=Array.from({length:100},(_,i)=>({id:"XO-MER-"+String(i+1).padStart(4,"0"),name:["Mộc Xanh Coffee","Tiệm Trà Mây","Bếp Nhà Nhiên","Góc Phố Nhỏ","Nắng Garden"][i%5]+" "+(i+1),category:["Cà phê","Trà sữa","Nhà hàng","Quán ăn","Đồ uống","Làm đẹp","Thời trang","Siêu thị mini"][i%8],area:["Hải Châu","Thanh Khê","Sơn Trà","Ngũ Hành Sơn","Liên Chiểu","Cẩm Lệ","Hòa Vang"][i%7],status:(i+1)%17===0?"Tạm ngưng":"Đang hoạt động",initialBacking:2_000_000+(i%6)*500_000}));
@@ -32,7 +32,23 @@ export function makeInitialState(now=new Date()):DemoState{
  for(let i=0;i<12;i++){const store=demoStores[i%5],customer=demoCustomers[i%8],amount=[185000,225000,96000,420000,135000,92000][i%6],policy=policies[i%5],occurredAt=new Date(now.getTime()-(i+1)*86400000).toISOString(),schedule=batchSchedule(occurredAt);
   events.push({type:"SALE_CONFIRMED",id:"EV-SEED-"+String(i+1).padStart(4,"0"),orderId:"XO-SEED-"+String(i+1).padStart(4,"0"),customerId:customer.id,storeId:store.id,grossAmount:amount,pointsRedeemed:0,cashPaid:amount,rewardPoints:Math.floor(amount*policy.rewardRate/100),feeAmount:Math.round(amount*policy.cashFeeRate/100),cashFeeAmount:Math.round(amount*policy.cashFeeRate/100),merchantDiscountPoints:0,merchantPointsAllocated:0,policy,occurredAt,batchAt:schedule.batchAt,releaseAt:schedule.releaseAt});
  }
- return {version:2,events,policies,clock:now.toISOString()};
+ return {version:3,events,policies,clock:now.toISOString()};
+}
+export function migrateDemoState(raw:any):DemoState{
+ if(raw?.version===3&&Array.isArray(raw.events)&&Array.isArray(raw.policies))return raw as DemoState;
+ if(raw?.version!==2||!Array.isArray(raw.events)||!Array.isArray(raw.policies))return makeInitialState();
+ const migratePolicy=(p:any):DemoPolicy=>({...p,cashFeeRate:p.cashFeeRate??p.platformFeeRate??0,merchantDiscountRate:p.merchantDiscountRate??10,platformFeeRate:p.cashFeeRate??p.platformFeeRate??0});
+ const policies=raw.policies.map(migratePolicy);
+ const events:DemoEvent[]=raw.events.map((event:any)=>{
+  if(event.type==="SALE_CONFIRMED"){
+   const policy=migratePolicy(event.policy??policies.find((p:any)=>p.storeId===event.storeId)??{version:"LEGACY",rewardRate:0,platformFeeRate:0,effectiveAt:event.occurredAt,storeId:event.storeId,actor:"LEGACY_MIGRATION",reason:"Migrated DEMO v2"});
+   const amounts=calculateSaleAmounts({amount:event.grossAmount,redeem:event.pointsRedeemed,rewardRate:policy.rewardRate,cashFeeRate:policy.cashFeeRate,merchantDiscountRate:policy.merchantDiscountRate});
+   return {...event,...amounts,feeAmount:amounts.cashFeeAmount,cashFeeAmount:amounts.cashFeeAmount,merchantDiscountPoints:amounts.merchantDiscountPoints,merchantPointsAllocated:amounts.merchantPointsAllocated,policy};
+  }
+  if(event.type==="POLICY_UPDATED")return {...event,before:migratePolicy(event.before),after:migratePolicy(event.after)};
+  return event;
+ });
+ return {version:3,events,policies,clock:raw.clock??new Date().toISOString()};
 }
 export function project(state:DemoState){
  const p:any={merchantPointsPending:0,merchantPointsAvailable:0,xoaiDiscountPointsPending:0,xoaiDiscountPointsAvailable:0,cashFeeGross:0,cashFeeReversed:0,cashFeeNet:0,merchantDiscountPointsGross:0,merchantDiscountPointsReversed:0,merchantDiscountPointsNet:0,gmvGross:0,gmvReversed:0,gmvNet:0,cashPaid:0,cashPaidReversed:0,cashPaidNet:0,pointsRedeemed:0,pointsRedeemedReversed:0,pointsRedeemedNet:0,fees:0,feesReversed:0,feesNet:0,rewardIssued:0,rewardPending:0,rewardAvailable:0,rewardReversed:0,shortfall:0,orders:0,activeOrders:0,customers:[],stores:[],pointRows:[],walletRows:[],ledgerRows:[],reconciliationRows:[],withdrawals:[]};
