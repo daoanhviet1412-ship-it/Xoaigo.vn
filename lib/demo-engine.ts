@@ -189,9 +189,10 @@ export function runAcceptanceTests(){
  const cashbackInput={customerId:demoCustomers[1].id,storeId:store.id,amount:100000,redeem:0,occurredAt:"2026-11-12T13:00:00.000Z",rewardRate:7,feeRate:3},cashbackSale=appendSale(base,cashbackInput),cashbackEvent=cashbackSale.events.find(x=>x.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>;
  add("Cashback: app tính 7% trên tiền mặt và trừ Ví điểm quán",cashbackEvent.rewardPoints===7000&&cashbackEvent.merchantCashbackPoints===7000&&project(cashbackSale).stores.find((x:any)=>x.id===store.id)?.pointsAvailable===project(base).stores.find((x:any)=>x.id===store.id)?.pointsAvailable-7000,"Ghi điểm Pending khách và debit Available quán.");
  const insufficient=(()=>{try{appendSale(base,{...cashbackInput,storeId:demoStores[1].id});return false;}catch(e){return String(e).includes("Ví điểm quán không đủ");}})();
- add("Cashback: thiếu điểm vẫn ghi nhận giao dịch Pending",!insufficient&&project(appendSale(base,{...cashbackInput,storeId:demoStores[1].id}),"2026-11-13T12:00:00.000Z").cashbackPending===7000,"Khoản cashback chờ quán bổ sung điểm.");
+ const pendingState=appendSale(base,{...cashbackInput,storeId:demoStores[1].id}),pendingNow="2026-11-13T12:00:00.000Z";
+ add("Cashback: thiếu điểm vẫn ghi nhận giao dịch Pending",!insufficient&&project(pendingState,pendingNow).cashbackPending-project(base,pendingNow).cashbackPending===7000,"Khoản cashback mới được ghi nhận tăng thêm 7.000 điểm chờ quán bổ sung.");
  const overdue=appendSale(base,{...cashbackInput,storeId:demoStores[1].id});
- add("Cashback: cảnh báo đỏ sau 3 ngày",project(overdue,"2026-11-16T13:01:00.000Z").cashbackOverdue===7000,"Quá 72 giờ chưa đủ điểm thì cảnh báo đỏ.");
+ add("Cashback: cảnh báo đỏ sau 3 ngày",project(overdue,"2026-11-16T13:01:00.000Z").cashbackOverdue-project(base,"2026-11-16T13:01:00.000Z").cashbackOverdue===7000,"Khoản cashback mới chuyển sang cảnh báo đỏ sau 72 giờ.");
  const cashbackReversed=reverseSale(cashbackSale,cashbackEvent.id,"Test cashback reversal","2026-11-12T14:00:00.000Z");
  add("Cashback: đảo giao dịch hoàn lại điểm đã trừ Ví quán",project(cashbackReversed).stores.find((x:any)=>x.id===store.id)?.pointsAvailable===project(cashbackSale).stores.find((x:any)=>x.id===store.id)?.pointsAvailable+7000,"Reversal khôi phục debit cashback.");
  add("P31: không tự kết luận gian lận",true,"Không có fraud verdict tự động.");
