@@ -24,6 +24,7 @@ const groups = [
   ]},
   { title: "Tài chính", items: [
     { label: "Tổng quan tài chính", href: "/admin/funds", icon: Wallet },
+    { label: "Thống kê từng ví", href: "/admin/finance", icon: Coins },
     { label: "Mô hình tài chính", href: "/admin/finance-model", icon: Scale },
     { label: "Ngân sách", href: "/admin/budgets", icon: Landmark },
     { label: "Sổ cái", href: "/admin/ledger", icon: ReceiptText },
