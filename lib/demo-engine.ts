@@ -15,7 +15,7 @@ export type DemoEvent=
 export type DemoState={version:4;events:DemoEvent[];policies:DemoPolicy[];clock:string};
 export const money=(n:number)=>new Intl.NumberFormat("vi-VN",{maximumFractionDigits:0}).format(n)+" ₫";
 export const number=(n:number)=>new Intl.NumberFormat("vi-VN",{maximumFractionDigits:0}).format(n);
-export const demoStores:DemoStore[]=Array.from({length:100},(_,i)=>({id:"XO-MER-"+String(i+1).padStart(4,"0"),name:["Mộc Xanh Coffee","Tiệm Trà Mây","Bếp Nhà Nhiên","Góc Phố Nhỏ","Nắng Garden"][i%5]+" "+(i+1),category:["Cà phê","Trà sữa","Nhà hàng","Quán ăn","Đồ uống","Làm đẹp","Thời trang","Siêu thị mini"][i%8],area:["Hải Châu","Thanh Khê","Sơn Trà","Ngũ Hành Sơn","Liên Chiểu","Cẩm Lệ","Hòa Vang"][i%7],status:(i+1)%17===0?"Tạm ngưng":"Đang hoạt động",initialBacking:2_000_000+(i%6)*500_000,initialPoints:i===1?0:500_000}));
+export const demoStores:DemoStore[]=Array.from({length:100},(_,i)=>({id:"XO-MER-"+String(i+1).padStart(4,"0"),name:["Mộc Xanh Coffee","Tiệm Trà Mây","Bếp Nhà Nhiên","Góc Phố Nhỏ","Nắng Garden"][i%5]+" "+(i+1),category:["Cà phê","Trà sữa","Nhà hàng","Quán ăn","Đồ uống","Làm đẹp","Thời trang","Siêu thị mini"][i%8],area:["Hải Châu","Thanh Khê","Sơn Trà","Ngũ Hành Sơn","Liên Chiểu","Cẩm Lệ","Hòa Vang"][i%7],status:(i+1)%17===0?"Tạm ngưng":"Đang hoạt động",initialBacking:2_000_000+(i%6)*500_000,initialPoints:500_000}));
 const first=["Minh","Anh","Hương","Tuấn","Linh","Trang","Nam","Thảo","Quân","Vy","Hải","Ngọc","Phúc","My","Duy","Lan","Khoa","Trâm","Long","Chi"];
 const last=["Nguyễn","Trần","Lê","Phạm","Hoàng","Huỳnh","Phan","Võ","Đặng","Bùi","Đỗ","Ngô"];
 export const demoCustomers:DemoCustomer[]=Array.from({length:1000},(_,i)=>({id:"XO-MB-"+String(i+1).padStart(6,"0"),name:last[i%last.length]+" "+first[(i*3+1)%first.length]+" "+first[(i*11+5)%first.length],phone:"09"+String(10000000+i*7919).slice(0,8),area:["Hải Châu","Thanh Khê","Sơn Trà","Ngũ Hành Sơn","Liên Chiểu","Cẩm Lệ","Hòa Vang"][i%7],initialAvailable:0,status:i%53===0?"Tạm khóa":"Hoạt động"}));
@@ -188,11 +188,11 @@ export function runAcceptanceTests(){
  add("P28A: policy chưa đến hiệu lực không áp dụng ngược",historicalSnapshot.policy.merchantDiscountRate===10,"Giao dịch trước mốc hiệu lực giữ tỷ lệ điểm app cũ.");
  const cashbackInput={customerId:demoCustomers[1].id,storeId:store.id,amount:100000,redeem:0,occurredAt:"2026-11-12T13:00:00.000Z",rewardRate:7,feeRate:3},cashbackSale=appendSale(base,cashbackInput),cashbackEvent=cashbackSale.events.find(x=>x.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>;
  add("Cashback: app tính 7% trên tiền mặt và trừ Ví điểm quán",cashbackEvent.rewardPoints===7000&&cashbackEvent.merchantCashbackPoints===7000&&project(cashbackSale).stores.find((x:any)=>x.id===store.id)?.pointsAvailable===project(base).stores.find((x:any)=>x.id===store.id)?.pointsAvailable-7000,"Ghi điểm Pending khách và debit Available quán.");
- const insufficient=(()=>{try{appendSale(base,{...cashbackInput,storeId:demoStores[1].id});return false;}catch(e){return String(e).includes("Ví điểm quán không đủ");}})();
- const pendingState=appendSale(base,{...cashbackInput,storeId:demoStores[1].id}),pendingNow="2026-11-13T12:00:00.000Z";
- add("Cashback: thiếu điểm vẫn ghi nhận giao dịch Pending",!insufficient&&project(pendingState,pendingNow).cashbackPending-project(base,pendingNow).cashbackPending===7000,"Khoản cashback mới được ghi nhận tăng thêm 7.000 điểm chờ quán bổ sung.");
- const overdue=appendSale(base,{...cashbackInput,storeId:demoStores[1].id});
- add("Cashback: cảnh báo đỏ sau 3 ngày",project(overdue,"2026-11-16T13:01:00.000Z").cashbackOverdue-project(base,"2026-11-16T13:01:00.000Z").cashbackOverdue===7000,"Khoản cashback mới chuyển sang cảnh báo đỏ sau 72 giờ.");
+ let insufficientBase=base;for(let i=0;i<100;i++)insufficientBase=appendSale(insufficientBase,{customerId:demoCustomers[1].id,storeId:demoStores[1].id,amount:100000,redeem:0,occurredAt:"2026-11-12T12:30:00.000Z",rewardRate:7,feeRate:3});
+ const pendingState=appendSale(insufficientBase,{...cashbackInput,storeId:demoStores[1].id}),pendingNow="2026-11-13T12:00:00.000Z";
+ add("Cashback: thiếu điểm vẫn ghi nhận giao dịch Pending",project(pendingState,pendingNow).cashbackPending-project(insufficientBase,pendingNow).cashbackPending===7000,"Khoản cashback mới được ghi nhận tăng thêm 7.000 điểm chờ quán bổ sung.");
+ const overdue=pendingState;
+ add("Cashback: cảnh báo đỏ sau 3 ngày",project(overdue,"2026-11-16T13:01:00.000Z").cashbackOverdue-project(insufficientBase,"2026-11-16T13:01:00.000Z").cashbackOverdue===7000,"Khoản cashback mới chuyển sang cảnh báo đỏ sau 72 giờ.");
  const cashbackReversed=reverseSale(cashbackSale,cashbackEvent.id,"Test cashback reversal","2026-11-12T14:00:00.000Z");
  add("Cashback: đảo giao dịch hoàn lại điểm đã trừ Ví quán",project(cashbackReversed).stores.find((x:any)=>x.id===store.id)?.pointsAvailable===project(cashbackSale).stores.find((x:any)=>x.id===store.id)?.pointsAvailable+7000,"Reversal khôi phục debit cashback.");
  add("P31: không tự kết luận gian lận",true,"Không có fraud verdict tự động.");
