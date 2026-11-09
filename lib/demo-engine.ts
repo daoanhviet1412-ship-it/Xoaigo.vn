@@ -136,7 +136,7 @@ export function runAcceptanceTests(){
  const initial=makeInitialState(new Date("2026-11-09T02:00:00.000Z")),out:{name:string;pass:boolean;detail:string}[]=[];
  const noReward=updatePolicy(initial,demoStores[0].id,0,4,"Acceptance funding setup","2026-11-09T08:00:00.000Z");
  let fundedBase=noReward;
- for(const idx of [68,69,70])fundedBase=appendSale(fundedBase,{customerId:demoCustomers[idx].id,storeId:demoStores[0].id,amount:200000,redeem:9000,occurredAt:"2026-11-09T08:00:00.000Z",rewardRate:0,feeRate:4});
+ for(const idx of [67,68,69])fundedBase=appendSale(fundedBase,{customerId:demoCustomers[idx].id,storeId:demoStores[0].id,amount:200000,redeem:9000,occurredAt:"2026-11-09T08:00:00.000Z",rewardRate:0,feeRate:4});
  fundedBase=releaseEligible(fundedBase,"2026-11-11T10:01:00.000Z");
  const base=updatePolicy(fundedBase,demoStores[0].id,8,4,"Acceptance cashback policy","2026-11-12T12:00:00.000Z");
  const add=(name:string,pass:boolean,detail:string)=>out.push({name,pass,detail});
