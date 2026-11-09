@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { DemoModulePage } from "@/components/admin/demo-module-page";
 
 export default async function SettlementsPage(){
+  if (process.env.VERCEL_ENV === "preview") return <DemoModulePage module="settlements" />;
  const supabase=await createClient(); if(!supabase)return <main style={{padding:36}}>Preview chưa cấu hình Supabase.</main>;
  const {data:{user}}=await supabase.auth.getUser(); if(!user)redirect("/admin/login");
  const [{data:profile},{data:grants},{data:rolePermissions},{data:obligations,error:obligationError},{data:batches,error:batchError}] = await Promise.all([
