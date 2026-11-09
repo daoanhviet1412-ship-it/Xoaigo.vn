@@ -35,7 +35,7 @@ export function makeInitialState(now=new Date()):DemoState{
  return {version:2,events,policies,clock:now.toISOString()};
 }
 export function project(state:DemoState){
- const p:any={gmvGross:0,gmvReversed:0,gmvNet:0,cashPaid:0,pointsRedeemed:0,fees:0,rewardIssued:0,rewardPending:0,rewardAvailable:0,rewardReversed:0,shortfall:0,orders:0,activeOrders:0,customers:[],stores:[],pointRows:[],walletRows:[],ledgerRows:[],reconciliationRows:[],withdrawals:[]};
+ const p:any={gmvGross:0,gmvReversed:0,gmvNet:0,cashPaid:0,cashPaidReversed:0,cashPaidNet:0,pointsRedeemed:0,pointsRedeemedReversed:0,pointsRedeemedNet:0,fees:0,feesReversed:0,feesNet:0,rewardIssued:0,rewardPending:0,rewardAvailable:0,rewardReversed:0,shortfall:0,orders:0,activeOrders:0,customers:[],stores:[],pointRows:[],walletRows:[],ledgerRows:[],reconciliationRows:[],withdrawals:[]};
  const cm=new Map(demoCustomers.map(c=>[c.id,{...c,available:c.initialAvailable,pending:0,held:0,used:0,spent:0,orders:0}]));
  const sm=new Map(demoStores.map(s=>[s.id,{...s,backing:s.initialBacking,pendingBacking:0,gross:0,fee:0,net:0,count:0,negative:false}]));
  const sales=new Map<string,Extract<DemoEvent,{type:"SALE_CONFIRMED"}>>(),released=new Set<string>(),reversed=new Set<string>(),withdrawals=new Map<string,any>();
@@ -59,7 +59,7 @@ export function project(state:DemoState){
    p.walletRows.push({id:e.id+"-customer",owner:sale.customerId,kind:"Chuyển điểm thưởng sang Available",amount:sale.rewardPoints,status:"Available · DEMO",source:sale.orderId});
    p.walletRows.push({id:e.id+"-merchant",owner:sale.storeId,kind:"Giải phóng backing Pending",amount:sale.rewardPoints+sale.feeAmount,status:"Đã giải phóng DEMO",source:sale.orderId});
   }else if(e.type==="SALE_REVERSED"){
-   const sale=sales.get(e.saleEventId);if(!sale||reversed.has(sale.id))continue;reversed.add(sale.id);p.gmvReversed+=sale.grossAmount;
+   const sale=sales.get(e.saleEventId);if(!sale||reversed.has(sale.id))continue;reversed.add(sale.id);p.gmvReversed+=sale.grossAmount;p.cashPaidReversed+=sale.cashPaid;p.pointsRedeemedReversed+=sale.pointsRedeemed;p.feesReversed+=sale.feeAmount;
    const c=cm.get(sale.customerId);if(c){if(released.has(sale.id)){const recover=Math.min(c.available,sale.rewardPoints);c.available-=recover;p.shortfall+=sale.rewardPoints-recover;c.used=Math.max(0,c.used-sale.pointsRedeemed);}else c.pending=Math.max(0,c.pending-sale.rewardPoints);c.available+=sale.pointsRedeemed;}
    const s=sm.get(sale.storeId);if(s){s.pendingBacking=Math.max(0,s.pendingBacking-sale.rewardPoints-sale.feeAmount);if(released.has(sale.id))s.backing+=sale.rewardPoints+sale.feeAmount;s.gross-=sale.grossAmount;s.fee-=sale.feeAmount;s.count=Math.max(0,s.count-1);}
    p.rewardReversed+=sale.rewardPoints;p.walletRows.push({id:e.id+"-customer",owner:sale.customerId,kind:"Điều chỉnh đảo điểm thưởng",amount:-sale.rewardPoints,status:"Adjustment · DEMO",source:sale.orderId});p.walletRows.push({id:e.id+"-merchant",owner:sale.storeId,kind:"Điều chỉnh backing giao dịch đảo",amount:-(sale.rewardPoints+sale.feeAmount),status:"Adjustment · DEMO",source:sale.orderId});p.pointRows.push({id:e.id,customerId:sale.customerId,kind:"Điều chỉnh đảo",amount:-sale.rewardPoints,bucket:"Adjustment",source:sale.orderId});
@@ -70,7 +70,7 @@ export function project(state:DemoState){
   else if(e.type==="WITHDRAWAL_REQUESTED")withdrawals.set(e.id,{...e,status:"Chờ duyệt"});
   else if(e.type==="WITHDRAWAL_APPROVED"){const w=withdrawals.get(e.requestId);if(w)w.status="Đã duyệt DEMO · chưa chi tiền";}
  }
- p.gmvNet=p.gmvGross-p.gmvReversed;p.rewardPending=[...cm.values()].reduce((n,c)=>n+c.pending,0);p.rewardAvailable=[...cm.values()].reduce((n,c)=>n+c.available,0);
+ p.gmvNet=p.gmvGross-p.gmvReversed;p.cashPaidNet=p.cashPaid-p.cashPaidReversed;p.pointsRedeemedNet=p.pointsRedeemed-p.pointsRedeemedReversed;p.feesNet=p.fees-p.feesReversed;p.rewardPending=[...cm.values()].reduce((n,c)=>n+c.pending,0);p.rewardAvailable=[...cm.values()].reduce((n,c)=>n+c.available,0);
  p.customers=[...cm.values()];p.stores=[...sm.values()].map(s=>({...s,net:s.gross-s.fee,negative:s.backing<0}));p.withdrawals=[...withdrawals.values()];p.activeOrders=p.orders-reversed.size;
  for(const e of ordered){if(e.type!=="SALE_CONFIRMED")continue;const releasedEvent=ordered.find(x=>x.type==="PENDING_RELEASED"&&x.saleEventId===e.id),reversal=ordered.find(x=>x.type==="SALE_REVERSED"&&x.saleEventId===e.id);p.reconciliationRows.push({id:e.orderId,amount:e.grossAmount,source:"App DEMO",external:"Chưa có nguồn POS/ngân hàng",difference:"Chưa xác định",status:reversal?"Đã đảo":releasedEvent?"Đã ghi nhận nội bộ":"Chờ bằng chứng độc lập"});}
  return p;
