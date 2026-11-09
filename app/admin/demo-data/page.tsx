@@ -70,15 +70,18 @@ export default async function DemoDataPage({searchParams}:{searchParams:Params})
   const type=params.type==="members"?"members":"stores";
   const page=Math.max(1,Math.min(type==="stores"?5:50,Number(params.page)||1));
   const supabase=await createClient();
-  if(!supabase) return <main className="demo-wrap">Preview chưa cấu hình Supabase.</main>;
-  const {data:{user}}=await supabase.auth.getUser();
-  if(!user) redirect("/admin/login");
-  const [{data:profile},{data:grants}]=await Promise.all([
-    supabase.from("profiles").select("status").eq("id",user.id).maybeSingle(),
-    supabase.from("user_role_grants").select("roles(code)").eq("user_id",user.id).is("revoked_at",null)
-  ]);
-  const roleCodes=(grants??[]).map(g=>g.roles?.code).filter(Boolean);
-  if(profile?.status!=="active"||!roleCodes.some(code=>["platform_owner","platform_admin","ops_manager","ops_agent"].includes(code))) return <main className="demo-wrap">Không có quyền truy cập khu vực DEMO.</main>;
+  const isPreviewDemo=process.env.VERCEL_ENV==="preview";
+  if(!supabase && !isPreviewDemo) return <main className="demo-wrap">Chưa kết nối dữ liệu.</main>;
+  if(!isPreviewDemo && supabase) {
+    const {data:{user}}=await supabase.auth.getUser();
+    if(!user) redirect("/admin/login");
+    const [{data:profile},{data:grants}]=await Promise.all([
+      supabase.from("profiles").select("status").eq("id",user.id).maybeSingle(),
+      supabase.from("user_role_grants").select("roles(code)").eq("user_id",user.id).is("revoked_at",null)
+    ]);
+    const roleCodes=(grants??[]).map(g=>g.roles?.code).filter(Boolean);
+    if(profile?.status!=="active"||!roleCodes.some(code=>["platform_owner","platform_admin","ops_manager","ops_agent"].includes(code))) return <main className="demo-wrap">Không có quyền truy cập khu vực DEMO.</main>;
+  }
   const source=type==="stores"?stores:members;
   const rows=source.slice((page-1)*20,page*20);
   const pages=type==="stores"?5:50;
