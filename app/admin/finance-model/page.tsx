@@ -40,7 +40,7 @@ export default async function FinanceModelPage() {
           <a href="/admin">Tổng quan</a>
           <a href="/admin/merchants">Cửa hàng</a>
           <a href="/admin/policies">Chính sách</a>
-          <a href="/admin/finance-model" style={{ color: "#13864b", fontWeight: 800 }}>Mô hình tài chính</a>
+          <a href="/admin/finance-model" style={{ color: "#13864b", fontWeight: 800 }}>Mô hình tài chính</a><a href="/admin/product-decisions">Quyết định sản phẩm</a>
           <a href="/admin/points">Điểm</a>
           <a href="/admin/ledger">Sổ cái</a>
           <a href="/admin/funds">Nguồn tiền</a>
