@@ -133,13 +133,18 @@ export function confirmTopup(state:DemoState,storeId:string,amount:number,refere
 export function requestWithdrawal(state:DemoState,storeId:string,amount:number,now:string){if(!Number.isInteger(amount)||amount<=0)throw new Error("Số tiền rút DEMO phải là số nguyên dương.");const event:Extract<DemoEvent,{type:"WITHDRAWAL_REQUESTED"}>={type:"WITHDRAWAL_REQUESTED",id:"EV-WITHDRAW-"+crypto.randomUUID(),storeId,amount,requestedAt:now};return {...state,events:[event,...state.events]};}
 export function approveWithdrawal(state:DemoState,requestId:string,now:string,approver:string){const w=state.events.find(e=>e.type==="WITHDRAWAL_REQUESTED"&&e.id===requestId);if(!w)throw new Error("Không tìm thấy yêu cầu rút.");if(state.events.some(e=>e.type==="WITHDRAWAL_APPROVED"&&e.requestId===requestId))throw new Error("Yêu cầu đã được duyệt.");const event:Extract<DemoEvent,{type:"WITHDRAWAL_APPROVED"}>={type:"WITHDRAWAL_APPROVED",id:"EV-APPROVE-"+crypto.randomUUID(),requestId,approvedAt:now,approver};return {...state,events:[event,...state.events]};}
 export function runAcceptanceTests(){
- const base=makeInitialState(new Date("2026-11-09T02:00:00.000Z")),out:{name:string;pass:boolean;detail:string}[]=[];
+ const initial=makeInitialState(new Date("2026-11-09T02:00:00.000Z")),out:{name:string;pass:boolean;detail:string}[]=[];
+ const noReward=updatePolicy(initial,demoStores[0].id,0,4,"Acceptance funding setup","2026-11-09T08:00:00.000Z");
+ let fundedBase=noReward;
+ for(const idx of [68,69,70])fundedBase=appendSale(fundedBase,{customerId:demoCustomers[idx].id,storeId:demoStores[0].id,amount:200000,redeem:9000,occurredAt:"2026-11-09T08:00:00.000Z",rewardRate:0,feeRate:4});
+ fundedBase=releaseEligible(fundedBase,"2026-11-11T10:01:00.000Z");
+ const base=updatePolicy(fundedBase,demoStores[0].id,8,4,"Acceptance cashback policy","2026-11-12T12:00:00.000Z");
  const add=(name:string,pass:boolean,detail:string)=>out.push({name,pass,detail});
  const a=batchSchedule("2026-11-09T09:59:00.000Z"),b=batchSchedule("2026-11-09T10:00:00.000Z");
  add("P32: trước 17:00 vào batch cùng ngày",a.batchAt==="2026-11-09T10:00:00.000Z",a.batchAt);
  add("P32: từ 17:00 vào batch ngày kế tiếp",b.batchAt==="2026-11-10T10:00:00.000Z",b.batchAt);
  add("P32: giải phóng sau 48 giờ liên tục",a.releaseAt==="2026-11-11T10:00:00.000Z",a.releaseAt);
- const customer=demoCustomers[0],store=demoStores[0],input={customerId:customer.id,storeId:store.id,amount:200000,redeem:customer.initialAvailable+1,occurredAt:"2026-11-09T08:00:00.000Z",rewardRate:8,feeRate:4};
+ const customer=demoCustomers[0],store=demoStores[0],input={customerId:customer.id,storeId:store.id,amount:200000,redeem:customer.initialAvailable+1,occurredAt:"2026-11-12T13:00:00.000Z",rewardRate:8,feeRate:4};
  add("P31: chặn sử dụng điểm vượt Available",!!validateSale(base,input),validateSale(base,input)??"Không hợp lệ");
  const valid={...input,redeem:100},withSale=appendSale(base,valid),sale=withSale.events.find(e=>e.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>;
  add("P28A: snapshot riêng phí tiền mặt và chiết khấu điểm quán",sale.policy.rewardRate===8&&sale.policy.cashFeeRate===4&&sale.policy.merchantDiscountRate===10,JSON.stringify(sale.policy));
@@ -147,30 +152,25 @@ export function runAcceptanceTests(){
  add("P28: phân bổ điểm tiêu theo chiết khấu riêng của quán",sale.merchantDiscountPoints===10&&sale.merchantPointsAllocated===90&&sale.merchantCashbackPoints===sale.rewardPoints,"100 điểm dùng: 10 điểm chiết khấu cho Xoài, 90 điểm phân bổ Quán; cashback do app chỉ đạo trừ Ví quán");
  const exampleSale=calculateSaleAmounts({amount:1000000,redeem:300000,rewardRate:7,cashFeeRate:3,merchantDiscountRate:10});
  add("P28: ví dụ hóa đơn 1 triệu khớp công thức đã chốt",exampleSale.cashPaid===700000&&exampleSale.rewardPoints===49000&&exampleSale.cashFeeAmount===21000&&exampleSale.merchantDiscountPoints===30000&&exampleSale.merchantPointsAllocated===270000,"700.000 VND tiền mặt; 49.000 điểm thưởng; 21.000 VND phí; 30.000 điểm chiết khấu Xoài; 270.000 điểm phân bổ Quán");
- const notYet=releaseEligible(withSale,"2026-11-10T10:00:00.000Z");add("P31/P32: không nhả Pending trước mốc 48h",!notYet.events.some(e=>e.type==="PENDING_RELEASED"&&e.saleEventId===sale.id),"Chưa đủ thời gian");
- const reversed=reverseSale(withSale,sale.id,"Test reversal","2026-11-09T09:00:00.000Z");add("P31/P32: reversal giữ giao dịch gốc và tạo adjustment",reversed.events.some(e=>e.type==="SALE_CONFIRMED"&&e.id===sale.id)&&reversed.events.some(e=>e.type==="SALE_REVERSED"&&e.saleEventId===sale.id),"Append-only");
+ const notYet=releaseEligible(withSale,"2026-11-14T10:00:00.000Z");add("P31/P32: không nhả Pending trước mốc 48h",!notYet.events.some(e=>e.type==="PENDING_RELEASED"&&e.saleEventId===sale.id),"Chưa đủ thời gian");
+ const reversed=reverseSale(withSale,sale.id,"Test reversal","2026-11-12T14:00:00.000Z");add("P31/P32: reversal giữ giao dịch gốc và tạo adjustment",reversed.events.some(e=>e.type==="SALE_CONFIRMED"&&e.id===sale.id)&&reversed.events.some(e=>e.type==="SALE_REVERSED"&&e.saleEventId===sale.id),"Append-only");
  const held=holdPoints(base,customer.id,100,"test","2026-11-09T08:00:00.000Z");add("P31: Held không thể dùng trong giao dịch",!!validateSale(held,{...valid,redeem:customer.initialAvailable}),"Điểm Held bị loại khỏi Available");
- const changed=updatePolicy(base,store.id,9,3,"Test policy change","2026-11-09T08:00:00.000Z"),snapshotSale=appendSale(changed,{...valid,amount:200000,redeem:0,rewardRate:9,feeRate:3}),snap=snapshotSale.events.find(x=>x.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>;
+ const changed=updatePolicy(base,store.id,9,3,"Test policy change","2026-11-12T13:00:00.000Z"),snapshotSale=appendSale(changed,{...valid,amount:200000,redeem:0,rewardRate:9,feeRate:3}),snap=snapshotSale.events.find(x=>x.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>;
  add("P28A: policy mới chỉ áp dụng giao dịch mới và có lý do",snap.policy.rewardRate===9&&snap.policy.cashFeeRate===3&&snap.policy.merchantDiscountRate===10&&snap.policy.reason==="Test policy change","Snapshot lưu version, actor, reason và thời điểm");
- const huge=appendSale(base,{customerId:customer.id,storeId:store.id,amount:100000000,redeem:0,occurredAt:"2026-11-09T08:00:00.000Z",rewardRate:8,feeRate:4}),hugeSale=huge.events.find(x=>x.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>,blocked=releaseEligible(huge,"2026-11-12T10:00:00.000Z");
+ const zeroReward=updatePolicy(base,store.id,0,4,"Backing test without cashback","2026-11-12T13:01:00.000Z"),huge=appendSale(zeroReward,{customerId:customer.id,storeId:store.id,amount:100000000,redeem:0,occurredAt:"2026-11-12T13:02:00.000Z",rewardRate:0,feeRate:4}),hugeSale=huge.events.find(x=>x.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>,blocked=releaseEligible(huge,"2026-11-15T10:00:00.000Z");
  add("P31: thiếu backing thì không giải phóng Pending",!blocked.events.some(x=>x.type==="PENDING_RELEASED"&&x.saleEventId===hugeSale.id),"Backing thấp hơn nghĩa vụ cần giải phóng");
- const releasedState=releaseEligible(withSale,"2026-11-12T10:00:00.000Z"),releasedReverse=reverseSale(releasedState,sale.id,"Reversal after release","2026-11-12T11:00:00.000Z"),releasedProjection=project(releasedReverse);
+ const releasedState=releaseEligible(withSale,"2026-11-15T10:00:00.000Z"),releasedReverse=reverseSale(releasedState,sale.id,"Reversal after release","2026-11-15T11:00:00.000Z"),releasedProjection=project(releasedReverse);
  add("P31: đảo sau giải phóng thu hồi đúng điểm phân bổ",releasedProjection.merchantPointsAvailable===0&&releasedProjection.xoaiDiscountPointsAvailable===0&&releasedProjection.shortfall===0,"Thu hồi điểm Quán/Xoài và xử lý điểm thưởng khách trong giới hạn số dư");
- const futurePolicy=updatePolicy(base,store.id,9,3,"Future policy effective time","2026-11-09T08:00:00.000Z",12),historicalSale=appendSale(futurePolicy,{...valid,occurredAt:"2026-11-09T07:00:00.000Z",redeem:0});
+ const futurePolicy=updatePolicy(base,store.id,9,3,"Future policy effective time","2026-11-12T13:00:00.000Z",12),historicalSale=appendSale(futurePolicy,{...valid,occurredAt:"2026-11-12T12:30:00.000Z",redeem:0});
  const historicalSnapshot=historicalSale.events.find(x=>x.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>;
  add("P28A: policy chưa đến hiệu lực không áp dụng ngược",historicalSnapshot.policy.rewardRate===8&&historicalSnapshot.policy.cashFeeRate===4,"Giao dịch trước mốc hiệu lực giữ policy cũ");
 
- const noCashbackPolicy=updatePolicy(base,store.id,0,4,"Fund merchant wallet for cashback test","2026-11-09T08:00:00.000Z");
- const fundingInput={customerId:demoCustomers[68].id,storeId:store.id,amount:200000,redeem:9000,occurredAt:"2026-11-09T08:00:00.000Z",rewardRate:0,feeRate:4};
- const funded=appendSale(noCashbackPolicy,fundingInput),fundedSale=funded.events.find(x=>x.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>;
- const fundedReleased=releaseEligible(funded,new Date(new Date(fundedSale.releaseAt).getTime()+1000).toISOString());
- const cashbackPolicy=updatePolicy(fundedReleased,store.id,8,4,"Enable cashback test","2026-11-12T12:00:00.000Z");
- const cashbackInput={customerId:demoCustomers[1].id,storeId:store.id,amount:100000,redeem:0,occurredAt:"2026-11-12T12:00:00.000Z",rewardRate:8,feeRate:4};
- const cashbackSale=appendSale(cashbackPolicy,cashbackInput),cashbackEvent=cashbackSale.events.find(x=>x.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>;
- add("Cashback: app tính trên tiền mặt và trừ Ví điểm quán",cashbackEvent.rewardPoints===8000&&cashbackEvent.merchantCashbackPoints===8000&&project(cashbackSale).stores.find((x:any)=>x.id===store.id)?.pointsAvailable===fundedSale.merchantPointsAllocated-8000,"Một sự kiện sale ghi đồng thời điểm Pending khách và debit Available của quán");
+ const cashbackInput={customerId:demoCustomers[1].id,storeId:store.id,amount:100000,redeem:0,occurredAt:"2026-11-12T13:00:00.000Z",rewardRate:8,feeRate:4};
+ const cashbackSale=appendSale(base,cashbackInput),cashbackEvent=cashbackSale.events.find(x=>x.type==="SALE_CONFIRMED") as Extract<DemoEvent,{type:"SALE_CONFIRMED"}>;
+ add("Cashback: app tính trên tiền mặt và trừ Ví điểm quán",cashbackEvent.rewardPoints===8000&&cashbackEvent.merchantCashbackPoints===8000&&project(cashbackSale).stores.find((x:any)=>x.id===store.id)?.pointsAvailable===project(base).stores.find((x:any)=>x.id===store.id)?.pointsAvailable-8000,"Một event sale ghi điểm Pending khách và debit Available quán");
  const insufficient=(()=>{try{appendSale(base,{...cashbackInput,storeId:demoStores[1].id});return false;}catch(e){return String(e).includes("Ví điểm quán không đủ");}})();
  add("Cashback: chặn giao dịch nếu Ví quán không đủ",insufficient,"Không cho số dư điểm quán âm");
- const cashbackReversed=reverseSale(cashbackSale,cashbackEvent.id,"Test cashback reversal","2026-11-12T13:00:00.000Z");
+ const cashbackReversed=reverseSale(cashbackSale,cashbackEvent.id,"Test cashback reversal","2026-11-12T14:00:00.000Z");
  add("Cashback: đảo giao dịch hoàn lại điểm đã trừ Ví quán",project(cashbackReversed).stores.find((x:any)=>x.id===store.id)?.pointsAvailable===project(cashbackSale).stores.find((x:any)=>x.id===store.id)?.pointsAvailable+8000,"Reversal khôi phục debit cashback của giao dịch gốc");
  add("P31: không tự kết luận gian lận",true,"Không có fraud verdict tự động");
  const reversalProjected=project(reverseSale(withSale,sale.id,"test reversal","2026-11-09T09:00:00.000Z"));
