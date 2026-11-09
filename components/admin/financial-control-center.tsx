@@ -48,7 +48,9 @@ function Stat({ label, value, note }: { label: string; value: string; note: stri
 
 export function FinancialControlCenter({ wallet = "overview" }: { wallet?: string }) {
   const [state, setState] = useState<DemoState>(() => makeInitialState());
-  const [loaded, setLoaded] = useState(false);\n  const [orderCount, setOrderCount] = useState("250");\n  const [scenarioNote, setScenarioNote] = useState("");
+  const [loaded, setLoaded] = useState(false);
+  const [orderCount, setOrderCount] = useState("250");
+  const [scenarioNote, setScenarioNote] = useState("");
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_STORAGE_KEY);
@@ -69,7 +71,8 @@ export function FinancialControlCenter({ wallet = "overview" }: { wallet?: strin
     pending: data.customers.reduce((sum: number, customer: { pending: number }) => sum + customer.pending, 0),
     held: data.customers.reduce((sum: number, customer: { held: number }) => sum + customer.held, 0),
   }), [data]);
-  const activeTab = tabs.some((tab) => tab.id === wallet) ? wallet as WalletTab : "overview";\n  const applyScenario = () => { const count=Number(orderCount); if(!Number.isInteger(count)||count<0||count>5000){setScenarioNote("Nhập số đơn từ 0 đến 5.000.");return;} const next=makeInitialState(new Date(),count); setState(next); try{localStorage.setItem(STORAGE_KEY,JSON.stringify(next));localStorage.removeItem(LEGACY_STORAGE_KEY);}catch{} setScenarioNote(`Đã tạo lại kịch bản ${number(count)} đơn. Các ví và chỉ số doanh thu đã được tính lại.`); };
+  const activeTab = tabs.some((tab) => tab.id === wallet) ? wallet as WalletTab : "overview";
+  const applyScenario = () => { const count=Number(orderCount); if(!Number.isInteger(count)||count<0||count>5000){setScenarioNote("Nhập số đơn từ 0 đến 5.000.");return;} const next=makeInitialState(new Date(),count); setState(next); try{localStorage.setItem(STORAGE_KEY,JSON.stringify(next));localStorage.removeItem(LEGACY_STORAGE_KEY);}catch{} setScenarioNote(`Đã tạo lại kịch bản ${number(count)} đơn. Các ví và chỉ số doanh thu đã được tính lại.`); };
   const customerRows = data.customers.slice(0, 12);
   const merchantRows = data.stores.slice(0, 12);
 
