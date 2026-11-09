@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { demoCustomers, demoStores, makeInitialState, money, number, project, type DemoState } from "@/lib/demo-engine";
+import { makeInitialState, money, number, project, type DemoState } from "@/lib/demo-engine";
 
 const STORAGE_KEY = "xoai-demo-engine-v2";
 type WalletTab = "overview" | "customer" | "merchant" | "xoai" | "reserve" | "cash";
@@ -67,7 +67,6 @@ export function FinancialControlCenter({ wallet = "overview" }: { wallet?: strin
   const activeTab = tabs.some((tab) => tab.id === wallet) ? wallet as WalletTab : "overview";
   const customerRows = data.customers.slice(0, 12);
   const merchantRows = data.stores.slice(0, 12);
-  const renderWallet = activeTab !== "overview";
 
   return <main className="fc-page">
     <div className="fc-inner">
@@ -108,11 +107,11 @@ export function FinancialControlCenter({ wallet = "overview" }: { wallet?: strin
           <Stat label="Đã tiêu ròng" value={number(data.pointsRedeemedNet)} note="Chỉ số luồng, không phải số dư" />
         </section>
         <Doughnut title="Cơ cấu ví Khách" subtitle="Số dư theo trạng thái" items={[{label:"Available",value:customerBalances.available},{label:"Pending",value:customerBalances.pending},{label:"Held",value:customerBalances.held}]} unit="điểm" />
-        <section className="fc-panel"><div className="fc-panel-head"><div><h2>Danh sách ví Khách (12 mẫu)</h2><p>Dữ liệu tổng hợp từ synthetic customers của DEMO.</p></div></div><div className="fc-table-wrap"><table><thead><tr><th>Mã thành viên</th><th>Thành viên</th><th>Available</th><th>Pending</th><th>Held</th></tr></thead><tbody>{customerRows.map((customer: any) => <tr key={customer.id}><td>{customer.id}</td><td>{customer.name}</td><td>{number(customer.available)}</td><td>{number(customer.pending)}</td><td>{number(customer.held)}</td></tr>)}</tbody></table></div></section>
+        <section className="fc-panel"><div className="fc-panel-head"><div><h2>Danh sách ví Khách (12 mẫu)</h2><p>Dữ liệu tổng hợp từ synthetic customers của DEMO.</p></div></div><div className="fc-table-wrap"><table><thead><tr><th>Mã thành viên</th><th>Thành viên</th><th>Available</th><th>Pending</th><th>Held</th></tr></thead><tbody>{customerRows.map((customer: { id: string; name: string; available: number; pending: number; held: number }) => <tr key={customer.id}><td>{customer.id}</td><td>{customer.name}</td><td>{number(customer.available)}</td><td>{number(customer.pending)}</td><td>{number(customer.held)}</td></tr>)}</tbody></table></div></section>
         <p className="fc-policy-note">Chính sách đã chốt: điểm hết hạn sau 6 tháng kể từ thời điểm cộng; tối thiểu 50.000 điểm/lần tiêu; tối đa mặc định 300.000 điểm/lần; bước chọn 10.000 điểm. Lưu ý: engine DEMO hiện chưa mô phỏng đầy đủ hạn dùng và giới hạn tiêu này.</p>
       </>}
 
-      {activeTab === "merchant" && <><section className="fc-stats"><Stat label="Số quán trong bộ DEMO" value={number(data.stores.length)} note="Synthetic stores" /><Stat label="Backing DEMO" value={money(data.stores.reduce((sum: number, store: any) => sum + store.backing, 0))} note="Không phải số dư điểm quán" /><Stat label="Pending backing" value={money(data.stores.reduce((sum: number, store: any) => sum + store.pendingBacking, 0))} note="Nghĩa vụ mô phỏng theo engine cũ" /></section><div className="fc-empty-card"><b>Chưa có số dư điểm sở hữu của Quán.</b><span>Engine hiện tại chỉ có merchant backing mô phỏng bằng VND; chưa có point wallet ledger cho Quán. Không dùng backing thay cho điểm.</span></div><section className="fc-panel"><h2>Quán trong bộ DEMO</h2><div className="fc-table-wrap"><table><thead><tr><th>Mã quán</th><th>Tên quán</th><th>Backing DEMO (VND)</th><th>Pending backing (VND)</th></tr></thead><tbody>{merchantRows.map((store: any) => <tr key={store.id}><td>{store.id}</td><td>{store.name}</td><td>{money(store.backing)}</td><td>{money(store.pendingBacking)}</td></tr>)}</tbody></table></div></section></>}
+      {activeTab === "merchant" && <><section className="fc-stats"><Stat label="Số quán trong bộ DEMO" value={number(data.stores.length)} note="Synthetic stores" /><Stat label="Backing DEMO" value={money(data.stores.reduce((sum: number, store: { backing: number; pendingBacking: number }) => sum + store.backing, 0))} note="Không phải số dư điểm quán" /><Stat label="Pending backing" value={money(data.stores.reduce((sum: number, store: any) => sum + store.pendingBacking, 0))} note="Nghĩa vụ mô phỏng theo engine cũ" /></section><div className="fc-empty-card"><b>Chưa có số dư điểm sở hữu của Quán.</b><span>Engine hiện tại chỉ có merchant backing mô phỏng bằng VND; chưa có point wallet ledger cho Quán. Không dùng backing thay cho điểm.</span></div><section className="fc-panel"><h2>Quán trong bộ DEMO</h2><div className="fc-table-wrap"><table><thead><tr><th>Mã quán</th><th>Tên quán</th><th>Backing DEMO (VND)</th><th>Pending backing (VND)</th></tr></thead><tbody>{merchantRows.map((store: { id: string; name: string; backing: number; pendingBacking: number }) => <tr key={store.id}><td>{store.id}</td><td>{store.name}</td><td>{money(store.backing)}</td><td>{money(store.pendingBacking)}</td></tr>)}</tbody></table></div></section></>}
 
       {activeTab === "xoai" && <div className="fc-empty-card"><b>Chưa có số dư ví doanh thu điểm App Xoài.</b><span>Chưa có event/ledger phân bổ phần chiết khấu của quán dành cho Xoài và chưa có event chuyển điểm hết hạn từ ví Khách về ví này.</span><span>Không lấy phí tiền mặt hoặc merchant backing để thay thế số dư điểm Xoài.</span></div>}
       {activeTab === "reserve" && <div className="fc-empty-card"><b>Chưa có registry quỹ điểm cố định.</b><span>Chưa có dữ liệu tổng quỹ điểm, đã phát hành và chưa phát hành để lập biểu đồ cơ cấu. Cần bổ sung point reserve registry và quy tắc chuyển trạng thái phát hành/thu hồi.</span></div>}
