@@ -61,7 +61,8 @@ export function DemoWorkspace({module}:{module:ModuleKey}){
  {module==="wallet"&&<section style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:10}}>
   {card("Ví tổng khách · điểm thưởng",number(projection.customerRewardNet)+" điểm","Tổng điểm thưởng ròng của khách")}
   {card("Ví doanh thu app · tiền mặt",money(projection.appRevenueCashNet),"3% tiền khách thực trả")}
-  {card("Ví doanh thu app · điểm",number(projection.appRevenuePointsNet)+" điểm","Tỷ lệ app trên phần điểm khách dùng")}
+  {card("Ví doanh thu app · điểm Pending",number(projection.xoaiDiscountPointsPending)+" điểm","Chờ đủ 48 giờ")}
+  {card("Ví doanh thu app · điểm Available",number(projection.xoaiDiscountPointsAvailable)+" điểm","Đã qua điều kiện Pending")}
   {card("Doanh thu app quy đổi",money(projection.appRevenueEquivalentNet),"VND + giá trị điểm quy đổi")}
   {card("Tổng khách + app",money(projection.customerAppAllocationNet),"Phải bằng 10% GMV net")}
   {card("Mục tiêu 10% GMV",money(projection.allocationTargetNet),"Sai lệch: "+money(projection.allocationVarianceNet))}
