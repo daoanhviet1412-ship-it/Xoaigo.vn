@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { DemoWorkspace } from "@/components/admin/demo-workspace";
 import { Store, Users, Sparkles, RotateCcw, MapPin, Search, BadgeCheck } from "lucide-react";
 
 type Params = Promise<{ type?: string; page?: string }>;
@@ -68,6 +69,7 @@ const styles = `
 export default async function DemoDataPage({searchParams}:{searchParams:Params}){
   const params=await searchParams;
   const type=params.type==="members"?"members":"stores";
+  if(process.env.VERCEL_ENV==="preview") return <DemoWorkspace module={type==="members"?"customers":"stores"}/>;
   const page=Math.max(1,Math.min(type==="stores"?5:50,Number(params.page)||1));
   const supabase=await createClient();
   const isPreviewDemo=process.env.VERCEL_ENV==="preview";
