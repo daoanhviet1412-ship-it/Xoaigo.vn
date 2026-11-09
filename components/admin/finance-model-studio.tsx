@@ -32,9 +32,9 @@ export function FinanceModelStudio({ policySets, canWrite }: Props) {
   const [scopeName, setScopeName] = useState("Cửa hàng A");
   const [effectiveFrom, setEffectiveFrom] = useState("");
   const [effectiveUntil, setEffectiveUntil] = useState("");
-  const [cashCustomerRate, setCashCustomerRate] = useState(10);
-  const [cashXoaiRate, setCashXoaiRate] = useState(5);
-  const [pointsRedemptionRate, setPointsRedemptionRate] = useState(10);
+  const [cashCustomerRate, setCashCustomerRate] = useState<number | null>(null);
+  const [cashXoaiRate, setCashXoaiRate] = useState<number | null>(null);
+  const [pointsRedemptionRate, setPointsRedemptionRate] = useState<number | null>(null);
   const [invoiceAmount, setInvoiceAmount] = useState(1000000);
   const [cashPaid, setCashPaid] = useState(700000);
   const [pointsPaid, setPointsPaid] = useState(300000);
@@ -47,19 +47,19 @@ export function FinanceModelStudio({ policySets, canWrite }: Props) {
 
   useEffect(() => { setEffectiveFrom(localDateTimeValue()); }, []);
 
-  const cashAllocationRate = cashCustomerRate + cashXoaiRate;
+  const cashAllocationRate = (cashCustomerRate ?? 0) + (cashXoaiRate ?? 0);
   const amountValid = Number.isInteger(invoiceAmount) && Number.isInteger(cashPaid) && Number.isInteger(pointsPaid) && invoiceAmount >= 0 && cashPaid >= 0 && pointsPaid >= 0 &&
     Math.round(cashPaid + pointsPaid) === Math.round(invoiceAmount);
   const ratesValid = [cashCustomerRate, cashXoaiRate, pointsRedemptionRate].every(
-    (rate) => Number.isFinite(rate) && rate >= 0 && rate <= 100
+    (rate) => rate !== null && Number.isFinite(rate) && rate >= 0 && rate <= 100
   ) && cashAllocationRate <= 100;
   const datesValid = Boolean(effectiveFrom) &&
     (!effectiveUntil || new Date(effectiveUntil).getTime() > new Date(effectiveFrom).getTime());
 
   const result = useMemo(() => {
-    const earnedPoints = cashPaid * cashCustomerRate / 100;
-    const xoaiCashRevenue = cashPaid * cashXoaiRate / 100;
-    const xoaiPointsRevenue = pointsPaid * pointsRedemptionRate / 100;
+    const earnedPoints = cashPaid * (cashCustomerRate ?? 0) / 100;
+    const xoaiCashRevenue = cashPaid * (cashXoaiRate ?? 0) / 100;
+    const xoaiPointsRevenue = pointsPaid * (pointsRedemptionRate ?? 0) / 100;
     const cashAllocation = earnedPoints + xoaiCashRevenue;
     const pointsAllocation = xoaiPointsRevenue;
     const totalAllocation = cashAllocation + pointsAllocation;
@@ -266,22 +266,22 @@ export function FinanceModelStudio({ policySets, canWrite }: Props) {
       <section style={{ ...cardStyle, display: "grid", gap: 16 }}>
         <div>
           <h2 style={{ margin: 0, fontSize: 19 }}>2. Tỷ lệ phân bổ thủ công</h2>
-          <p style={{ margin: "6px 0 0", color: "#718176", fontSize: 12 }}>Các con số dưới đây là bộ ví dụ đang chỉnh sửa, không phải tỷ lệ mặc định hay chính sách đang hoạt động.</p>
+          <p style={{ margin: "6px 0 0", color: "#718176", fontSize: 12 }}>Không có tỷ lệ mặc định. Hãy nhập đủ tỷ lệ được duyệt cho phạm vi này; nút ví dụ chỉ nạp dữ liệu minh họa.</p>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(210px,1fr))", gap: 14 }}>
           <label style={labelStyle}>Hoàn điểm cho khách trên tiền thật (%)
-            <input type="number" min="0" max="100" step="0.01" value={cashCustomerRate} onChange={(event) => setCashCustomerRate(Number(event.target.value))} style={inputStyle} />
+            <input type="number" min="0" max="100" step="0.01" value={cashCustomerRate ?? ""} onChange={(event) => setCashCustomerRate(event.target.value === "" ? null : Number(event.target.value))} style={inputStyle} />
           </label>
           <label style={labelStyle}>Doanh thu / phí Xoài trên tiền thật (%)
-            <input type="number" min="0" max="100" step="0.01" value={cashXoaiRate} onChange={(event) => setCashXoaiRate(Number(event.target.value))} style={inputStyle} />
+            <input type="number" min="0" max="100" step="0.01" value={cashXoaiRate ?? ""} onChange={(event) => setCashXoaiRate(event.target.value === "" ? null : Number(event.target.value))} style={inputStyle} />
           </label>
           <label style={labelStyle}>Phí Xoài trên phần khách dùng điểm (%)
-            <input type="number" min="0" max="100" step="0.01" value={pointsRedemptionRate} onChange={(event) => setPointsRedemptionRate(Number(event.target.value))} style={inputStyle} />
+            <input type="number" min="0" max="100" step="0.01" value={pointsRedemptionRate ?? ""} onChange={(event) => setPointsRedemptionRate(event.target.value === "" ? null : Number(event.target.value))} style={inputStyle} />
           </label>
         </div>
         <div style={{ padding: 14, borderRadius: 12, background: ratesValid ? "#edf6ef" : "#fff0ee", color: ratesValid ? "#286342" : "#a22b24", fontSize: 13, lineHeight: 1.6 }}>
           <b>Tổng phân bổ trên phần tiền thật: {pct(cashAllocationRate)}</b>
-          <div>Khách nhận {pct(cashCustomerRate)} dưới dạng điểm Pending · Xoài nhận {pct(cashXoaiRate)} doanh thu/phí.</div>
+          <div>Khách nhận {pct(cashCustomerRate ?? 0)} dưới dạng điểm Pending · Xoài nhận {pct(cashXoaiRate ?? 0)} doanh thu/phí.</div>
           {!ratesValid && <div style={{ fontWeight: 800, marginTop: 5 }}>Tỷ lệ không hợp lệ: mỗi tỷ lệ phải từ 0% đến 100%, tổng hai phần trên tiền thật không vượt 100%.</div>}
         </div>
       </section>
