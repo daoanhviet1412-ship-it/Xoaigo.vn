@@ -3,7 +3,7 @@ export type DemoStore={id:string;name:string;category:string;area:string;status:
 export type DemoCustomer={id:string;name:string;phone:string;area:string;initialAvailable:number;status:string};
 export type DemoPolicy={version:string;rewardRate:number;cashFeeRate:number;merchantDiscountRate:number;platformFeeRate?:number;effectiveAt:string;storeId:string;actor:string;reason:string};
 export type DemoEvent=
- | {type:"SALE_CONFIRMED";id:string;orderId:string;customerId:string;storeId:string;grossAmount:number;pointsRedeemed:number;cashPaid:number;rewardPoints:number;feeAmount:number;cashFeeAmount:number;merchantDiscountPoints:number;merchantPointsAllocated:number;merchantCashbackPoints:number;policy:DemoPolicy;occurredAt:string;batchAt:string;releaseAt:string}
+ | {type:"SALE_CONFIRMED";id:string;orderId:string;customerId:string;storeId:string;grossAmount:number;pointsRedeemed:number;cashPaid:number;rewardPoints:number;feeAmount:number;cashFeeAmount:number;merchantDiscountPoints:number;merchantPointsAllocated:number;merchantCashbackPoints:number;appCashRevenue:number;appPointsRevenue:number;appRevenueTotal:number;allocationTarget:number;allocationVariance:number;policy:DemoPolicy;occurredAt:string;batchAt:string;releaseAt:string}
  | {type:"PENDING_RELEASED";id:string;saleEventId:string;releasedAt:string}
  | {type:"SALE_REVERSED";id:string;saleEventId:string;reason:string;occurredAt:string}
  | {type:"MERCHANT_TOPUP";id:string;storeId:string;amount:number;confirmedAt:string;reference:string}
@@ -12,7 +12,7 @@ export type DemoEvent=
  | {type:"POLICY_UPDATED";id:string;storeId:string;before:DemoPolicy;after:DemoPolicy;actor:string;reason:string;effectiveAt:string}
  | {type:"POINTS_HELD";id:string;customerId:string;points:number;reason:string;occurredAt:string}
  | {type:"POINTS_UNHELD";id:string;customerId:string;points:number;reason:string;occurredAt:string};
-export type DemoState={version:3;events:DemoEvent[];policies:DemoPolicy[];clock:string};
+export type DemoState={version:4;events:DemoEvent[];policies:DemoPolicy[];clock:string};
 export const money=(n:number)=>new Intl.NumberFormat("vi-VN",{maximumFractionDigits:0}).format(n)+" ₫";
 export const number=(n:number)=>new Intl.NumberFormat("vi-VN",{maximumFractionDigits:0}).format(n);
 export const demoStores:DemoStore[]=Array.from({length:100},(_,i)=>({id:"XO-MER-"+String(i+1).padStart(4,"0"),name:["Mộc Xanh Coffee","Tiệm Trà Mây","Bếp Nhà Nhiên","Góc Phố Nhỏ","Nắng Garden"][i%5]+" "+(i+1),category:["Cà phê","Trà sữa","Nhà hàng","Quán ăn","Đồ uống","Làm đẹp","Thời trang","Siêu thị mini"][i%8],area:["Hải Châu","Thanh Khê","Sơn Trà","Ngũ Hành Sơn","Liên Chiểu","Cẩm Lệ","Hòa Vang"][i%7],status:(i+1)%17===0?"Tạm ngưng":"Đang hoạt động",initialBacking:2_000_000+(i%6)*500_000,initialPoints:500_000}));
@@ -28,7 +28,7 @@ export function batchSchedule(iso:string){
 function eventTime(e:DemoEvent){return "occurredAt" in e?e.occurredAt:"releasedAt" in e?e.releasedAt:"confirmedAt" in e?e.confirmedAt:"requestedAt" in e?e.requestedAt:"approvedAt" in e?e.approvedAt:"effectiveAt" in e?e.effectiveAt:"";}
 export const DEMO_TOTAL_POINT_SUPPLY=1_000_000_000;
 export function makeInitialState(now=new Date(),orderCount=250):DemoState{
- const policies=demoStores.map((s,i)=>({version:"DEMO-POLICY-"+(i+1)+".1",rewardRate:[8,6,10,5,7][i%5],cashFeeRate:[4,3,5,4,2][i%5],merchantDiscountRate:10,platformFeeRate:[4,3,5,4,2][i%5],effectiveAt:"2026-11-01T00:00:00.000Z",storeId:s.id,actor:"SYSTEM_DEMO",reason:"Seed policy DEMO"}));
+ const policies=demoStores.map((s,i)=>({version:"DEMO-POLICY-"+(i+1)+".1",rewardRate:7,cashFeeRate:3,merchantDiscountRate:10,platformFeeRate:3,effectiveAt:"2026-11-01T00:00:00.000Z",storeId:s.id,actor:"SYSTEM_DEMO",reason:"Seed policy DEMO · 7% khách + 3% app trên tiền mặt; app hưởng 10% phần điểm dùng"}));
  const events:DemoEvent[]=[];
  const safeOrderCount=Math.max(0,Math.min(5000,Math.floor(orderCount)));
  for(let i=0;i<safeOrderCount;i++){
@@ -40,20 +40,20 @@ export function makeInitialState(now=new Date(),orderCount=250):DemoState{
  return {version:3,events,policies,clock:now.toISOString()};
 }
 export function migrateDemoState(raw:any):DemoState{
- if(raw?.version===3&&Array.isArray(raw.events)&&Array.isArray(raw.policies))return raw as DemoState;
- if(raw?.version!==2||!Array.isArray(raw.events)||!Array.isArray(raw.policies))return makeInitialState();
- const migratePolicy=(p:any):DemoPolicy=>({...p,cashFeeRate:p.cashFeeRate??p.platformFeeRate??0,merchantDiscountRate:p.merchantDiscountRate??10,platformFeeRate:p.cashFeeRate??p.platformFeeRate??0});
+ if(raw?.version===4&&Array.isArray(raw.events)&&Array.isArray(raw.policies))return raw as DemoState;
+ if(![2,3].includes(raw?.version)||!Array.isArray(raw.events)||!Array.isArray(raw.policies))return makeInitialState();
+ const migratePolicy=(p:any):DemoPolicy=>({...p,rewardRate:7,cashFeeRate:3,platformFeeRate:3,merchantDiscountRate:p.merchantDiscountRate??10});
  const policies=raw.policies.map(migratePolicy);
  const events:DemoEvent[]=raw.events.map((event:any)=>{
   if(event.type==="SALE_CONFIRMED"){
-   const policy=migratePolicy(event.policy??policies.find((p:any)=>p.storeId===event.storeId)??{version:"LEGACY",rewardRate:0,platformFeeRate:0,effectiveAt:event.occurredAt,storeId:event.storeId,actor:"LEGACY_MIGRATION",reason:"Migrated DEMO v2"});
-   const amounts=calculateSaleAmounts({amount:event.grossAmount,redeem:event.pointsRedeemed,rewardRate:policy.rewardRate,cashFeeRate:policy.cashFeeRate,merchantDiscountRate:policy.merchantDiscountRate});
+   const policy=migratePolicy(event.policy??policies.find((p:any)=>p.storeId===event.storeId)??{version:"LEGACY",rewardRate:7,cashFeeRate:3,merchantDiscountRate:10,platformFeeRate:3,effectiveAt:event.occurredAt,storeId:event.storeId,actor:"LEGACY_MIGRATION",reason:"Migrated to locked 7% + 3% model"});
+   const amounts=calculateSaleAmounts({amount:event.grossAmount,redeem:event.pointsRedeemed,rewardRate:7,cashFeeRate:3,merchantDiscountRate:policy.merchantDiscountRate});
    return {...event,...amounts,feeAmount:amounts.cashFeeAmount,cashFeeAmount:amounts.cashFeeAmount,merchantDiscountPoints:amounts.merchantDiscountPoints,merchantPointsAllocated:amounts.merchantPointsAllocated,merchantCashbackPoints:amounts.rewardPoints,policy};
   }
   if(event.type==="POLICY_UPDATED")return {...event,before:migratePolicy(event.before),after:migratePolicy(event.after)};
   return event;
  });
- return {version:3,events,policies,clock:raw.clock??new Date().toISOString()};
+ return {version:4,events,policies,clock:raw.clock??new Date().toISOString()};
 }
 export function project(state:DemoState,now=new Date().toISOString()){
  const p:any={merchantPointsPending:0,merchantPointsAvailable:demoStores.reduce((n,s)=>n+s.initialPoints,0),pointSupplyTotal:DEMO_TOTAL_POINT_SUPPLY,pointReserveAvailable:DEMO_TOTAL_POINT_SUPPLY-demoStores.reduce((n,s)=>n+s.initialPoints,0),xoaiDiscountPointsPending:0,xoaiDiscountPointsAvailable:0,cashFeeGross:0,cashFeeReversed:0,cashFeeNet:0,merchantDiscountPointsGross:0,merchantDiscountPointsReversed:0,merchantDiscountPointsNet:0,gmvGross:0,gmvReversed:0,gmvNet:0,cashPaid:0,cashPaidReversed:0,cashPaidNet:0,pointsRedeemed:0,pointsRedeemedReversed:0,pointsRedeemedNet:0,fees:0,feesReversed:0,feesNet:0,rewardIssued:0,rewardPending:0,rewardAvailable:0,rewardReversed:0,shortfall:0,orders:0,activeOrders:0,customers:[],stores:[],pointRows:[],walletRows:[],ledgerRows:[],reconciliationRows:[],withdrawals:[],cashbackOrders:[],cashbackPending:0,cashbackOverdue:0};
