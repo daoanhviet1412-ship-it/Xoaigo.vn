@@ -1,4 +1,6 @@
 import Link from "next/link";
+import DashboardDataSource from "@/components/admin/dashboard-data-source";
+
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -129,7 +131,7 @@ export default async function AdminHomePage({ searchParams }: { searchParams: Se
     "Điểm Pending và Available: schema hiện có account, entry và hold nhưng chưa có bucket balance chuẩn để tổng hợp.",
     "Phí nền tảng và doanh thu Xoài: chưa có luồng ghi nhận tài chính được kích hoạt.",
   ];
-  return <main className="xoai-page">
+  return <DashboardDataSource live={<main className="xoai-page">
     <div className="xoai-page-inner">
       <div className="xoai-page-heading">
         <div><p className="xoai-eyebrow">OPERATIONS COMMAND CENTER</p><h1>Tổng quan hoạt động</h1><p>Theo dõi quy mô giao dịch, sức khỏe hệ sinh thái và các việc cần xử lý.</p></div>
@@ -186,5 +188,5 @@ export default async function AdminHomePage({ searchParams }: { searchParams: Se
       <footer className="xoai-dashboard-footer"><span><span className="xoai-status-dot"/> Dữ liệu truy vấn trực tiếp từ Core Platform</span><span>Cập nhật lúc {now.toLocaleString("vi-VN",{timeZone:"Asia/Ho_Chi_Minh"})} · Asia/Ho_Chi_Minh</span></footer>
     </div>
 
-  </main>;
+  </main>} />;
 }
