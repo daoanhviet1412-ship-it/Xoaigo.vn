@@ -4,13 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
-  LayoutDashboard, Store, ShoppingBag, Users, Megaphone, Tags, ClipboardCheck,
+  LayoutDashboard, Database, Store, ShoppingBag, Users, Megaphone, Tags, ClipboardCheck,
   ShieldCheck, Wallet, Landmark, ReceiptText, Scale, Coins, Settings, ScrollText,
   ChevronDown, ChevronLeft, Menu, X, Leaf
 } from "lucide-react";
 
 const groups = [
-  { title: "Tổng quan", items: [{ label: "Dashboard", href: "/admin", icon: LayoutDashboard }] },
+  { title: "Tổng quan", items: [{ label: "Dashboard", href: "/admin", icon: LayoutDashboard }, { label: "Dữ liệu DEMO", href: "/admin/demo-data", icon: Database }] },
   { title: "Kinh doanh", items: [
     { label: "Cửa hàng", href: "/admin/merchants", icon: Store },
     { label: "Đơn hàng", href: "/admin/orders", icon: ShoppingBag },
