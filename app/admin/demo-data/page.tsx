@@ -38,8 +38,8 @@ function makeDemo():Demo {
 export default function DemoDataPage(){
  const [data,setData]=useState<Demo|null>(null),[tab,setTab]=useState<"summary"|"merchants"|"customers"|"transactions">("summary"),[page,setPage]=useState(0),[notice,setNotice]=useState("");
  useEffect(()=>{try{const raw=localStorage.getItem(KEY);if(raw)setData(JSON.parse(raw) as Demo)}catch{setNotice("Không đọc được dữ liệu DEMO đã lưu.")}},[]);
- const seed=()=>{const next=makeDemo();localStorage.setItem(KEY,JSON.stringify(next));setData(next);setPage(0);setNotice("Đã tạo bộ dữ liệu DEMO trong trình duyệt này.")};
- const reset=()=>{localStorage.removeItem(KEY);setData(null);setPage(0);setNotice("Đã xóa bộ dữ liệu DEMO khỏi trình duyệt này.")};
+ const seed=()=>{const next=makeDemo();localStorage.setItem(KEY,JSON.stringify(next));window.dispatchEvent(new Event("xoai-demo-data-updated"));setData(next);setPage(0);setNotice("Đã tạo bộ dữ liệu DEMO trong trình duyệt này.")};
+ const reset=()=>{localStorage.removeItem(KEY);window.dispatchEvent(new Event("xoai-demo-data-updated"));setData(null);setPage(0);setNotice("Đã xóa bộ dữ liệu DEMO khỏi trình duyệt này.")};
  const download=()=>{if(!data)return;const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="xoai-go-demo-data.json";a.click();URL.revokeObjectURL(url)};
  const totals=useMemo(()=>{if(!data)return null;const revenue=data.transactions.reduce((s,t)=>s+t.amountVnd,0);const issued=data.merchants.reduce((s,m)=>s+m.openingXg,0)+data.transactions.reduce((s,t)=>s+t.pointsXg,0);const customer=data.transactions.reduce((s,t)=>s+t.customerXg,0);const app=data.transactions.reduce((s,t)=>s+t.xoaiXg,0);const merchantBalance=data.merchants.reduce((s,m)=>s+m.balanceXg,0);return {revenue,issued,unissued:1000000000-issued,customer,app,merchantBalance,initial:data.merchants.reduce((s,m)=>s+m.openingXg,0),points:data.transactions.reduce((s,t)=>s+t.pointsXg,0)}},[data]);
  const rows=data?(tab==="merchants"?data.merchants:tab==="customers"?data.customers:data.transactions):[];
