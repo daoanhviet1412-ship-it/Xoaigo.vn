@@ -1,9 +1,11 @@
+import { PreviewModule } from "@/components/admin/preview-module";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { MerchantCreateForm } from "@/components/admin/merchant-create-form";
 import { MerchantEditForm } from "@/components/admin/merchant-edit-form";
 
 export default async function MerchantsPage() {
+  if (process.env.VERCEL_ENV === "preview") return <PreviewModule module="merchants" />;
   const supabase=await createClient();
   if(!supabase) return <main style={{padding:36}}>Preview chưa cấu hình Supabase.</main>;
   const {data:{user}}=await supabase.auth.getUser();
