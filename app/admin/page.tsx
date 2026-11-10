@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DemoDashboard } from "@/components/admin/demo-dashboard";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -50,6 +51,7 @@ function SectionTitle({ title, detail, action }: { title: string; detail?: strin
 }
 
 export default async function AdminHomePage({ searchParams }: { searchParams: SearchParams }) {
+  if (process.env.VERCEL_ENV === "preview") return <DemoDashboard />;
   const params = await searchParams;
   const period = ["7d","30d","month"].includes(params.period ?? "") ? params.period! : "30d";
   const now = new Date();

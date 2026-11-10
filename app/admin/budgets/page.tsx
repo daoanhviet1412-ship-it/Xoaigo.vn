@@ -1,9 +1,11 @@
+import { PreviewModule } from "@/components/admin/preview-module";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { BudgetProposalForm } from "@/components/admin/budget-proposal-form";
 import { ApprovalReviewQueue } from "@/components/admin/approval-review-queue";
 
 export default async function BudgetsPage() {
+  if (process.env.VERCEL_ENV === "preview") return <PreviewModule module="budgets" />;
   const supabase=await createClient();
   if(!supabase) return <main style={{padding:36}}>Preview chưa cấu hình Supabase.</main>;
   const {data:{user}}=await supabase.auth.getUser();

@@ -6,11 +6,11 @@ import { useState } from "react";
 import {
   LayoutDashboard, Store, ShoppingBag, Users, Megaphone, Tags, ClipboardCheck,
   ShieldCheck, Wallet, Landmark, ReceiptText, Scale, Coins, Settings, ScrollText,
-  ChevronDown, ChevronLeft, Menu, X, Leaf
+  ChevronDown, ChevronLeft, Menu, X, Leaf, Sparkles
 } from "lucide-react";
 
 const groups = [
-  { title: "Tổng quan", items: [{ label: "Dashboard", href: "/admin", icon: LayoutDashboard }] },
+  { title: "Điều hành", items: [{ label: "Dashboard", href: "/admin", icon: LayoutDashboard }, { label: "Bộ dữ liệu DEMO", href: "/admin/demo-data", icon: Sparkles }] },
   { title: "Kinh doanh", items: [
     { label: "Cửa hàng", href: "/admin/merchants", icon: Store },
     { label: "Đơn hàng", href: "/admin/orders", icon: ShoppingBag },
@@ -22,14 +22,16 @@ const groups = [
     { label: "Phê duyệt", href: "/admin/approvals", icon: ClipboardCheck },
     { label: "Chính sách", href: "/admin/policies", icon: ShieldCheck },
   ]},
-  { title: "Tài chính", items: [
+  { title: "Tài chính & điểm", items: [
     { label: "Tổng quan tài chính", href: "/admin/funds", icon: Wallet },
-    { label: "Mô hình tài chính", href: "/admin/finance-model", icon: Scale },
-    { label: "Ngân sách", href: "/admin/budgets", icon: Landmark },
-    { label: "Sổ cái", href: "/admin/ledger", icon: ReceiptText },
+    { label: "Thống kê các ví", href: "/admin/finance", icon: Coins },
+    { label: "Pending 70/30 & đối soát", href: "/admin/points-control", icon: Scale },
+    { label: "Điểm thành viên", href: "/admin/points", icon: Coins },
+    { label: "Công nợ & quyết toán", href: "/admin/settlements", icon: ReceiptText },
     { label: "Đối soát", href: "/admin/reconciliation", icon: Scale },
-    { label: "Điểm thưởng", href: "/admin/points", icon: Coins },
-    { label: "Công nợ", href: "/admin/settlements", icon: ReceiptText },
+    { label: "Sổ sự kiện", href: "/admin/ledger", icon: ReceiptText },
+    { label: "Ngân sách", href: "/admin/budgets", icon: Landmark },
+    { label: "Mô hình tài chính", href: "/admin/finance-model", icon: Scale },
   ]},
   { title: "Hệ thống", items: [
     { label: "Quyết định sản phẩm", href: "/admin/product-decisions", icon: ClipboardCheck },
@@ -43,7 +45,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({
-    "Kinh doanh": true, "Vận hành": true, "Tài chính": true, "Hệ thống": false,
+    "Kinh doanh": true, "Vận hành": true, "Tài chính & điểm": true, "Hệ thống": false,
   });
 
   if (pathname === "/admin/login") return <>{children}</>;

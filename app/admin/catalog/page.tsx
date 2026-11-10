@@ -1,7 +1,9 @@
+import { PreviewModule } from "@/components/admin/preview-module";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 import {CatalogManagement} from "@/components/admin/catalog-management";
 export default async function CatalogPage(){
+  if (process.env.VERCEL_ENV === "preview") return <PreviewModule module="catalog" />;
  const supabase=await createClient();if(!supabase)return <main style={{padding:36}}>Preview chưa cấu hình Supabase.</main>;
  const {data:{user}}=await supabase.auth.getUser();if(!user)redirect("/admin/login");
  const [{data:profile},{data:grants},{data:rolePermissions},{data:merchants},{data:products,error},{data:locations, error:locationError},{data:categories}]=await Promise.all([

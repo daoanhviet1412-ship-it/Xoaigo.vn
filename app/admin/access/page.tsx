@@ -1,6 +1,8 @@
+import { PreviewModule } from "@/components/admin/preview-module";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 export default async function AccessPage(){
+  if (process.env.VERCEL_ENV === "preview") return <PreviewModule module="access" />;
  const supabase=await createClient();if(!supabase)return <main style={{padding:36}}>Preview chưa cấu hình Supabase.</main>;
  const {data:{user}}=await supabase.auth.getUser();if(!user)redirect("/admin/login");
  const [{data:profile},{data:grants},{data:rolePermissions},{data:users,error},{data:roles}]=await Promise.all([
