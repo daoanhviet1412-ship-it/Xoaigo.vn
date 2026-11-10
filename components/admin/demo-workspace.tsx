@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from "next/link";
 import {useEffect,useMemo,useState} from "react";
-import {approveWithdrawal,appendSale,confirmTopup,demoCustomers,demoStores,holdPoints,makeInitialState,migrateDemoState,money,number,project,releaseEligible,requestWithdrawal,reverseSale,recordReconciliationEvidence,runAcceptanceTests,unholdPoints,updatePolicy,type DemoState} from "@/lib/demo-engine";
+import {approveWithdrawal,appendSale,confirmTopup,demoCustomers,demoStores,holdPoints,makeInitialState,migrateDemoState,money,number,project,releaseEligible,requestWithdrawal,reverseSale,recordReconciliationEvidence,runAcceptanceTests,unholdPoints,updatePolicy,type DemoEvent,type DemoState} from "@/lib/demo-engine";
 type ModuleKey="dashboard"|"customers"|"stores"|"orders"|"points"|"wallet"|"ledger"|"reconciliation"|"settlements";
 const KEY="xoai-demo-engine-v4",LEGACY_KEY="xoai-demo-engine-v3";
 const titles:Record<ModuleKey,string>={dashboard:"Trung tâm điều hành",customers:"Khách hàng",stores:"Cửa hàng",orders:"Giao dịch",points:"Điểm thành viên",wallet:"Ví & biến động",ledger:"Sổ sự kiện",reconciliation:"Đối soát",settlements:"Công nợ & quyết toán"};
