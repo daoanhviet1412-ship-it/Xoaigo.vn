@@ -1,3 +1,4 @@
+import { PreviewModule } from "@/components/admin/preview-module";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
@@ -13,6 +14,7 @@ const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}
 const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
 export default async function AuditLogPage({ searchParams }: { searchParams: SearchParams }) {
+  if (process.env.VERCEL_ENV === "preview") return <PreviewModule module="audit" />;
   const filters = await searchParams;
   const actor = (filters.actor ?? "").trim();
   const action = (filters.action ?? "").trim().slice(0, 100);
