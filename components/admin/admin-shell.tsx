@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 const groups = [
-  { title: "Tổng quan", items: [{ label: "Dashboard", href: "/admin", icon: LayoutDashboard }, { label: "Dữ liệu DEMO", href: "/admin/demo-data", icon: Database }] },
+  { title: "Tổng quan", items: [{ label: "Dashboard", href: "/admin", icon: LayoutDashboard }] },
   { title: "Kinh doanh", items: [
     { label: "Cửa hàng", href: "/admin/merchants", icon: Store },
     { label: "Đơn hàng", href: "/admin/orders", icon: ShoppingBag },
@@ -35,6 +35,7 @@ const groups = [
     { label: "Quyết định sản phẩm", href: "/admin/product-decisions", icon: ClipboardCheck },
     { label: "Phân quyền", href: "/admin/access", icon: Settings },
     { label: "Nhật ký hoạt động", href: "/admin/audit", icon: ScrollText },
+    { label: "Dữ liệu DEMO (Sandbox)", href: "/admin/demo-data", icon: Database },
   ]},
 ];
 
