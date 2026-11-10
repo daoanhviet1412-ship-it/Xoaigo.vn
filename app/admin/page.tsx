@@ -64,7 +64,7 @@ export default async function AdminHomePage({ searchParams }: { searchParams: Se
   };
   const monthStart = today.slice(0, 8) + "01";
   const previousMonthStart = shiftDay(monthStart, -1).slice(0, 8) + "01";
-  const validDay = (value?: string) => Boolean(value && /^\\d{4}-\\d{2}-\\d{2}$/.test(value) && !Number.isNaN(Date.parse(value + "T00:00:00Z")));
+  const validDay = (value?: string) => Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value + "T00:00:00Z")));
   let startDay = period === "today" ? today
     : period === "7d" ? shiftDay(today, -6)
     : period === "month" ? monthStart
@@ -92,6 +92,8 @@ export default async function AdminHomePage({ searchParams }: { searchParams: Se
     {count:pendingApprovalCount,error:approvalError},{count:memberCount,error:memberError},
     {count:newMemberCount,error:newMemberError},{count:activeCampaignCount,error:campaignError},
     {count:pendingOrderCount,error:pendingOrderError},{data:orders,count:completedOrderCount,error:ordersError},
+    {count:journalCount,error:journalError},{count:reconciliationBatchCount,error:reconciliationError},{count:reconciliationItemCount,error:reconciliationItemError},
+    {count:pointsAccountCount,error:pointsAccountError},{count:pointsEntryCount,error:pointsEntryError},{count:obligationCount,error:obligationError},{count:settlementBatchCount,error:settlementError},
   ] = await Promise.all([
     supabase.from("profiles").select("display_name,status").eq("id",user.id).maybeSingle(),
     supabase.from("user_role_grants").select("id,merchant_id,roles(code,name)").eq("user_id",user.id).is("revoked_at",null),
@@ -104,9 +106,16 @@ export default async function AdminHomePage({ searchParams }: { searchParams: Se
     supabase.from("marketing_campaigns").select("id",{count:"exact",head:true}).eq("status","active"),
     supabase.from("commerce_orders").select("id",{count:"exact",head:true}).in("status",["placed","accepted","preparing","ready"]),
     supabase.from("commerce_orders").select("id,total_amount,created_at,currency",{count:"exact"}).eq("status","completed").gte("created_at",start.toISOString()).lt("created_at",endExclusive.toISOString()).order("created_at",{ascending:true}).limit(2000),
+    supabase.from("journal_transactions").select("id",{count:"exact",head:true}),
+    supabase.from("reconciliation_batches").select("id",{count:"exact",head:true}),
+    supabase.from("reconciliation_items").select("id",{count:"exact",head:true}),
+    supabase.from("points_accounts").select("id",{count:"exact",head:true}),
+    supabase.from("points_entries").select("id",{count:"exact",head:true}),
+    supabase.from("merchant_obligations").select("id",{count:"exact",head:true}),
+    supabase.from("settlement_batches").select("id",{count:"exact",head:true}),
   ]);
 
-  const errors = [profileError,grantsError,permissionError,merchantError,activeMerchantError,approvalError,memberError,newMemberError,campaignError,pendingOrderError,ordersError].filter(Boolean);
+  const errors = [profileError,grantsError,permissionError,merchantError,activeMerchantError,approvalError,memberError,newMemberError,campaignError,pendingOrderError,ordersError,journalError,reconciliationError,reconciliationItemError,pointsAccountError,pointsEntryError,obligationError,settlementError].filter(Boolean);
   if (errors.length) return <main className="xoai-page"><div className="xoai-page-inner"><div className="xoai-alert alert-error"><AlertTriangle size={18}/><div><b>Chưa thể tải đầy đủ dữ liệu quản trị</b><p>Một hoặc nhiều truy vấn gặp lỗi. Dashboard ẩn các chỉ số liên quan thay vì hiển thị số 0 gây hiểu nhầm.</p></div></div><Link href="/admin">Thử tải lại</Link></div></main>;
   if (!profile || profile.status !== "active") return <main className="xoai-page"><div className="xoai-page-inner"><h1>Tài khoản chưa được kích hoạt</h1><p>Quyền truy cập quản trị đã bị từ chối.</p></div></main>;
   const roleCodes=(grants??[]).map((g)=>g.roles?.code).filter((v):v is string=>Boolean(v));
@@ -136,6 +145,10 @@ export default async function AdminHomePage({ searchParams }: { searchParams: Se
   const showMembers=canSee("members.read","members.manage");
   const showApprovals=canSee("approvals.read","approvals.review","budgets.review");
   const showCampaigns=canSee("campaigns.read","campaigns.manage");
+  const showLedger=canSee("ledger.read");
+  const showReconciliation=canSee("reconciliation.read");
+  const showPoints=canSee("points.read");
+  const showSettlements=canSee("settlement.read");
 
   const cards=[
     {label:"Doanh thu (GMV)",value:showGmv?(hasCompleteGmv?money(gmv):"Cần tổng hợp"): "Không có quyền",hint:showGmv?`${fmtCount(completedOrderCount)} giao dịch hoàn tất · ${periodLabel}`:"Cần quyền xem đơn hàng",icon:CircleDollarSign,tone:"green" as const},
@@ -149,8 +162,8 @@ export default async function AdminHomePage({ searchParams }: { searchParams: Se
   const missingFinancial=[
     ...(hasCompleteGmv?[]:["Số đơn hoàn tất vượt giới hạn bản ghi truy vấn; GMV tạm ẩn để tránh tổng thiếu. Cần RPC/view tổng hợp phía database."]),
     "Tiền cửa hàng nạp mới: chưa có bảng top-up được xác nhận với sao kê ngân hàng.",
-    "Ví cửa hàng / số dư bảo đảm: chưa có wallet balance register được xác minh.",
-    "Điểm Pending và Available: schema hiện có account, entry và hold nhưng chưa có bucket balance chuẩn để tổng hợp.",
+    "Số dư ví / bảo đảm: chưa có wallet balance register được xác minh.",
+    "Điểm Pending và Available: hiện chỉ hiển thị số lượng account/entry; chưa có bucket balance chuẩn để tổng hợp.",
     "Phí nền tảng và doanh thu Xoài: chưa có luồng ghi nhận tài chính được kích hoạt.",
   ];
   return <DashboardDataSource live={<main className="xoai-page">
@@ -191,7 +204,7 @@ export default async function AdminHomePage({ searchParams }: { searchParams: Se
           <div className="xoai-task-list">
             <Link href="/admin/approvals"><span className="task-icon amber"><ClipboardCheck size={17}/></span><span><b>Yêu cầu chờ phê duyệt</b><small>Các đề xuất cần người có quyền xem xét</small></span><strong>{showApprovals?fmtCount(pendingApprovalCount):"—"}</strong></Link>
             <Link href="/admin/orders"><span className="task-icon blue"><ShoppingBag size={17}/></span><span><b>Đơn hàng đang xử lý</b><small>Đơn chưa hoàn tất hoặc hủy</small></span><strong>{showGmv?fmtCount(pendingOrderCount):"—"}</strong></Link>
-            <Link href="/admin/reconciliation"><span className="task-icon green"><BadgeCheck size={17}/></span><span><b>Đối soát cần kiểm tra</b><small>Đợt đối soát và sai lệch</small></span><strong>—</strong></Link>
+            <Link href="/admin/reconciliation"><span className="task-icon green"><BadgeCheck size={17}/></span><span><b>Đợt đối soát</b><small>{showReconciliation?`${fmtCount(reconciliationBatchCount)} đợt · ${fmtCount(reconciliationItemCount)} dòng`: "Cần quyền xem đối soát"}</small></span><strong>{showReconciliation?fmtCount(reconciliationBatchCount):"—"}</strong></Link>
             <Link href="/admin/funds"><span className="task-icon amber"><Wallet size={17}/></span><span><b>Top-up chờ xác nhận</b><small>Chưa có kết nối xác minh ngân hàng</small></span><strong>—</strong></Link>
           </div>
         </article>
@@ -201,10 +214,10 @@ export default async function AdminHomePage({ searchParams }: { searchParams: Se
         <article className="xoai-panel">
           <SectionTitle title="Tài chính & dòng tiền" detail="Các khoản cần theo dõi riêng biệt"/>
           <div className="xoai-finance-list">
-            <div><span><CreditCard size={16}/>Tiền cửa hàng nạp mới</span><b>Chưa có dữ liệu</b><small>Chỉ tính tiền đã xác nhận vào ngân hàng</small></div>
-            <div><span><Clock3 size={16}/>Tổng Pending</span><b>Chưa có dữ liệu</b><small>Chưa có nguồn tổng hợp bucket đã xác thực</small></div>
-            <div><span><Wallet size={16}/>Số dư ví cửa hàng</span><b>Chưa có dữ liệu</b><small>Sổ vận hành, không phải số dư ngân hàng</small></div>
-            <div><span><Coins size={16}/>Điểm Pending / Available</span><b>Chưa có dữ liệu</b><small>Không suy diễn từ số tài khoản điểm</small></div>
+            <div><span><CreditCard size={16}/>Bút toán sổ cái</span><b>{showLedger?fmtCount(journalCount):"—"}</b><small>{showLedger?"Số bản ghi journal_transactions · chưa phải số dư tiền":"Cần quyền xem sổ cái"}</small></div>
+            <div><span><BadgeCheck size={16}/>Đối soát</span><b>{showReconciliation?fmtCount(reconciliationBatchCount):"—"} đợt</b><small>{showReconciliation?`${fmtCount(reconciliationItemCount)} dòng đối soát`:"Cần quyền xem đối soát"}</small></div>
+            <div><span><Coins size={16}/>Tài khoản / bút toán điểm</span><b>{showPoints?`${fmtCount(pointsAccountCount)} / ${fmtCount(pointsEntryCount)}`:"—"}</b><small>{showPoints?"Số lượng record · chưa phải số dư Pending/Available":"Cần quyền xem điểm"}</small></div>
+            <div><span><Wallet size={16}/>Nghĩa vụ / quyết toán merchant</span><b>{showSettlements?`${fmtCount(obligationCount)} / ${fmtCount(settlementBatchCount)}`:"—"}</b><small>{showSettlements?"Số lượng record · chưa xác nhận dòng tiền thực trả":"Cần quyền xem công nợ"}</small></div>
           </div>
         </article>
         <article className="xoai-panel">
