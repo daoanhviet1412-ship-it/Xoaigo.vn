@@ -1,3 +1,4 @@
+import { PreviewModule } from "@/components/admin/preview-module";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
@@ -53,6 +54,7 @@ const decisions = [
 ];
 
 export default async function ProductDecisionsPage() {
+  if (process.env.VERCEL_ENV === "preview") return <PreviewModule module="product-decisions" />;
   const supabase = await createClient();
   if (!supabase) return <main style={{ padding: 36 }}>Preview chưa cấu hình Supabase.</main>;
 
