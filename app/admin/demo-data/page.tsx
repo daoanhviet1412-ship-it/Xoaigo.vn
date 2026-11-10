@@ -1,3 +1,4 @@
+import { PreviewModule } from "@/components/admin/preview-module";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -67,6 +68,7 @@ const styles = `
 @media(max-width:760px){.demo-wrap{padding:20px 13px 34px}.demo-stats{grid-template-columns:1fr 1fr}.demo-stat:last-child{grid-column:1/-1}.demo-head h1{font-size:24px}.demo-panel{padding:13px}.demo-table{min-width:850px}.demo-table-scroll{overflow:auto}}
 `;
 export default async function DemoDataPage({searchParams}:{searchParams:Params}){
+  if (process.env.VERCEL_ENV === "preview") return <PreviewModule module="demo-data" />;
   const params=await searchParams;
   const type=params.type==="members"?"members":"stores";
   if(process.env.VERCEL_ENV==="preview") return <DemoWorkspace module={type==="members"?"customers":"stores"}/>;
