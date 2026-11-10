@@ -1,8 +1,10 @@
+import { PreviewModule } from "@/components/admin/preview-module";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { FinanceModelStudio } from "@/components/admin/finance-model-studio";
 
 export default async function FinanceModelPage() {
+  if (process.env.VERCEL_ENV === "preview") return <PreviewModule module="finance-model" />;
   const supabase = await createClient();
   if (!supabase) return <main style={{ padding: 36 }}>Preview chưa cấu hình Supabase.</main>;
 
