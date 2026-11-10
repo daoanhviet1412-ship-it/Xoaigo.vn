@@ -9,7 +9,7 @@ import {
   Users, Wallet, TrendingUp, ClipboardCheck, Megaphone
 } from "lucide-react";
 
-type SearchParams = Promise<{ period?: string }>;
+type SearchParams = Promise<{ period?: string; from?: string; to?: string }>;
 
 function money(value: number) {
   return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 }).format(value);
@@ -53,13 +53,34 @@ function SectionTitle({ title, detail, action }: { title: string; detail?: strin
 
 export default async function AdminHomePage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
-  const period = ["7d","30d","month"].includes(params.period ?? "") ? params.period! : "30d";
+  const allowedPeriods = ["today","7d","30d","month","lastmonth","custom"];
+  const period = allowedPeriods.includes(params.period ?? "") ? params.period! : "30d";
   const now = new Date();
-  const start = new Date(now);
-  if (period === "7d") start.setDate(start.getDate()-6);
-  else if (period === "month") start.setDate(1);
-  else start.setDate(start.getDate()-29);
-  start.setHours(0,0,0,0);
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+  const shiftDay = (day: string, amount: number) => {
+    const d = new Date(day + "T00:00:00Z");
+    d.setUTCDate(d.getUTCDate() + amount);
+    return d.toISOString().slice(0, 10);
+  };
+  const monthStart = today.slice(0, 8) + "01";
+  const previousMonthStart = shiftDay(monthStart, -1).slice(0, 8) + "01";
+  const validDay = (value?: string) => Boolean(value && /^\\d{4}-\\d{2}-\\d{2}$/.test(value) && !Number.isNaN(Date.parse(value + "T00:00:00Z")));
+  let startDay = period === "today" ? today
+    : period === "7d" ? shiftDay(today, -6)
+    : period === "month" ? monthStart
+    : period === "lastmonth" ? previousMonthStart
+    : period === "custom" && validDay(params.from) ? params.from!
+    : shiftDay(today, -29);
+  let endDayExclusive = period === "lastmonth" ? monthStart
+    : period === "custom" && validDay(params.to) ? shiftDay(params.to!, 1)
+    : shiftDay(today, 1);
+  if (period === "custom" && validDay(params.from) && validDay(params.to) && params.from! > params.to!) {
+    startDay = params.to!;
+    endDayExclusive = shiftDay(params.from!, 1);
+  }
+  const start = new Date(startDay + "T00:00:00+07:00");
+  const endExclusive = new Date(endDayExclusive + "T00:00:00+07:00");
+  const chartDays = Math.max(1, Math.min(366, Math.round((Date.parse(endDayExclusive + "T00:00:00Z") - Date.parse(startDay + "T00:00:00Z")) / 86400000)));
   const supabase = await createClient();
   if (!supabase) return <main className="xoai-page"><div className="xoai-page-inner"><h1>Chưa kết nối dữ liệu</h1><p>Preview chưa có cấu hình Supabase. Dashboard không sử dụng dữ liệu mẫu.</p></div></main>;
   const { data: { user } } = await supabase.auth.getUser();
@@ -79,10 +100,10 @@ export default async function AdminHomePage({ searchParams }: { searchParams: Se
     supabase.from("merchants").select("id",{count:"exact",head:true}).eq("status","active"),
     supabase.from("approval_requests").select("id",{count:"exact",head:true}).eq("status","pending"),
     supabase.from("member_profiles").select("user_id",{count:"exact",head:true}),
-    supabase.from("member_profiles").select("user_id",{count:"exact",head:true}).gte("joined_at",start.toISOString()),
+    supabase.from("member_profiles").select("user_id",{count:"exact",head:true}).gte("joined_at",start.toISOString()).lt("joined_at",endExclusive.toISOString()),
     supabase.from("marketing_campaigns").select("id",{count:"exact",head:true}).eq("status","active"),
     supabase.from("commerce_orders").select("id",{count:"exact",head:true}).in("status",["placed","accepted","preparing","ready"]),
-    supabase.from("commerce_orders").select("id,total_amount,created_at,currency",{count:"exact"}).eq("status","completed").gte("created_at",start.toISOString()).order("created_at",{ascending:true}).limit(2000),
+    supabase.from("commerce_orders").select("id,total_amount,created_at,currency",{count:"exact"}).eq("status","completed").gte("created_at",start.toISOString()).lt("created_at",endExclusive.toISOString()).order("created_at",{ascending:true}).limit(2000),
   ]);
 
   const errors = [profileError,grantsError,permissionError,merchantError,activeMerchantError,approvalError,memberError,newMemberError,campaignError,pendingOrderError,ordersError].filter(Boolean);
@@ -95,19 +116,20 @@ export default async function AdminHomePage({ searchParams }: { searchParams: Se
   const canSee=(...codes:string[])=>codes.some((code)=>permissionCodes.has(code));
   const orderRows=orders??[];
   const gmv=orderRows.reduce((sum,row)=>sum+Number(row.total_amount||0),0);
-  const orderBuckets=Array.from({length:period==="7d"?7:period==="month"?Math.max(1,Math.min(31,now.getDate())):30},(_,i)=>{
-    const d=new Date(start);d.setDate(start.getDate()+i);
-    return {date:d,label:dateLabel(d),value:0};
+  const orderBuckets=Array.from({length:chartDays},(_,i)=>{
+    const day=shiftDay(startDay,i);
+    const d=new Date(day + "T00:00:00+07:00");
+    return {date:day,label:dateLabel(d),value:0};
   });
   for(const order of orderRows){
     const d=new Date(order.created_at);
     const key=d.toLocaleDateString("en-CA",{timeZone:"Asia/Ho_Chi_Minh"});
-    const bucket=orderBuckets.find((b)=>b.date.toLocaleDateString("en-CA",{timeZone:"Asia/Ho_Chi_Minh"})===key);
+    const bucket=orderBuckets.find((b)=>b.date===key);
     if(bucket) bucket.value+=Number(order.total_amount||0);
   }
   const hasCompleteGmv = (completedOrderCount ?? 0) <= orderRows.length;
   const aov=completedOrderCount && hasCompleteGmv ? gmv/completedOrderCount : 0;
-  const periodLabel=period==="7d"?"7 ngày gần nhất":period==="month"?"Tháng này":"30 ngày gần nhất";
+  const periodLabel=period==="today"?"Hôm nay":period==="7d"?"7 ngày gần nhất":period==="month"?"Tháng này":period==="lastmonth"?"Tháng trước":period==="custom"?`Từ ${startDay} đến ${shiftDay(endDayExclusive,-1)}`:"30 ngày gần nhất";
   const fmtCount=(n:number|null)=>n===null?"—":new Intl.NumberFormat("vi-VN").format(n);
   const showGmv=canSee("orders.read","orders.manage");
   const showMerchants=canSee("merchants.read","merchants.manage");
@@ -135,7 +157,22 @@ export default async function AdminHomePage({ searchParams }: { searchParams: Se
     <div className="xoai-page-inner">
       <div className="xoai-page-heading">
         <div><p className="xoai-eyebrow">OPERATIONS COMMAND CENTER</p><h1>Tổng quan hoạt động</h1><p>Theo dõi quy mô giao dịch, sức khỏe hệ sinh thái và các việc cần xử lý.</p></div>
-        <div className="xoai-period"><CalendarDays size={16}/><Link className={period==="7d"?"selected":""} href="/admin?period=7d">7 ngày</Link><Link className={period==="30d"?"selected":""} href="/admin?period=30d">30 ngày</Link><Link className={period==="month"?"selected":""} href="/admin?period=month">Tháng này</Link></div>
+        <div className="xoai-filter-wrap">
+          <nav className="xoai-period" aria-label="Lọc thời gian">
+            <CalendarDays size={16}/>
+            <Link className={period==="today"?"selected":""} href="/admin?period=today">Hôm nay</Link>
+            <Link className={period==="7d"?"selected":""} href="/admin?period=7d">7 ngày</Link>
+            <Link className={period==="30d"?"selected":""} href="/admin?period=30d">30 ngày</Link>
+            <Link className={period==="month"?"selected":""} href="/admin?period=month">Tháng này</Link>
+            <Link className={period==="lastmonth"?"selected":""} href="/admin?period=lastmonth">Tháng trước</Link>
+          </nav>
+          <form className="xoai-custom-range" method="get">
+            <input type="hidden" name="period" value="custom"/>
+            <label>Từ <input aria-label="Từ ngày" type="date" name="from" defaultValue={period==="custom"?startDay:today}/></label>
+            <label>Đến <input aria-label="Đến ngày" type="date" name="to" defaultValue={period==="custom"?shiftDay(endDayExclusive,-1):today}/></label>
+            <button type="submit">Áp dụng</button>
+          </form>
+        </div>
       </div>
 
       <section className="xoai-kpi-grid">
