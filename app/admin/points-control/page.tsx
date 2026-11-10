@@ -2,19 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { PENDING_CONTROL_KEY, readPendingTransactions, summarizePending, writePendingTransactions, type PendingTransaction as Tx } from "@/lib/pending-control";
 
-type Tx = {
-  id: string;
-  merchant: string;
-  orderRef: string;
-  merchantDebit: number;
-  customerPending: number;
-  appPending: number;
-  createdAt: string;
-  status: "PENDING" | "RELEASED" | "REVERSED";
-  reversedAt?: string;
-};
-const KEY = "xoai-pending-control-v1";
 const fmt = (n: number) => new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(n);
 const money = (n: number) => fmt(n) + " điểm";
 const panel: React.CSSProperties = { background: "#fff", border: "1px solid #e4ece5", borderRadius: 16, padding: 18, boxShadow: "0 5px 20px rgba(20,60,35,.04)" };
@@ -28,20 +17,16 @@ export default function PendingControlPage() {
   const [debit, setDebit] = useState("10000");
   const [notice, setNotice] = useState("");
   useEffect(() => {
-    try { const raw = localStorage.getItem(KEY); if (raw) { const parsed = JSON.parse(raw); if (Array.isArray(parsed)) setRows(parsed); } } catch {}
+    setRows(readPendingTransactions());
     setLoaded(true);
+    const sync = (event: StorageEvent) => { if (!event.key || event.key === PENDING_CONTROL_KEY) setRows(readPendingTransactions()); };
+    window.addEventListener("storage", sync);
+    return () => window.removeEventListener("storage", sync);
   }, []);
-  useEffect(() => { if (loaded) { try { localStorage.setItem(KEY, JSON.stringify(rows)); } catch {} } }, [rows, loaded]);
+  useEffect(() => { if (loaded) { try { writePendingTransactions(rows); window.dispatchEvent(new CustomEvent("xoai-pending-updated")); } catch {} } }, [rows, loaded]);
 
-  const active = rows.filter(r => r.status !== "REVERSED");
-  const pending = active.filter(r => r.status === "PENDING");
-  const customerPending = pending.reduce((n, r) => n + r.customerPending, 0);
-  const appPending = pending.reduce((n, r) => n + r.appPending, 0);
-  const totalPending = customerPending + appPending;
-  const merchantDebit = active.reduce((n, r) => n + r.merchantDebit, 0);
-  const allocated = active.reduce((n, r) => n + r.customerPending + r.appPending, 0);
-  const variance = merchantDebit - allocated;
-  const mismatchRows = active.filter(r => r.merchantDebit !== r.customerPending + r.appPending);
+  const summary = summarizePending(rows);
+  const { customerPending, appPending, totalPending, merchantDebit, allocated, variance, mismatchCount: mismatchRowsCount } = summary;
   const stats = useMemo(() => [
     ["Pending Ví Khách", customerPending, "70% phân bổ"],
     ["Pending Ví App", appPending, "30% phân bổ"],
@@ -81,7 +66,7 @@ export default function PendingControlPage() {
       <section style={{ ...panel, borderColor: variance === 0 ? "#cfe6d4" : "#f0c5c1", background: variance === 0 ? "#f7fcf7" : "#fff7f6" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}><div><b>Kiểm tra tổng đối soát</b><p style={{ margin: "6px 0", color: "#728078" }}>Chênh lệch = Điểm bị trừ Ví Quán − (Pending Ví Khách + Pending Ví App)</p></div><strong style={{ fontSize: 25, color: variance === 0 ? "#16864b" : "#b42318" }}>{money(variance)}</strong></div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 10, marginTop: 10 }}>
-          <div><small>Ví Quán đã trừ</small><b style={{ display: "block", marginTop: 5 }}>{money(merchantDebit)}</b></div><div><small>Pending Khách + App</small><b style={{ display: "block", marginTop: 5 }}>{money(allocated)}</b></div><div><small>Kết quả</small><b style={{ display: "block", marginTop: 5, color: variance === 0 ? "#16864b" : "#b42318" }}>{variance === 0 ? "KHỚP" : "CẢNH BÁO CHÊNH LỆCH"}</b></div><div><small>Giao dịch đang lệch</small><b style={{ display: "block", marginTop: 5 }}>{mismatchRows.length}</b></div>
+          <div><small>Ví Quán đã trừ</small><b style={{ display: "block", marginTop: 5 }}>{money(merchantDebit)}</b></div><div><small>Pending Khách + App</small><b style={{ display: "block", marginTop: 5 }}>{money(allocated)}</b></div><div><small>Kết quả</small><b style={{ display: "block", marginTop: 5, color: variance === 0 ? "#16864b" : "#b42318" }}>{variance === 0 ? "KHỚP" : "CẢNH BÁO CHÊNH LỆCH"}</b></div><div><small>Giao dịch đang lệch</small><b style={{ display: "block", marginTop: 5 }}>{mismatchRowsCount}</b></div>
         </div>
         {variance !== 0 && <p style={{ color: "#b42318", fontWeight: 700, marginBottom: 0 }}>Có sai lệch. Chỉ đưa vào hàng đợi điều tra; không tự sửa số dư hoặc tự tạo bút toán điều chỉnh.</p>}
       </section>
