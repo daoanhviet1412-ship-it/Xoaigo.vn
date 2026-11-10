@@ -25,6 +25,7 @@ const groups = [
   { title: "Tài chính & điểm", items: [
     { label: "Tổng quan tài chính", href: "/admin/funds", icon: Wallet },
     { label: "Thống kê các ví", href: "/admin/finance", icon: Coins },
+    { label: "Pending 70/30 & đối soát", href: "/admin/points-control", icon: Scale },
     { label: "Điểm thành viên", href: "/admin/points", icon: Coins },
     { label: "Công nợ & quyết toán", href: "/admin/settlements", icon: ReceiptText },
     { label: "Đối soát", href: "/admin/reconciliation", icon: Scale },
