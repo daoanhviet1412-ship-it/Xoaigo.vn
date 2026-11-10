@@ -82,7 +82,7 @@ export default async function AdminHomePage({ searchParams }: { searchParams: Se
   const endExclusive = new Date(endDayExclusive + "T00:00:00+07:00");
   const chartDays = Math.max(1, Math.min(366, Math.round((Date.parse(endDayExclusive + "T00:00:00Z") - Date.parse(startDay + "T00:00:00Z")) / 86400000)));
   const supabase = await createClient();
-  if (!supabase) return <main className="xoai-page"><div className="xoai-page-inner"><h1>Chưa kết nối dữ liệu</h1><p>Preview chưa có cấu hình Supabase. Dashboard không sử dụng dữ liệu mẫu.</p></div></main>;
+  if (!supabase) return <DashboardDataSource live={<main className="xoai-page"><div className="xoai-page-inner"><h1>Chưa kết nối dữ liệu</h1><p>Preview chưa có cấu hình Supabase. Hãy nạp bộ dữ liệu Sandbox tại mục Dữ liệu DEMO để xem Dashboard mô phỏng trên chính trình duyệt này.</p></div></main>} />;
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/admin/login");
 
