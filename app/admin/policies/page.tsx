@@ -1,8 +1,10 @@
+import { PreviewModule } from "@/components/admin/preview-module";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PolicyRegistryActions } from "@/components/admin/policy-proposal-form";
 
 export default async function PoliciesPage() {
+  if (process.env.VERCEL_ENV === "preview") return <PreviewModule module="policies" />;
   const supabase = await createClient();
   if (!supabase) return <main style={{ padding: 36 }}>Preview chưa cấu hình Supabase.</main>;
   const { data: { user } } = await supabase.auth.getUser();
