@@ -56,14 +56,16 @@ create table public.points_wallets (
     check (status in ('active','suspended','closed'))
 );
 
-create unique index points_wallets_customer_program_uidx
-  on public.points_wallets(customer_user_id, program_code)
+-- One canonical wallet per subject in the current Xoai Go program.
+-- program_code is descriptive metadata, not a second balance partition.
+create unique index points_wallets_customer_uidx
+  on public.points_wallets(customer_user_id)
   where subject_type = 'customer';
-create unique index points_wallets_merchant_program_uidx
-  on public.points_wallets(merchant_id, program_code)
+create unique index points_wallets_merchant_uidx
+  on public.points_wallets(merchant_id)
   where subject_type = 'merchant';
-create unique index points_wallets_app_program_uidx
-  on public.points_wallets(platform_code, program_code)
+create unique index points_wallets_app_uidx
+  on public.points_wallets(subject_type)
   where subject_type = 'app';
 create index points_wallets_merchant_idx
   on public.points_wallets(merchant_id) where merchant_id is not null;
@@ -409,6 +411,9 @@ begin
     end if;
     if old.status not in ('pending','held') then
       raise exception 'terminal_points_release_request_is_immutable';
+    end if;
+    if old.status = 'held' and new.status = 'pending' then
+      raise exception 'held_points_release_request_requires_explicit_resolution';
     end if;
     if new.status not in ('pending','approved','rejected','held','cancelled') then
       raise exception 'invalid_points_release_request_transition';
