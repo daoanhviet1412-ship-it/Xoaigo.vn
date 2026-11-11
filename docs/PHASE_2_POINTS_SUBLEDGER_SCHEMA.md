@@ -47,7 +47,7 @@ The VND journal remains unchanged. POINTS are integer units in a separate subled
 - A posted transaction must contain at least two entries and debit total must equal credit total.
 - Posted transaction headers and ledger entries are immutable; corrections use new linked reversal/adjustment transactions.
 - A release request line must reference a Pending credit from a posted Redeem transaction and cannot reserve more than the originating allocation.
-- POINTS and VND remain separate in all tables and reports.
+- POINTS and VND remain separate in all tables and reports.\n- The migration enforces the effective session/shift discount snapshot for every posted Redeem transaction; it does not infer the rate from merchant defaults.
 
 ## 3. Existing schema compatibility
 
@@ -84,7 +84,7 @@ The current database schema still needs isolated runtime testing for RLS and tri
 ## 6. Explicitly not implemented
 
 - Earn command and approved campaign eligibility calculation.
-- Redeem command and merchant rate resolution.
+- Redeem command and runtime resolution of the active session/shift discount at payment time (the schema only validates that the resolved value and context are snapshotted).
 - Wallet funding/top-up and insufficient Merchant Wallet handling.
 - Available balance projections and concurrency-safe debit execution.
 - Pending release ledger movement.
