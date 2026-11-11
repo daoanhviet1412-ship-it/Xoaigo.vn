@@ -286,10 +286,17 @@ begin
     raise exception 'points_entry_transaction_cannot_change';
   end if;
 
-  select status into v_status
-    from public.points_transactions
-    where id = case when tg_op = 'DELETE' then old.transaction_id else new.transaction_id end
-    for update;
+  if tg_op = 'DELETE' then
+    select status into v_status
+      from public.points_transactions
+      where id = old.transaction_id
+      for update;
+  else
+    select status into v_status
+      from public.points_transactions
+      where id = new.transaction_id
+      for update;
+  end if;
 
   if v_status is distinct from 'draft' then
     raise exception 'posted_points_entries_are_immutable';
@@ -477,6 +484,13 @@ create trigger points_release_request_lines_guard
 before insert or update or delete on public.points_release_request_lines
 for each row execute function private.guard_points_release_request_line();
 
+create trigger points_release_requests_no_truncate
+before truncate on public.points_release_requests
+for each statement execute function private.prevent_append_only_truncate();
+create trigger points_release_request_lines_no_truncate
+before truncate on public.points_release_request_lines
+for each statement execute function private.prevent_append_only_truncate();
+
 create or replace function private.guard_points_release_decision()
 returns trigger
 language plpgsql
@@ -613,7 +627,7 @@ using (
 revoke all on public.points_wallets, public.points_transactions,
   public.points_ledger_entries, public.points_release_requests,
   public.points_release_request_lines, public.points_release_decisions
-  from anon, authenticated;
+  from public, anon, authenticated;
 grant select on public.points_wallets, public.points_transactions,
   public.points_ledger_entries, public.points_release_requests,
   public.points_release_request_lines, public.points_release_decisions
