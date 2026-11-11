@@ -101,8 +101,13 @@ create table public.points_transactions (
     check (request_hash ~ '^[0-9a-fA-F]{64}$'),
   constraint points_transactions_source_check
     check (length(trim(source_type)) > 0),
+  constraint points_transactions_code_check
+    check (length(trim(transaction_code)) > 0),
+  constraint points_transactions_idempotency_key_check
+    check (length(trim(idempotency_key)) > 0),
   constraint points_transactions_snapshot_check
-    check (jsonb_typeof(policy_snapshot) = 'object'),
+    check (jsonb_typeof(policy_snapshot) = 'object'
+      and (status <> 'posted' or jsonb_object_length(policy_snapshot) > 0)),
   constraint points_transactions_posted_fields_check
     check (
       (status in ('draft','voided') and posted_at is null and posted_by is null)
@@ -173,6 +178,8 @@ create table public.points_release_requests (
     check (status in ('pending','approved','rejected','held','cancelled')),
   constraint points_release_requests_reason_check
     check (length(trim(reason)) > 0),
+  constraint points_release_requests_idempotency_key_check
+    check (length(trim(idempotency_key)) > 0),
   constraint points_release_requests_review_reason_check
     check (review_reason is null or length(trim(review_reason)) > 0),
   constraint points_release_requests_maker_checker_check
@@ -415,6 +422,22 @@ begin
     if new.status = 'approved' and now() < old.eligible_after then
       raise exception 'points_redeem_pending_minimum_2_days';
     end if;
+    if new.status in ('approved','rejected','held') and not exists (
+      select 1
+      from public.points_release_decisions d
+      where d.release_request_id = old.id
+        and d.actor_user_id = new.reviewed_by
+        and d.action = new.status
+        and d.reason = new.review_reason
+    ) then
+      raise exception 'points_release_decision_audit_record_required';
+    end if;
+    if new.status = 'approved' and not exists (
+      select 1 from public.points_release_request_lines l
+      where l.release_request_id = old.id
+    ) then
+      raise exception 'points_release_request_requires_allocation_scope';
+    end if;
     return new;
   end if;
 end;
@@ -438,7 +461,7 @@ declare
   v_entry_side text;
   v_transaction_type text;
   v_transaction_status text;
-  v_reserved bigint;
+  v_reserved numeric;
 begin
   if tg_op <> 'INSERT' then
     raise exception 'points_release_request_lines_are_immutable';
@@ -576,7 +599,7 @@ using (
     select 1
     from public.points_ledger_entries e
     join public.points_wallets w on w.id = e.wallet_id
-    where e.transaction_id = id
+    where e.transaction_id = points_transactions.id
       and (
         (w.subject_type = 'customer' and w.customer_user_id = (select auth.uid()))
         or private.has_permission('points.read', null)
