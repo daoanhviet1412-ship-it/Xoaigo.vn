@@ -95,6 +95,8 @@ create table public.points_transactions (
     check (status in ('draft','posted','voided')),
   constraint points_transactions_actor_kind_check
     check (actor_kind in ('user','system','provider')),
+  constraint points_transactions_user_actor_check
+    check (actor_kind <> 'user' or actor_user_id is not null),
   constraint points_transactions_request_hash_check
     check (request_hash ~ '^[0-9a-fA-F]{64}$'),
   constraint points_transactions_source_check
@@ -366,11 +368,11 @@ as $$
 declare
   v_transaction_type text;
   v_transaction_status text;
-  v_transaction_created_at timestamptz;
+  v_transaction_posted_at timestamptz;
 begin
   if tg_op = 'INSERT' then
-    select transaction_type, status, created_at
-      into v_transaction_type, v_transaction_status, v_transaction_created_at
+    select transaction_type, status, posted_at
+      into v_transaction_type, v_transaction_status, v_transaction_posted_at
       from public.points_transactions
       where id = new.transaction_id
       for update;
@@ -378,7 +380,7 @@ begin
        or v_transaction_status is distinct from 'posted' then
       raise exception 'release_request_requires_posted_redeem_transaction';
     end if;
-    new.eligible_after := v_transaction_created_at + interval '2 days';
+    new.eligible_after := v_transaction_posted_at + interval '2 days';
     return new;
   elsif tg_op = 'DELETE' then
     raise exception 'points_release_requests_are_not_deletable';
@@ -495,7 +497,7 @@ begin
   if v_status not in ('pending','held') then
     raise exception 'points_release_request_not_reviewable';
   end if;
-  if new.actor_user_id = v_requester then
+  if new.action in ('approved','rejected','held') and new.actor_user_id = v_requester then
     raise exception 'maker_checker_violation';
   end if;
   if new.action = 'approved' and now() < v_eligible_after then
@@ -600,7 +602,12 @@ using (
 create policy points_release_decisions_read_scoped on public.points_release_decisions
 for select to authenticated
 using (
-  actor_user_id = (select auth.uid()) or private.has_permission('points.read', null)
+  actor_user_id = (select auth.uid())
+  or private.has_permission('points.read', null)
+  or exists (
+    select 1 from public.points_release_requests r
+    where r.id = release_request_id and r.requested_by = (select auth.uid())
+  )
 );
 
 revoke all on public.points_wallets, public.points_transactions,
