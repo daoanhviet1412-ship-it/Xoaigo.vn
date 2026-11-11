@@ -122,6 +122,14 @@ begin
 
   if not exists (
     select 1 from pg_constraint
+    where conrelid = 'public.points_transactions'::regclass
+      and conname = 'points_transactions_redeem_context_check'
+  ) then
+    raise exception 'missing_redeem_effective_session_shift_snapshot_constraint';
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint
     where conrelid = 'public.points_ledger_entries'::regclass
       and conname = 'points_ledger_entries_bucket_check'
   ) then
