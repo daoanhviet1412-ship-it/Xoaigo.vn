@@ -81,6 +81,30 @@ begin
   end if;
 
   if not exists (
+    select 1 from pg_trigger
+    where tgname = 'points_release_request_lines_no_truncate'
+      and not tgisinternal
+  ) then
+    raise exception 'missing_release_request_line_truncate_guard';
+  end if;
+
+  if not exists (
+    select 1 from pg_indexes
+    where schemaname = 'public'
+      and indexname = 'points_wallets_customer_uidx'
+  ) or not exists (
+    select 1 from pg_indexes
+    where schemaname = 'public'
+      and indexname = 'points_wallets_merchant_uidx'
+  ) or not exists (
+    select 1 from pg_indexes
+    where schemaname = 'public'
+      and indexname = 'points_wallets_app_uidx'
+  ) then
+    raise exception 'missing_one_wallet_per_subject_unique_indexes';
+  end if;
+
+  if not exists (
     select 1 from pg_constraint
     where conrelid = 'public.points_wallets'::regclass
       and conname = 'points_wallets_subject_check'
