@@ -73,6 +73,12 @@ Therefore:
 
 The migration source is committed for review only. No Supabase DDL was run.
 
+## 5. Current session/shift source gap
+
+A read-only audit of the current live `public` schema found no session or shift table. `commerce_orders` currently has `campaign_id` and `discount_amount`, but no session/shift reference or effective discount-rate field. `marketing_campaigns` has campaign status and start/end timestamps, but no discount-rate field. Therefore the existing database cannot yet resolve the actual active session/shift discount at payment time.
+
+Migration 0027 validates that a posted Redeem stores the resolved rate and opaque session/shift context reference in its immutable policy snapshot. It deliberately does not invent a foreign key to a session/shift table that does not exist. Before implementing the Redeem command, the product/database must define the canonical session/shift entity, how the active discount is determined, and how the transaction captures that exact context atomically.
+
 ## 5. Security boundary
 
 - All six new tables have RLS enabled.
