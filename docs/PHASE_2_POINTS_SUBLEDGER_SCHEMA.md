@@ -12,7 +12,7 @@
 
 Migration `0027_points_subledger_schema.sql` introduces:
 
-- `points_wallets`: one canonical wallet per Customer, Merchant or App subject and program.
+- `points_wallets`: one canonical wallet per Customer, Merchant or App subject. `program_code` is descriptive metadata and does not create a second wallet/balance partition.
 - `points_transactions`: immutable posted transaction header, correlation ID, idempotency key, request hash, order/merchant/customer references and policy snapshot.
 - `points_ledger_entries`: balanced debit/credit POINTS entries, each assigned to Available, Pending or Held bucket.
 - `points_release_requests` and request lines: manual review scope for posted Redeem allocations.
@@ -53,7 +53,7 @@ The VND journal remains unchanged. POINTS are integer units in a separate subled
 
 The old `points_accounts`, `points_entries` and `points_holds` tables remain untouched as legacy member-only structures. They do not become a second active balance source for the new model.
 
-Migration 0027 deliberately fails closed if any of those three legacy tables contain rows. The old signed `points_delta` entries do not record Available/Pending/Held buckets, so an automatic conversion would invent bucket history. If legacy rows appear before rollout, stop and define an explicit, reviewed backfill/reconciliation plan before applying 0027.
+Migration 0027 deliberately fails closed if any of those three legacy tables contain rows. It also enforces one canonical wallet per Customer, Merchant and App subject in the current Xoai Go program. The old signed `points_delta` entries do not record Available/Pending/Held buckets, so an automatic conversion would invent bucket history. If legacy rows appear before rollout, stop and define an explicit, reviewed backfill/reconciliation plan before applying 0027.
 
 No legacy table is dropped or rewritten.
 
