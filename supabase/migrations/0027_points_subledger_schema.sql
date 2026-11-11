@@ -126,6 +126,7 @@ create table public.points_transactions (
                between 0 and 1
           else false
         end
+        and policy_snapshot #>> '{redeem,discount_context_type}' is not null
         and policy_snapshot #>> '{redeem,discount_context_type}' in ('session','shift')
         and jsonb_typeof(policy_snapshot #> '{redeem,discount_context_id}') = 'string'
         and length(trim(policy_snapshot #>> '{redeem,discount_context_id}')) > 0
