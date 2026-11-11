@@ -110,6 +110,27 @@ create table public.points_transactions (
   constraint points_transactions_snapshot_check
     check (jsonb_typeof(policy_snapshot) = 'object'
       and (status <> 'posted' or jsonb_object_length(policy_snapshot) > 0)),
+  -- A posted Redeem must preserve the effective discount from the actual
+  -- session/shift used at payment time. Rate is a decimal fraction: 0.20 = 20%.
+  -- The context ID is intentionally opaque until the canonical session/shift
+  -- table and its key are verified; no guessed FK is introduced here.
+  constraint points_transactions_redeem_context_check
+    check (
+      transaction_type <> 'redeem'
+      or status <> 'posted'
+      or (
+        jsonb_typeof(policy_snapshot -> 'redeem') = 'object'
+        and case
+          when jsonb_typeof(policy_snapshot #> '{redeem,effective_discount_rate}') = 'number'
+          then (policy_snapshot #>> '{redeem,effective_discount_rate}')::numeric
+               between 0 and 1
+          else false
+        end
+        and policy_snapshot #>> '{redeem,discount_context_type}' in ('session','shift')
+        and jsonb_typeof(policy_snapshot #> '{redeem,discount_context_id}') = 'string'
+        and length(trim(policy_snapshot #>> '{redeem,discount_context_id}')) > 0
+      )
+    ),
   constraint points_transactions_posted_fields_check
     check (
       (status in ('draft','voided') and posted_at is null and posted_by is null)
