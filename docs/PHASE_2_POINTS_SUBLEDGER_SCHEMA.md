@@ -33,8 +33,9 @@ The VND journal remains unchanged. POINTS are integer units in a separate subled
 ### Point Redeem
 
 - Customer is debited the full POINTS amount used.
-- Merchant receives 90% by default or an approved merchant-specific rate.
-- App receives the remainder.
+- The App share is the effective discount rate actually applied in the active sales session/shift at payment time; the Merchant share is the remainder. The merchant's default discount is only a baseline configuration and must not override the active session/shift rate.
+- Example: merchant default 10%, active session/shift discount 20%, customer uses 100,000 POINTS → App Pending 20,000 POINTS and Merchant Pending 80,000 POINTS.
+- A posted Redeem snapshot must include `redeem.effective_discount_rate` as a decimal fraction (0.20 = 20%), `redeem.discount_context_type` (`session` or `shift`) and the non-empty `redeem.discount_context_id`. Later configuration/campaign changes must not recalculate an existing transaction.
 - Both allocations begin Pending.
 - A release request records the eligible time as **posted_at + 2 days**. Approval before that time is rejected.
 - Passing the two-day minimum never releases a balance by itself. The schema stores manual review requests and checker decisions only; a later command must create an explicit ledger movement.
@@ -47,7 +48,8 @@ The VND journal remains unchanged. POINTS are integer units in a separate subled
 - A posted transaction must contain at least two entries and debit total must equal credit total.
 - Posted transaction headers and ledger entries are immutable; corrections use new linked reversal/adjustment transactions.
 - A release request line must reference a Pending credit from a posted Redeem transaction and cannot reserve more than the originating allocation.
-- POINTS and VND remain separate in all tables and reports.\n- The migration enforces the effective session/shift discount snapshot for every posted Redeem transaction; it does not infer the rate from merchant defaults.
+- POINTS and VND remain separate in all tables and reports.
+- The migration enforces the effective session/shift discount snapshot for every posted Redeem transaction; it does not infer the rate from merchant defaults.
 
 ## 3. Existing schema compatibility
 
@@ -125,11 +127,12 @@ Required isolated tests before any live decision:
 4. Draft transaction can receive entries; posting rejects fewer than two entries or unbalanced debit/credit.
 5. Posted headers/entries cannot be updated, deleted or truncated.
 6. Idempotency and single-reversal uniqueness hold under concurrent requests.
-7. Release request requires a posted Redeem transaction.
-8. Release cannot be approved before posted_at + 2 days.
-9. Request maker cannot be checker.
-10. Release lines cannot exceed the Pending Redeem credit allocation, including concurrent requests.
-11. RLS matrix for Customer, Merchant Owner, Finance Operator, Platform Owner and anon.
-12. No authenticated client write grants exist.
+7. A posted Redeem without an effective discount rate and session/shift reference is rejected; a 20% session/shift rate is preserved as 0.20 even if the merchant default is 10%.
+8. Release request requires a posted Redeem transaction.
+9. Release cannot be approved before posted_at + 2 days.
+10. Request maker cannot be checker.
+11. Release lines cannot exceed the Pending Redeem credit allocation, including concurrent requests.
+12. RLS matrix for Customer, Merchant Owner, Finance Operator, Platform Owner and anon.
+13. No authenticated client write grants exist.
 
 No test is marked passed until it has run in an isolated database with captured output. Phase 2 is therefore **source drafted / runtime verification blocked**, not Done/Verified.
