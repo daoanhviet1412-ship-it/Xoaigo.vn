@@ -2204,3 +2204,90 @@ footer { background:#fff; }
   .benefit-grid .benefit-content h3 { font-size:8.5px; }
   .benefit-grid .benefit-content p { font-size:6.5px; }
 }
+
+
+/* XOAI GO — GREEN & ORANGE DESIGN SYSTEM
+   UI-only refinement. Existing page copy, markup, imagery and interactions remain unchanged. */
+:root {
+  --yellow: #F28A00;
+  --orange: #F28A00;
+  --brown: #004331;
+  --cream: #F7F8F5;
+  --green: #218653;
+  --ink: #26342D;
+  --muted: #64736C;
+  --line: #E6ECE8;
+  --paper: #FFFFFF;
+  --xoai-primary: #004331;
+  --xoai-secondary: #F28A00;
+  --xoai-surface: #FFFFFF;
+  --xoai-background: #F7F8F5;
+  --xoai-primary-soft: #EAF4EF;
+  --xoai-orange-soft: #FFF0DE;
+  --xoai-text-primary: #26342D;
+  --xoai-text-secondary: #64736C;
+  --xoai-border: #E6ECE8;
+  --xoai-success: #218653;
+}
+body { background: var(--xoai-background); color: var(--xoai-text-primary); }
+.nav { border-bottom-color: var(--xoai-border); }
+.nav nav { color: var(--xoai-text-secondary); }
+.nav nav a:hover, .footer-main nav a:hover { color: var(--xoai-secondary); }
+.nav-cta { border-color: var(--xoai-border); background: var(--xoai-surface); color: var(--xoai-primary); }
+.nav-cta span, .text-link span, .under-link span { color: var(--xoai-secondary); }
+.eyebrow { color: var(--xoai-primary); }
+.eyebrow i { background: var(--xoai-secondary); }
+.hero h1 em, h2 em { color: var(--xoai-secondary); }
+.hero-lead, .intro-copy p, .model-copy > p, .merchant-copy > p,
+.faq-heading > p, .benefit-content p, .benefit-card p { color: var(--xoai-text-secondary); }
+.btn-primary { background: var(--xoai-secondary); color: #FFFFFF; box-shadow: 0 9px 22px #F28A0030; }
+.btn-primary:hover { box-shadow: 0 13px 26px #F28A0040; }
+.btn-soft { background: var(--xoai-primary-soft); color: var(--xoai-primary); }
+.text-link, .under-link { color: var(--xoai-primary); }
+.hero-proof { color: var(--xoai-text-secondary); }
+.proof-icon, .note-symbol { background: var(--xoai-orange-soft); color: var(--xoai-secondary); }
+.note-symbol.green { background: var(--xoai-primary-soft); color: var(--xoai-success); }
+.floating-note { background: var(--xoai-surface); border-color: var(--xoai-border); }
+.floating-note small { color: var(--xoai-text-secondary); }
+.marquee { background: var(--xoai-primary); color: #FFFFFF; }
+.marquee b { color: var(--xoai-secondary); }
+.benefit-feature { background: var(--xoai-surface); border-color: var(--xoai-border); }
+.benefit-warm { background: var(--xoai-orange-soft); }
+.benefit-warm h3 em { color: var(--xoai-secondary); }
+.benefit-green { background: var(--xoai-primary-soft); }
+.benefit-green h3 { color: var(--xoai-primary); }
+.benefit-green p { color: var(--xoai-text-secondary); }
+.card-index { color: var(--xoai-text-secondary); }
+.how-section, .join-section { background: var(--xoai-primary); }
+.eyebrow.light { color: #DCECE4; }
+.how-intro h2 em, .join-inner h2 em { color: #FFB24A; }
+.how-intro > p, .step p, .join-inner p { color: #D5E4DD; }
+.step-list, .step { border-color: #FFFFFF35; }
+.step-no, .step-arrow { color: #FFB24A; }
+.step h3 { color: #FFFFFF; }
+.model-card { background: var(--xoai-surface); border-color: var(--xoai-border); }
+.model-card-top, .flow-node small, .flow-platform small, .model-foot { color: var(--xoai-text-secondary); }
+.flow-node { background: var(--xoai-surface); border-color: var(--xoai-border); }
+.flow-platform { background: var(--xoai-orange-soft); color: var(--xoai-primary); }
+.flow-connect { color: var(--xoai-secondary); }
+.merchant-section { background: var(--xoai-primary-soft); }
+.merchant-points { border-color: #CFE0D7; }
+.merchant-points div { border-color: #CFE0D7; }
+.merchant-points b { color: var(--xoai-secondary); }
+.merchant-points span { color: var(--xoai-text-primary); }
+.faq-list, .faq-item { border-color: var(--xoai-border); }
+.faq-item summary { color: var(--xoai-text-primary); }
+.faq-item summary b { color: var(--xoai-secondary); }
+.faq-item p { color: var(--xoai-text-secondary); }
+.join-inner h2 { color: #FFFFFF; }
+.btn-light { background: var(--xoai-secondary); color: #FFFFFF; }
+footer { background: var(--xoai-surface); }
+.footer-main { border-color: var(--xoai-border); }
+.footer-tagline { color: var(--xoai-text-secondary); }
+.footer-main nav, .footer-bottom { color: var(--xoai-text-secondary); }
+.footer-bottom b { color: var(--xoai-secondary); }
+.location-pill { border-color: var(--xoai-border); background: var(--xoai-surface); color: var(--xoai-primary); }
+:focus-visible { outline: 2px solid var(--xoai-secondary); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
